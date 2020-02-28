@@ -11,7 +11,7 @@ Add the the dependency, e.g. Maven:
 <dependency>
   <groupId>com.noenv</groupId>
   <artifactId>vertx-wiremongo</artifactId>
-  <version>3.8.6-SNAPSHOT</version>
+  <version>3.8.5</version>
   <scope>test</scrope>
 </dependency>
 ```

@@ -1,0 +1,7 @@
+{
+  "method": "createCollection",
+  "collection": {
+    "equalTo": "createcollectionfile"
+  },
+  "response": null
+}

@@ -1,0 +1,14 @@
+{
+  "method": "findOneAndDelete",
+  "collection": {
+    "equalTo": "findOneAndDelete"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndDeleteFile"
+    }
+  },
+  "response": {
+    "field1": "value1"
+  }
+}

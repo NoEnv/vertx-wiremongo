@@ -1,0 +1,14 @@
+{
+  "method": "findOneAndDelete",
+  "collection": {
+    "equalTo": "findOneAndDelete"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndDeleteFileError"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

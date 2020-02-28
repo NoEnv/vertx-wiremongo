@@ -1,0 +1,20 @@
+{
+  "method": "replaceDocuments",
+  "collection": {
+    "equalTo": "replaceDocuments"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testReplaceDocumentsFile"
+    }
+  },
+  "replace": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "response": {
+    "doc_matched": 21,
+    "doc_modified": 56
+  }
+}

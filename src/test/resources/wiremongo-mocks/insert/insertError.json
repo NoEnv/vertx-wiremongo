@@ -1,0 +1,15 @@
+{
+  "method": "insert",
+  "collection": {
+    "equalTo": "insert"
+  },
+  "document": {
+    "equalToJson": {
+      "test": "testInsertFileError"
+    },
+    "ignoreExtraElements": true
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

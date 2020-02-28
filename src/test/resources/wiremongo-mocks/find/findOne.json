@@ -1,0 +1,19 @@
+{
+  "method": "findOne",
+  "collection": {
+    "equalTo": "findone"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneFile"
+    }
+  },
+  "fields": {
+    "equalTo": {
+      "field1": 1
+    }
+  },
+  "response": {
+    "field1": "value1"
+  }
+}

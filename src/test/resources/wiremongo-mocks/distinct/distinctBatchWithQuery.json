@@ -1,0 +1,23 @@
+{
+  "method": "distinctBatchWithQuery",
+  "collection": {
+    "equalTo": "distinctBatchWithQuery"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctBatchWithQueryFile"
+  },
+  "resultClassname": {
+    "equalTo": "io.vertx.core.json.JsonObject"
+  },
+  "response": [
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    }
+  ]
+}

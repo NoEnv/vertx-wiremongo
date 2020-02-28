@@ -1,0 +1,29 @@
+{
+  "method": "findOneAndReplaceWithOptions",
+  "collection": {
+    "equalTo": "findOneAndReplaceWithOptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndReplaceWithOptionsFileError"
+    }
+  },
+  "replace": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "findOptions": {
+    "equalTo": {
+      "limit": 42
+    }
+  },
+  "updateOptions": {
+    "equalTo": {
+      "upsert": true
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

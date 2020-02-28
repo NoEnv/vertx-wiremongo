@@ -1,0 +1,14 @@
+{
+  "method": "count",
+  "collection": {
+    "equalTo": "count"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testCountFileError"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

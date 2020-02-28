@@ -1,0 +1,19 @@
+{
+  "method": "findWithOptions",
+  "collection": {
+    "equalTo": "findwithoptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindWithOptionsFileError"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "skip": 42
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

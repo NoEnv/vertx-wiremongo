@@ -1,0 +1,30 @@
+{
+  "method": "findOneAndUpdateWithOptions",
+  "collection": {
+    "equalTo": "findoneandupdatewithoptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndUpdateWithOptionsFile"
+    }
+  },
+  "findOptions": {
+    "equalTo": {
+      "skip": 42
+    }
+  },
+  "updateOptions": {
+    "equalTo": {
+      "multi": true
+    }
+  },
+  "update": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "response": {
+    "field1": "value1"
+  }
+
+}

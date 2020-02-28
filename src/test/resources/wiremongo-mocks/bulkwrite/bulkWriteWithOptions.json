@@ -1,0 +1,26 @@
+{
+  "method": "bulkWriteWithOptions",
+  "collection": {
+    "equalTo": "bulkwritewithoptions"
+  },
+  "operations": {
+    "equalTo": [
+      {
+        "type": "insert",
+        "document": {
+          "test": "testBulkWriteWithOptionsFile"
+        },
+        "upsert": false,
+        "multi": false
+      }
+    ]
+  },
+  "options": {
+    "equalTo": {
+      "writeOption": "ACKNOWLEDGED"
+    }
+  },
+  "response": {
+    "modifiedCount": 71
+  }
+}

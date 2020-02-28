@@ -1,0 +1,15 @@
+{
+  "method": "distinct",
+  "collection": {
+    "equalTo": "distinct"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctFileError"
+  },
+  "resultClassname": {
+    "equalTo": "java.lang.Integer"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

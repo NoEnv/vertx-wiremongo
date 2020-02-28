@@ -1,0 +1,19 @@
+{
+  "method": "findBatchWithOptions",
+  "collection": {
+    "equalTo": "findbatchwithoptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindBatchWithOptionsFileError"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "skip": 27
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

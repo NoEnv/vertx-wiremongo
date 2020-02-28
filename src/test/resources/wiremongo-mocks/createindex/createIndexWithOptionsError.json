@@ -1,0 +1,22 @@
+{
+  "method": "createIndexWithOptions",
+  "collection": {
+    "equalTo": "createindexwithoptions"
+  },
+  "key": {
+    "equalTo": {
+      "test": "testCreateIndexWithOptionsFileError"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "background": false,
+      "unique": false,
+      "sparse": false,
+      "name": "testIndexError"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

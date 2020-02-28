@@ -1,0 +1,22 @@
+{
+  "method": "findBatch",
+  "collection": {
+    "equalTo": "findbatch"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindBatchFile"
+    }
+  },
+  "response": [
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "method": "insert",
+  "collection": {
+    "equalTo": "fruits"
+  },
+  "document": {
+    "equalToJson": {
+      "type": "banana",
+      "mass": 2468
+    },
+    "ignoreExtraElements": true
+  },
+  "response": "3c8a273f"
+}

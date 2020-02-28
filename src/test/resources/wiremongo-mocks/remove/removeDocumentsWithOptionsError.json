@@ -1,0 +1,17 @@
+{
+  "method": "removeDocumentsWithOptions",
+  "collection": {
+    "equalTo": "removeDocumentsWithOptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testRemoveDocumentsWithOptionsFileError"
+    }
+  },
+  "options": {
+    "equalTo": "MAJORITY"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

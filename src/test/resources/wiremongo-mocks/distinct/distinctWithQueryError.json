@@ -1,0 +1,20 @@
+{
+  "method": "distinctWithQuery",
+  "collection": {
+    "equalTo": "distinctWithQuery"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctWithQueryFileError"
+  },
+  "resultClassname": {
+    "equalTo": "java.lang.Integer"
+  },
+  "query": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "method": "listIndexes",
+  "collection": {
+    "equalTo": "testListIndexesFileError"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

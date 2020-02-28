@@ -1,0 +1,13 @@
+{
+  "method": "save",
+  "collection": {
+    "equalTo": "save"
+  },
+  "document": {
+    "equalToJson": {
+      "test": "testSaveFile"
+    },
+    "ignoreExtraElements": true
+  },
+  "response": "5c45f450c29de454289c5706"
+}

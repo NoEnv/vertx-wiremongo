@@ -1,0 +1,19 @@
+{
+  "method": "replaceDocuments",
+  "collection": {
+    "equalTo": "replaceDocuments"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testReplaceDocumentsFileError"
+    }
+  },
+  "replace": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

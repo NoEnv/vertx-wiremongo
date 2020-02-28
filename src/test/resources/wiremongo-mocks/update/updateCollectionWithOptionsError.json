@@ -1,0 +1,24 @@
+{
+  "method": "updateCollectionWithOptions",
+  "collection": {
+    "equalTo": "updatecollectionwithoptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testUpdateCollectionWithOptionsFileError"
+    }
+  },
+  "update": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "multi": true
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

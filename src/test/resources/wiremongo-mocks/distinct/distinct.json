@@ -1,0 +1,13 @@
+{
+  "method": "distinct",
+  "collection": {
+    "equalTo": "distinct"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctFile"
+  },
+  "resultClassname": {
+    "equalTo": "java.lang.String"
+  },
+  "response": ["A", "B", "C"]
+}

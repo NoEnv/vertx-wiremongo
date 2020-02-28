@@ -1,0 +1,31 @@
+package com.noenv.wiremongo.mapping;
+
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class GetCollections extends MappingBase<List<String>> {
+
+  public static class GetCollectionsCommand extends CommandBase {
+    public GetCollectionsCommand() {
+      super("getCollections");
+    }
+  }
+
+  public GetCollections() {
+    super("getCollections");
+  }
+
+  public GetCollections(JsonObject json) {
+    super(json);
+  }
+
+  @Override
+  protected List<String> parseResponse(Object jsonValue) {
+    return ((JsonArray) jsonValue).stream()
+      .map(o -> (String) o)
+      .collect(Collectors.toList());
+  }
+}

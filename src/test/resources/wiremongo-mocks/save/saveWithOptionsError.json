@@ -1,0 +1,18 @@
+{
+  "method": "saveWithOptions",
+  "collection": {
+    "equalTo": "saveWithOptions"
+  },
+  "document": {
+    "equalToJson": {
+      "test": "testSaveWithOptionsFileError"
+    },
+    "ignoreExtraElements": true
+  },
+  "options": {
+    "equalTo": "FSYNCED"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

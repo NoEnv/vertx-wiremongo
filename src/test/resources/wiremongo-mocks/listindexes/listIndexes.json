@@ -1,0 +1,7 @@
+{
+  "method": "listIndexes",
+  "collection": {
+    "equalTo": "testListIndexesFile"
+  },
+  "response": [87, 92]
+}

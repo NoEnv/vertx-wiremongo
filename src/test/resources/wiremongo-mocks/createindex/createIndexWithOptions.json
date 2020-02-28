@@ -1,0 +1,20 @@
+{
+  "method": "createIndexWithOptions",
+  "collection": {
+    "equalTo": "createindexwithoptions"
+  },
+  "key": {
+    "equalTo": {
+      "test": "testCreateIndexWithOptionsFile"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "background": false,
+      "unique": false,
+      "sparse": false,
+      "name": "testIndex"
+    }
+  },
+  "response": null
+}

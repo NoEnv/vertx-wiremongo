@@ -1,0 +1,21 @@
+{
+  "method": "findWithOptions",
+  "collection": {
+    "equalTo": "findwithoptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindWithOptionsFile"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "skip": 42
+    }
+  },
+  "response": [
+    {
+      "field1": "value1"
+    }
+  ]
+}

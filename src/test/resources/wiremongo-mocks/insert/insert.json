@@ -1,0 +1,13 @@
+{
+  "method": "insert",
+  "collection": {
+    "equalTo": "insert"
+  },
+  "document": {
+    "equalToJson": {
+      "test": "testInsertFile"
+    },
+    "ignoreExtraElements": true
+  },
+  "response": "5c45f450c29de454289c5706"
+}

@@ -1,0 +1,19 @@
+{
+  "method": "updateCollection",
+  "collection": {
+    "equalTo": "updatecollection"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testUpdateCollectionFileError"
+    }
+  },
+  "update": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

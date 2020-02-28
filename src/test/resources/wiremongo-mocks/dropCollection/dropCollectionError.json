@@ -1,0 +1,9 @@
+{
+  "method": "dropCollection",
+  "collection": {
+    "equalTo": "testDropCollectionFileError"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

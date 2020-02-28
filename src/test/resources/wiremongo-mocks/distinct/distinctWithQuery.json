@@ -1,0 +1,18 @@
+{
+  "method": "distinctWithQuery",
+  "collection": {
+    "equalTo": "distinctWithQuery"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctWithQueryFile"
+  },
+  "resultClassname": {
+    "equalTo": "java.lang.String"
+  },
+  "query": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "response": ["A", "B", "C"]
+}

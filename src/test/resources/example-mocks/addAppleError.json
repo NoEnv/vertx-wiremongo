@@ -1,0 +1,16 @@
+{
+  "method": "insert",
+  "collection": {
+    "equalTo": "fruits"
+  },
+  "document": {
+    "equalToJson": {
+      "type": "apple",
+      "mass": 8392
+    },
+    "ignoreExtraElements": true
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

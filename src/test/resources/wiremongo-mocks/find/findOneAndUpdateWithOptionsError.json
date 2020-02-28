@@ -1,0 +1,29 @@
+{
+  "method": "findOneAndUpdateWithOptions",
+  "collection": {
+    "equalTo": "findoneandupdatewithoptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndUpdateWithOptionsError"
+    }
+  },
+  "findOptions": {
+    "equalTo": {
+      "skip": 42
+    }
+  },
+  "updateOptions": {
+    "equalTo": {
+      "multi": true
+    }
+  },
+  "update": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

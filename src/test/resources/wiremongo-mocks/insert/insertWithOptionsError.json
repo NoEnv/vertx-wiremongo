@@ -1,0 +1,18 @@
+{
+  "method": "insertWithOptions",
+  "collection": {
+    "equalTo": "insertWithOptions"
+  },
+  "document": {
+    "equalToJson": {
+      "test": "testInsertWithOptionsFileError"
+    },
+    "ignoreExtraElements": true
+  },
+  "options": {
+    "equalTo": "FSYNCED"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

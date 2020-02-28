@@ -1,0 +1,7 @@
+{
+  "method": "dropCollection",
+  "collection": {
+    "equalTo": "testDropCollectionFile"
+  },
+  "response": null
+}

@@ -1,0 +1,19 @@
+{
+  "method": "findOneAndUpdate",
+  "collection": {
+    "equalTo": "findoneandupdate"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndUpdateFileError"
+    }
+  },
+  "update": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "method": "dropIndex",
+  "collection": {
+    "equalTo": "dropIndex"
+  },
+  "name": {
+    "equalTo": "testDropIndexFileError"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "method": "bulkWrite",
+  "collection": {
+    "equalTo": "bulkwrite"
+  },
+  "operations": {
+    "equalToJson": [
+      {
+        "type": "INSERT",
+        "document": {
+          "test": "testBulkWriteFileJsonMatcher"
+        },
+        "upsert": false,
+        "multi": false
+      }
+    ],
+    "ignoreExtraElements": true
+  },
+  "response": {
+    "deletedCount": 48
+  }
+}

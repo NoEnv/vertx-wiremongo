@@ -1,0 +1,15 @@
+{
+  "method": "runCommand",
+  "commandName": {
+    "equalTo": "ping"
+  },
+  "command": {
+    "equalTo": {
+      "ping": 1,
+      "fail": true
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

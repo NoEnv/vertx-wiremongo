@@ -1,0 +1,26 @@
+{
+  "method": "aggregateWithOptions",
+  "collection": {
+    "equalTo": "aggregateWithOptions"
+  },
+  "pipeline": [{
+      "test": "testAggregateWithOptionsFile"
+   }],
+  "options": {
+    "equalTo": {
+      "allowDiskUse": false,
+      "maxTime": 345
+    }
+  },
+  "response": [
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    }
+  ]
+}

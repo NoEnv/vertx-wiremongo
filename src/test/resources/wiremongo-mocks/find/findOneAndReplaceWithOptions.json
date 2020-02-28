@@ -1,0 +1,31 @@
+{
+  "method": "findOneAndReplaceWithOptions",
+  "collection": {
+    "equalTo": "findOneAndReplaceWithOptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndReplaceWithOptionsFile"
+    }
+  },
+  "replace": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "findOptions": {
+    "equalTo": {
+      "fields": {
+        "field1": -1
+      }
+    }
+  },
+  "updateOptions": {
+    "equalTo": {
+      "returningNewDocument": false
+    }
+  },
+  "response": {
+    "field1": "value1"
+  }
+}

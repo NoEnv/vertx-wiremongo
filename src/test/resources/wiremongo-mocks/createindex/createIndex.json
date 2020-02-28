@@ -1,0 +1,12 @@
+{
+  "method": "createIndex",
+  "collection": {
+    "equalTo": "createindex"
+  },
+  "key": {
+    "equalTo": {
+      "test": "testCreateIndexFile"
+    }
+  },
+  "response": null
+}

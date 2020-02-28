@@ -1,0 +1,18 @@
+{
+  "method": "aggregateWithOptions",
+  "collection": {
+    "equalTo": "aggregateWithOptions"
+  },
+  "pipeline": [{
+      "test": "testAggregateWithOptionsFileError"
+  }],
+  "options": {
+    "equalTo": {
+      "allowDiskUse": false,
+      "maxTime": 234
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

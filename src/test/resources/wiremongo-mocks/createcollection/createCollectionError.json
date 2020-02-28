@@ -1,0 +1,9 @@
+{
+  "method": "createCollection",
+  "collection": {
+    "equalTo": "createcollectionfileerror"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

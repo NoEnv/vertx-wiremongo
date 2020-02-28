@@ -1,0 +1,14 @@
+{
+  "method": "find",
+  "collection": {
+    "equalTo": "find"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindFileError"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

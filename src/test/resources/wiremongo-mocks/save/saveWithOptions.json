@@ -1,0 +1,16 @@
+{
+  "method": "saveWithOptions",
+  "collection": {
+    "equalTo": "saveWithOptions"
+  },
+  "document": {
+    "equalToJson": {
+      "test": "testSaveWithOptionsFile"
+    },
+    "ignoreExtraElements": true
+  },
+  "options": {
+    "equalTo": "ACKNOWLEDGED"
+  },
+  "response": "5c45f450c29de454289c5706"
+}

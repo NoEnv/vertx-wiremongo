@@ -1,0 +1,14 @@
+{
+  "method": "findBatch",
+  "collection": {
+    "equalTo": "findbatch"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindBatchFileError"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

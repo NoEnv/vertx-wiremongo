@@ -1,0 +1,20 @@
+{
+  "method": "updateCollection",
+  "collection": {
+    "equalTo": "updatecollection"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testUpdateCollectionFile"
+    }
+  },
+  "update": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "response": {
+    "doc_matched": 42,
+    "doc_modified": 11
+  }
+}

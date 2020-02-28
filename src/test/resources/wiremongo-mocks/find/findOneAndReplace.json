@@ -1,0 +1,19 @@
+{
+  "method": "findOneAndReplace",
+  "collection": {
+    "equalTo": "findoneandreplace"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndReplaceFile"
+    }
+  },
+  "replace": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "response": {
+    "field1": "value1"
+  }
+}

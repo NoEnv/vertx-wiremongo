@@ -1,0 +1,20 @@
+{
+  "method": "aggregate",
+  "collection": {
+    "equalTo": "aggregate"
+  },
+  "pipeline": [{
+      "test": "testAggregateFile"
+   }],
+  "response": [
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    }
+  ]
+}

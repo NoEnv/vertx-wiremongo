@@ -1,0 +1,19 @@
+{
+  "method": "removeDocument",
+  "collection": {
+    "equalTo": "fruits"
+  },
+  "query": {
+    "equalToJson": {
+      "expiration": {
+        "$lt": {
+          "$date": "1984-05-27T00:01:02.241Z"
+        }
+      }
+    },
+    "ignoreExtraElements": true
+  },
+  "response": {
+    "removed_count": 32
+  }
+}

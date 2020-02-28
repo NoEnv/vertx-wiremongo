@@ -1,0 +1,14 @@
+{
+  "method": "removeDocuments",
+  "collection": {
+    "equalTo": "removeDocuments"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testRemoveDocumentsFileError"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

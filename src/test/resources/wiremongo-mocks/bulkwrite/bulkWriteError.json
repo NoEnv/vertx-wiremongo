@@ -1,0 +1,21 @@
+{
+  "method": "bulkWrite",
+  "collection": {
+    "equalTo": "bulkwrite"
+  },
+  "operations": {
+    "equalTo": [
+      {
+        "type": "insert",
+        "document": {
+          "test": "testBulkWriteFileError"
+        },
+        "upsert": false,
+        "multi": false
+      }
+    ]
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

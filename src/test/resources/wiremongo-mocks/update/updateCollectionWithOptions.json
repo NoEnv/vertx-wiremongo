@@ -1,0 +1,25 @@
+{
+  "method": "updateCollectionWithOptions",
+  "collection": {
+    "equalTo": "updatecollectionwithoptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testUpdateCollectionWithOptionsFile"
+    }
+  },
+  "update": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "options": {
+    "equalToJson": {
+      "multi": true
+    }
+  },
+  "response": {
+    "doc_matched": 46,
+    "doc_modified": 17
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "method": "count",
+  "collection": {
+    "equalTo": "fruits"
+  },
+  "query": {
+    "equalTo": {
+      "type": "banana"
+    }
+  },
+  "response": 71
+}

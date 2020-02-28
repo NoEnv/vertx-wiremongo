@@ -1,0 +1,22 @@
+{
+  "method": "findOneAndDeleteWithOptions",
+  "collection": {
+    "equalTo": "findOneAndDeleteWithOptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndDeleteWithOptionsFile"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "batchSize": 13,
+      "sort": {
+        "field1": -1
+      }
+    }
+  },
+  "response": {
+    "field1": "value1"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "method": "insertWithOptions",
+  "collection": {
+    "equalTo": "insertWithOptions"
+  },
+  "document": {
+    "equalToJson": {
+      "test": "testInsertWithOptionsFile"
+    },
+    "ignoreExtraElements": true
+  },
+  "options": {
+    "equalTo": "ACKNOWLEDGED"
+  },
+  "response": "5c45f450c29de454289c5706"
+}

@@ -1,0 +1,15 @@
+{
+  "method": "removeDocuments",
+  "collection": {
+    "equalTo": "removeDocuments"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testRemoveDocumentsFile"
+    }
+  },
+  "response": {
+    "doc_matched": 2,
+    "removed_count": 2
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "method": "findOneAndDeleteWithOptions",
+  "collection": {
+    "equalTo": "findOneAndDeleteWithOptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndDeleteWithOptionsFileError"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "fields": {
+        "fieldx": 1,
+        "fieldy": 1
+      },
+      "limit": 42
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

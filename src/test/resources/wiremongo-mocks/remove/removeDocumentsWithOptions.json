@@ -1,0 +1,18 @@
+{
+  "method": "removeDocumentsWithOptions",
+  "collection": {
+    "equalTo": "removeDocumentsWithOptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testRemoveDocumentsWithOptionsFile"
+    }
+  },
+  "options": {
+    "equalTo": "ACKNOWLEDGED"
+  },
+  "response": {
+    "doc_matched": 2,
+    "removed_count": 2
+  }
+}

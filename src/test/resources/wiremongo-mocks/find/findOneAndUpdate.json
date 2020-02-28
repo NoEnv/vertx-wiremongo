@@ -1,0 +1,19 @@
+{
+  "method": "findOneAndUpdate",
+  "collection": {
+    "equalTo": "findoneandupdate"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindOneAndUpdateFile"
+    }
+  },
+  "update": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "response": {
+    "field1": "value1"
+  }
+}

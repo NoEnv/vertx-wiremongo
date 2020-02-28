@@ -1,0 +1,25 @@
+{
+  "method": "replaceDocumentsWithOptions",
+  "collection": {
+    "equalTo": "replaceDocumentsWithOptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testReplaceDocumentsWithOptionsFile"
+    }
+  },
+  "replace": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "multi": true
+    }
+  },
+  "response": {
+    "doc_matched": 21,
+    "doc_modified": 56
+  }
+}

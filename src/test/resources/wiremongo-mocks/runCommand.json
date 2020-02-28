@@ -1,0 +1,14 @@
+{
+  "method": "runCommand",
+  "commandName": {
+    "equalTo": "ping"
+  },
+  "command": {
+    "equalTo": {
+      "ping": 1
+    }
+  },
+  "response": {
+    "ok": 1
+  }
+}

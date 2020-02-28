@@ -1,0 +1,27 @@
+{
+  "method": "findBatchWithOptions",
+  "collection": {
+    "equalTo": "findbatchwithoptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindBatchWithOptionsFile"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "skip": 21
+    }
+  },
+  "response": [
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    },
+    {
+      "field1": "value1"
+    }
+  ]
+}

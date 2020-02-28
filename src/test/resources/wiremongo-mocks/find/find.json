@@ -1,0 +1,16 @@
+{
+  "method": "find",
+  "collection": {
+    "equalTo": "find"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testFindFile"
+    }
+  },
+  "response": [
+    {
+      "field1": "value1"
+    }
+  ]
+}

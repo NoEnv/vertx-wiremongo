@@ -1,0 +1,12 @@
+{
+  "method": "count",
+  "collection": {
+    "equalTo": "count"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testCountFile"
+    }
+  },
+  "response": 26
+}

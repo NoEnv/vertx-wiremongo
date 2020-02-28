@@ -1,0 +1,15 @@
+{
+  "method": "save",
+  "collection": {
+    "equalTo": "save"
+  },
+  "document": {
+    "equalToJson": {
+      "test": "testSaveFileError"
+    },
+    "ignoreExtraElements": true
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

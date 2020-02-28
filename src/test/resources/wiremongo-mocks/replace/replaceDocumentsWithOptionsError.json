@@ -1,0 +1,24 @@
+{
+  "method": "replaceDocumentsWithOptions",
+  "collection": {
+    "equalTo": "replaceDocumentsWithOptions"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testReplaceDocumentsWithOptionsFileError"
+    }
+  },
+  "replace": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "writeOption": "MAJORITY"
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

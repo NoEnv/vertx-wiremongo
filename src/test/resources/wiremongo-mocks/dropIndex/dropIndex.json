@@ -1,0 +1,10 @@
+{
+  "method": "dropIndex",
+  "collection": {
+    "equalTo": "dropIndex"
+  },
+  "name": {
+    "equalTo": "testDropIndexFile"
+  },
+  "response": null
+}

@@ -1,0 +1,12 @@
+{
+  "method": "aggregate",
+  "collection": {
+    "equalTo": "aggregate"
+  },
+  "pipeline": [{
+      "test": "testAggregateFileError"
+  }],
+  "error": {
+    "message": "intentional"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "method": "distinctBatch",
+  "collection": {
+    "equalTo": "distinctBatch"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctBatchFileError"
+  },
+  "resultClassname": {
+    "equalTo": "io.vertx.core.json.JsonObject"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

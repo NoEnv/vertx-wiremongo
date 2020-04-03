@@ -1,0 +1,13 @@
+{
+  "method": "count",
+  "collection": {
+    "equalTo": "priority"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testPriorityFile"
+    }
+  },
+  "response": 333,
+  "priority": 999
+}

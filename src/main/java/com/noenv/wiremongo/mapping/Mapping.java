@@ -11,6 +11,10 @@ public interface Mapping<T> extends Command {
 
   boolean matches(Command c);
 
+  int priority();
+
+  Mapping<T> priority(int priority);
+
   Stub<T> stub();
 
   Mapping<T> stub(Stub<T> stub);

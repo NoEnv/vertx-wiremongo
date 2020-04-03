@@ -27,6 +27,13 @@ public class Save extends WithDocument {
     super(json);
   }
 
+  // fluent
+
+  @Override
+  public Save priority(int priority) {
+    return (Save) super.priority(priority);
+  }
+
   @Override
   public Save inCollection(String collection) {
     return (Save) super.inCollection(collection);

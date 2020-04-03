@@ -77,6 +77,11 @@ public class Distinct extends WithCollection<JsonArray> {
   // fluent
 
   @Override
+  public Distinct priority(int priority) {
+    return (Distinct) super.priority(priority);
+  }
+
+  @Override
   public Distinct inCollection(String collection) {
     return (Distinct) super.inCollection(collection);
   }

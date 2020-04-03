@@ -37,6 +37,11 @@ public class FindOneAndDelete extends WithQuery<JsonObject> {
   // fluent
 
   @Override
+  public FindOneAndDelete priority(int priority) {
+    return (FindOneAndDelete) super.priority(priority);
+  }
+
+  @Override
   public FindOneAndDelete inCollection(String collection) {
     return (FindOneAndDelete) super.inCollection(collection);
   }

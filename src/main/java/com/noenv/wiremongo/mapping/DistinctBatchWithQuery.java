@@ -71,6 +71,11 @@ public class DistinctBatchWithQuery extends DistinctBatch {
   // fluent
 
   @Override
+  public DistinctBatchWithQuery priority(int priority) {
+    return (DistinctBatchWithQuery) super.priority(priority);
+  }
+
+  @Override
   public DistinctBatchWithQuery withFieldName(String fieldName) {
     return (DistinctBatchWithQuery) super.withFieldName(fieldName);
   }

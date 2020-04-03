@@ -77,6 +77,11 @@ public class DistinctWithQuery extends WithQuery<JsonArray> {
   // fluent
 
   @Override
+  public DistinctWithQuery priority(int priority) {
+    return (DistinctWithQuery) super.priority(priority);
+  }
+
+  @Override
   public DistinctWithQuery withQuery(JsonObject query) {
     return (DistinctWithQuery) super.withQuery(query);
   }

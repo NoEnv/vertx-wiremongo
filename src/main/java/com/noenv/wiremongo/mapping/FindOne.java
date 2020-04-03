@@ -62,6 +62,11 @@ public class FindOne extends WithQuery<JsonObject> {
   // fluent
 
   @Override
+  public FindOne priority(int priority) {
+    return (FindOne) super.priority(priority);
+  }
+
+  @Override
   public FindOne inCollection(String collection) {
     return (FindOne) super.inCollection(collection);
   }

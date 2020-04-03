@@ -33,7 +33,7 @@ public class FindBatchWithOptions extends FindBatch {
 
   public FindBatchWithOptions(JsonObject json) {
     super(json);
-    options = Matcher.create(json.getJsonObject("options"), j -> new FindOptions((JsonObject)j), FindOptions::toJson);
+    options = Matcher.create(json.getJsonObject("options"), j -> new FindOptions((JsonObject) j), FindOptions::toJson);
   }
 
   @Override
@@ -58,6 +58,11 @@ public class FindBatchWithOptions extends FindBatch {
   }
 
   // fluent
+
+  @Override
+  public FindBatchWithOptions priority(int priority) {
+    return (FindBatchWithOptions) super.priority(priority);
+  }
 
   @Override
   public FindBatchWithOptions inCollection(String collection) {

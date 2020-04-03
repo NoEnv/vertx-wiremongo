@@ -80,6 +80,11 @@ public class DistinctBatch extends WithStream {
   // fluent
 
   @Override
+  public DistinctBatch priority(int priority) {
+    return (DistinctBatch) super.priority(priority);
+  }
+
+  @Override
   public DistinctBatch inCollection(String collection) {
     return (DistinctBatch) super.inCollection(collection);
   }

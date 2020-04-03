@@ -21,10 +21,15 @@ public class Count extends WithQuery<Long> {
 
   @Override
   protected Long parseResponse(Object jsonValue) {
-    return ((Number)jsonValue).longValue();
+    return ((Number) jsonValue).longValue();
   }
 
   // fluent
+
+  @Override
+  public Count priority(int priority) {
+    return (Count) super.priority(priority);
+  }
 
   @Override
   public Count inCollection(String collection) {
@@ -37,7 +42,7 @@ public class Count extends WithQuery<Long> {
   }
 
   @Override
-  public Count withQuery(JsonObject query){
+  public Count withQuery(JsonObject query) {
     return (Count) super.withQuery(query);
   }
 

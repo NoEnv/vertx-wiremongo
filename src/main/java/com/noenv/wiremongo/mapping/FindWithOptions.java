@@ -32,7 +32,7 @@ public class FindWithOptions extends Find {
 
   public FindWithOptions(JsonObject json) {
     super(json);
-    options = Matcher.create(json.getJsonObject("options"), j -> new FindOptions((JsonObject)j), FindOptions::toJson);
+    options = Matcher.create(json.getJsonObject("options"), j -> new FindOptions((JsonObject) j), FindOptions::toJson);
   }
 
   @Override
@@ -57,6 +57,11 @@ public class FindWithOptions extends Find {
   }
 
   // fluent
+
+  @Override
+  public FindWithOptions priority(int priority) {
+    return (FindWithOptions) super.priority(priority);
+  }
 
   @Override
   public FindWithOptions inCollection(Matcher<String> collection) {

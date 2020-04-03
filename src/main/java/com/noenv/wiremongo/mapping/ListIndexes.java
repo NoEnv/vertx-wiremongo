@@ -28,6 +28,11 @@ public class ListIndexes extends WithCollection<JsonArray> {
   // fluent
 
   @Override
+  public ListIndexes priority(int priority) {
+    return (ListIndexes) super.priority(priority);
+  }
+
+  @Override
   public ListIndexes inCollection(String collection) {
     return (ListIndexes) super.inCollection(collection);
   }

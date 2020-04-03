@@ -59,6 +59,11 @@ public class RemoveDocumentWithOptions extends RemoveDocument {
   // fluent
 
   @Override
+  public RemoveDocumentWithOptions priority(int priority) {
+    return (RemoveDocumentWithOptions) super.priority(priority);
+  }
+
+  @Override
   public RemoveDocumentWithOptions inCollection(String collection) {
     return (RemoveDocumentWithOptions) super.inCollection(collection);
   }

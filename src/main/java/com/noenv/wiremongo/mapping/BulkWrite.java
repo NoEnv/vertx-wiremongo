@@ -45,7 +45,7 @@ public class BulkWrite extends WithCollection<MongoClientBulkWriteResult> {
   public BulkWrite(JsonObject json) {
     super(json);
     operations = Matcher.create(json.getJsonObject("operations"),
-      j -> ((JsonArray)j).stream().map(v -> new BulkOperation((JsonObject)v)).collect(Collectors.toList()),
+      j -> ((JsonArray) j).stream().map(v -> new BulkOperation((JsonObject) v)).collect(Collectors.toList()),
       l -> new JsonArray(l.stream().map(BulkOperation::toJson).collect(Collectors.toList())));
   }
 
@@ -76,6 +76,11 @@ public class BulkWrite extends WithCollection<MongoClientBulkWriteResult> {
   }
 
   // fluent
+
+  @Override
+  public BulkWrite priority(int priority) {
+    return (BulkWrite) super.priority(priority);
+  }
 
   @Override
   public BulkWrite inCollection(String collection) {

@@ -32,10 +32,15 @@ public class ReplaceDocuments extends WithReplace<MongoClientUpdateResult> {
 
   @Override
   protected MongoClientUpdateResult parseResponse(Object jsonValue) {
-    return new MongoClientUpdateResult((JsonObject)jsonValue);
+    return new MongoClientUpdateResult((JsonObject) jsonValue);
   }
 
   // fluent
+
+  @Override
+  public ReplaceDocuments priority(int priority) {
+    return (ReplaceDocuments) super.priority(priority);
+  }
 
   @Override
   public ReplaceDocuments inCollection(String collection) {

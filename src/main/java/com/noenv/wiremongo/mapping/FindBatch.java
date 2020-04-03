@@ -10,6 +10,7 @@ public class FindBatch extends WithStreamQuery {
     public FindBatchCommand(String collection, JsonObject query) {
       this("findBatch", collection, query);
     }
+
     public FindBatchCommand(String method, String collection, JsonObject query) {
       super(method, collection, query);
     }
@@ -28,6 +29,11 @@ public class FindBatch extends WithStreamQuery {
   }
 
   // fluent
+
+  @Override
+  public FindBatch priority(int priority) {
+    return (FindBatch) super.priority(priority);
+  }
 
   @Override
   public FindBatch inCollection(String collection) {

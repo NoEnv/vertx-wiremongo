@@ -32,10 +32,15 @@ public class UpdateCollection extends WithUpdate<MongoClientUpdateResult> {
 
   @Override
   protected MongoClientUpdateResult parseResponse(Object jsonValue) {
-    return new MongoClientUpdateResult((JsonObject)jsonValue);
+    return new MongoClientUpdateResult((JsonObject) jsonValue);
   }
 
   // fluent
+
+  @Override
+  public UpdateCollection priority(int priority) {
+    return (UpdateCollection) super.priority(priority);
+  }
 
   @Override
   public UpdateCollection inCollection(String collection) {

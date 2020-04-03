@@ -76,6 +76,11 @@ public class FindOneAndReplaceWithOptions extends FindOneAndReplace {
   // fluent
 
   @Override
+  public FindOneAndReplaceWithOptions priority(int priority) {
+    return (FindOneAndReplaceWithOptions) super.priority(priority);
+  }
+
+  @Override
   public FindOneAndReplaceWithOptions inCollection(String collection) {
     return (FindOneAndReplaceWithOptions) super.inCollection(collection);
   }

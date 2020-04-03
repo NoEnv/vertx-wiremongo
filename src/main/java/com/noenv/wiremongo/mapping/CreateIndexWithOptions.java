@@ -31,7 +31,7 @@ public class CreateIndexWithOptions extends CreateIndex {
 
   public CreateIndexWithOptions(JsonObject json) {
     super(json);
-    options = Matcher.create(json.getJsonObject("options"), j -> new IndexOptions((JsonObject)j), IndexOptions::toJson);
+    options = Matcher.create(json.getJsonObject("options"), j -> new IndexOptions((JsonObject) j), IndexOptions::toJson);
   }
 
   @Override
@@ -56,6 +56,11 @@ public class CreateIndexWithOptions extends CreateIndex {
   }
 
   // fluent
+
+  @Override
+  public CreateIndexWithOptions priority(int priority) {
+    return (CreateIndexWithOptions) super.priority(priority);
+  }
 
   @Override
   public CreateIndexWithOptions inCollection(String collection) {

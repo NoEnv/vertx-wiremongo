@@ -36,7 +36,7 @@ public class FindOneAndDeleteWithOptions extends FindOneAndDelete {
 
   public FindOneAndDeleteWithOptions(JsonObject json) {
     super(json);
-    this.options = Matcher.create(json.getJsonObject("options"), j -> new FindOptions((JsonObject)j), FindOptions::toJson);
+    this.options = Matcher.create(json.getJsonObject("options"), j -> new FindOptions((JsonObject) j), FindOptions::toJson);
   }
 
   @Override
@@ -61,6 +61,11 @@ public class FindOneAndDeleteWithOptions extends FindOneAndDelete {
   }
 
   // fluent
+
+  @Override
+  public FindOneAndDeleteWithOptions priority(int priority) {
+    return (FindOneAndDeleteWithOptions) super.priority(priority);
+  }
 
   @Override
   public FindOneAndDeleteWithOptions inCollection(String collection) {

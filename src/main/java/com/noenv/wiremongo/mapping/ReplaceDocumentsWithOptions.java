@@ -32,7 +32,7 @@ public class ReplaceDocumentsWithOptions extends ReplaceDocuments {
 
   public ReplaceDocumentsWithOptions(JsonObject json) {
     super(json);
-    options = Matcher.create(json.getJsonObject("options"), j -> new UpdateOptions((JsonObject)j), UpdateOptions::toJson);
+    options = Matcher.create(json.getJsonObject("options"), j -> new UpdateOptions((JsonObject) j), UpdateOptions::toJson);
   }
 
   @Override
@@ -57,6 +57,11 @@ public class ReplaceDocumentsWithOptions extends ReplaceDocuments {
   }
 
   // fluent
+
+  @Override
+  public ReplaceDocumentsWithOptions priority(int priority) {
+    return (ReplaceDocumentsWithOptions) super.priority(priority);
+  }
 
   @Override
   public ReplaceDocumentsWithOptions inCollection(String collection) {

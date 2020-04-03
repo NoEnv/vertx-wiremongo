@@ -33,7 +33,7 @@ public class UpdateCollectionWithOptions extends UpdateCollection {
 
   public UpdateCollectionWithOptions(JsonObject json) {
     super(json);
-    options = Matcher.create(json.getJsonObject("options"), j -> new UpdateOptions((JsonObject)j), UpdateOptions::toJson);
+    options = Matcher.create(json.getJsonObject("options"), j -> new UpdateOptions((JsonObject) j), UpdateOptions::toJson);
   }
 
   @Override
@@ -63,6 +63,11 @@ public class UpdateCollectionWithOptions extends UpdateCollection {
   }
 
   // fluent
+
+  @Override
+  public UpdateCollectionWithOptions priority(int priority) {
+    return (UpdateCollectionWithOptions) super.priority(priority);
+  }
 
   @Override
   public UpdateCollectionWithOptions inCollection(String collection) {

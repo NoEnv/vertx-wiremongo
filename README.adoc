@@ -141,6 +141,28 @@ wiremongo.insert()
 
 The above example matches all commands that try to insert *bananas* into *fruits*. Note that the json matcher supports a flag `ignoreExtraElements` that allows these insert documents to be matched even if they contain additional fields (e.g. mass & expiration).
 
+=== Priority
+
+If several mocks are set up for the same command and matching criteria, WireMongo will use the mock with the highest priority. The default behaviour is to give mocks an increasing priority as they are added so the most recently added always has the highest priority:
+
+[source,java]
+----
+wiremongo.count().inCollection("fruits").returns(21L);
+wiremongo.count().inCollection("fruits").returns(42L);
+
+// a call to mongo.count("fruits") will return 42
+----
+
+However, priorities can be user-defined:
+
+[source,java]
+----
+wiremongo.count().inCollection("fruits").priority(13).returns(21L);
+wiremongo.count().inCollection("fruits").priority(11).returns(42L);
+
+// a call to mongo.count("fruits") will return 21
+----
+
 == Stubs
 
 Stubs are the *response* part of the mock, i.e. they define how the mock *responds* to commands that match. The most low-level stubs are *custom stubs*:

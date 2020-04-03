@@ -37,6 +37,11 @@ public class FindOneAndReplace extends WithReplace<JsonObject> {
   // fluent
 
   @Override
+  public FindOneAndReplace priority(int priority) {
+    return (FindOneAndReplace) super.priority(priority);
+  }
+
+  @Override
   public FindOneAndReplace inCollection(String collection) {
     return (FindOneAndReplace) super.inCollection(collection);
   }

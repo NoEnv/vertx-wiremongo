@@ -11,6 +11,7 @@ public class Aggregate extends WithStreamPipeline {
     public AggregateCommand(String collection, JsonArray pipeline) {
       this("aggregate", collection, pipeline);
     }
+
     public AggregateCommand(String method, String collection, JsonArray pipeline) {
       super(method, collection, pipeline);
     }
@@ -29,6 +30,12 @@ public class Aggregate extends WithStreamPipeline {
   }
 
   // fluent
+
+
+  @Override
+  public Aggregate priority(int priority) {
+    return (Aggregate) super.priority(priority);
+  }
 
   @Override
   public Aggregate inCollection(String collection) {

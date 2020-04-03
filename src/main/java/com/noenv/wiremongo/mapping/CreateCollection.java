@@ -27,6 +27,11 @@ public class CreateCollection extends WithCollection<Void> {
   // fluent
 
   @Override
+  public CreateCollection priority(int priority) {
+    return (CreateCollection) super.priority(priority);
+  }
+
+  @Override
   public CreateCollection inCollection(String collection) {
     return (CreateCollection) super.inCollection(collection);
   }

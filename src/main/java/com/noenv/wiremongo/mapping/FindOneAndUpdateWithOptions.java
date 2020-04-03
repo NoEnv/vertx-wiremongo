@@ -38,8 +38,8 @@ public class FindOneAndUpdateWithOptions extends FindOneAndUpdate {
 
   public FindOneAndUpdateWithOptions(JsonObject json) {
     super(json);
-    findOptions = Matcher.create(json.getJsonObject("findOptions"), j -> new FindOptions((JsonObject)j), FindOptions::toJson);
-    updateOptions = Matcher.create(json.getJsonObject("updateOptions"), j -> new UpdateOptions((JsonObject)j), UpdateOptions::toJson);
+    findOptions = Matcher.create(json.getJsonObject("findOptions"), j -> new FindOptions((JsonObject) j), FindOptions::toJson);
+    updateOptions = Matcher.create(json.getJsonObject("updateOptions"), j -> new UpdateOptions((JsonObject) j), UpdateOptions::toJson);
   }
 
   @Override
@@ -79,6 +79,11 @@ public class FindOneAndUpdateWithOptions extends FindOneAndUpdate {
   }
 
   // fluent
+
+  @Override
+  public FindOneAndUpdateWithOptions priority(int priority) {
+    return (FindOneAndUpdateWithOptions) super.priority(priority);
+  }
 
   @Override
   public FindOneAndUpdateWithOptions inCollection(String collection) {

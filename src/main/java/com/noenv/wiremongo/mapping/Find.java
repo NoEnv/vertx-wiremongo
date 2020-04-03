@@ -13,6 +13,7 @@ public class Find extends WithQuery<List<JsonObject>> {
     public FindCommand(String collection, JsonObject query) {
       this("find", collection, query);
     }
+
     public FindCommand(String method, String collection, JsonObject query) {
       super(method, collection, query);
     }
@@ -32,12 +33,17 @@ public class Find extends WithQuery<List<JsonObject>> {
 
   @Override
   protected List<JsonObject> parseResponse(Object jsonValue) {
-    return ((JsonArray)jsonValue).stream()
-      .map(o -> (JsonObject)o)
+    return ((JsonArray) jsonValue).stream()
+      .map(o -> (JsonObject) o)
       .collect(Collectors.toList());
   }
 
   // fluent
+
+  @Override
+  public Find priority(int priority) {
+    return (Find) super.priority(priority);
+  }
 
   @Override
   public Find inCollection(String collection) {

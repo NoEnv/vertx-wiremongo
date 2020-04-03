@@ -30,6 +30,11 @@ public class Insert extends WithDocument {
   // fluent
 
   @Override
+  public Insert priority(int priority) {
+    return (Insert) super.priority(priority);
+  }
+
+  @Override
   public Insert inCollection(String collection) {
     return (Insert) super.inCollection(collection);
   }

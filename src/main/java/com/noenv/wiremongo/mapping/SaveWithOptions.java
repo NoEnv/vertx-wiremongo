@@ -54,6 +54,11 @@ public class SaveWithOptions extends Save {
   // fluent
 
   @Override
+  public SaveWithOptions priority(int priority) {
+    return (SaveWithOptions) super.priority(priority);
+  }
+
+  @Override
   public SaveWithOptions inCollection(String collection) {
     return (SaveWithOptions) super.inCollection(collection);
   }

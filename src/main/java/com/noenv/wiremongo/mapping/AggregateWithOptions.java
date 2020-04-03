@@ -60,6 +60,11 @@ public class AggregateWithOptions extends Aggregate {
   // fluent
 
   @Override
+  public AggregateWithOptions priority(int priority) {
+    return (AggregateWithOptions) super.priority(priority);
+  }
+
+  @Override
   public AggregateWithOptions inCollection(String collection) {
     return (AggregateWithOptions) super.inCollection(collection);
   }

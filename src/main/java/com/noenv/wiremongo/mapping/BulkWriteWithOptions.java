@@ -34,7 +34,7 @@ public class BulkWriteWithOptions extends BulkWrite {
 
   public BulkWriteWithOptions(JsonObject json) {
     super(json);
-    options = Matcher.create(json.getJsonObject("options"), j -> new BulkWriteOptions((JsonObject)j), BulkWriteOptions::toJson);
+    options = Matcher.create(json.getJsonObject("options"), j -> new BulkWriteOptions((JsonObject) j), BulkWriteOptions::toJson);
   }
 
   @Override
@@ -59,6 +59,11 @@ public class BulkWriteWithOptions extends BulkWrite {
   }
 
   // fluent
+
+  @Override
+  public BulkWriteWithOptions priority(int priority) {
+    return (BulkWriteWithOptions) super.priority(priority);
+  }
 
   @Override
   public BulkWriteWithOptions inCollection(String collection) {

@@ -61,4 +61,11 @@ public class RunCommand extends MappingBase<JsonObject> {
     this.command = command;
     return this;
   }
+
+  // fluent
+
+  @Override
+  public RunCommand priority(int priority) {
+    return (RunCommand) super.priority(priority);
+  }
 }

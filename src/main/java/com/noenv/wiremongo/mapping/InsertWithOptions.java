@@ -59,6 +59,11 @@ public class InsertWithOptions extends Insert {
   // fluent
 
   @Override
+  public InsertWithOptions priority(int priority) {
+    return (InsertWithOptions) super.priority(priority);
+  }
+
+  @Override
   public InsertWithOptions inCollection(String collection) {
     return (InsertWithOptions) super.inCollection(collection);
   }

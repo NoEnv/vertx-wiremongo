@@ -27,6 +27,11 @@ public class DropCollection extends WithCollection<Void> {
   // fluent
 
   @Override
+  public DropCollection priority(int priority) {
+    return (DropCollection) super.priority(priority);
+  }
+
+  @Override
   public DropCollection inCollection(String collection) {
     return (DropCollection) super.inCollection(collection);
   }

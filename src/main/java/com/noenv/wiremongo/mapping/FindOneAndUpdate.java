@@ -37,6 +37,11 @@ public class FindOneAndUpdate extends WithUpdate<JsonObject> {
   // fluent
 
   @Override
+  public FindOneAndUpdate priority(int priority) {
+    return (FindOneAndUpdate) super.priority(priority);
+  }
+
+  @Override
   public FindOneAndUpdate inCollection(String collection) {
     return (FindOneAndUpdate) super.inCollection(collection);
   }

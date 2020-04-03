@@ -36,6 +36,11 @@ public class RemoveDocument extends WithQuery<MongoClientDeleteResult> {
   // fluent
 
   @Override
+  public RemoveDocument priority(int priority) {
+    return (RemoveDocument) super.priority(priority);
+  }
+
+  @Override
   public RemoveDocument inCollection(String collection) {
     return (RemoveDocument) super.inCollection(collection);
   }

@@ -62,6 +62,11 @@ public class DropIndex extends WithCollection<Void> {
   // fluent
 
   @Override
+  public DropIndex priority(int priority) {
+    return (DropIndex) super.priority(priority);
+  }
+
+  @Override
   public DropIndex inCollection(String collection) {
     return (DropIndex) super.inCollection(collection);
   }

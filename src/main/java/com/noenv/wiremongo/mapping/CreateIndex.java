@@ -70,6 +70,11 @@ public class CreateIndex extends WithCollection<Void> {
   // fluent
 
   @Override
+  public CreateIndex priority(int priority) {
+    return (CreateIndex) super.priority(priority);
+  }
+
+  @Override
   public CreateIndex inCollection(String collection) {
     return (CreateIndex) super.inCollection(collection);
   }

@@ -10,6 +10,7 @@ public abstract class MappingBase<T> extends CommandBase implements Mapping<T> {
 
   private static final Stub DUMMY_STUB = () -> null;
   private LinkedList<Stub<T>> stubs = new LinkedList<>();
+  private int priority;
 
   public MappingBase(String method) {
     super(method);
@@ -18,7 +19,19 @@ public abstract class MappingBase<T> extends CommandBase implements Mapping<T> {
 
   public MappingBase(JsonObject json) {
     super(json.getString("method"));
+    priority = json.getInteger("priority", 0);
     parseStub(json);
+  }
+
+  @Override
+  public int priority() {
+    return priority;
+  }
+
+  @Override
+  public Mapping<T> priority(int priority) {
+    this.priority = priority;
+    return this;
   }
 
   @Override

@@ -2,7 +2,6 @@ package com.noenv.wiremongo;
 
 import com.noenv.wiremongo.mapping.Command;
 import com.noenv.wiremongo.mapping.Mapping;
-import com.noenv.wiremongo.mapping.RemoveDocument;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
@@ -14,6 +13,7 @@ import io.vertx.core.streams.ReadStream;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class WireMongo implements WireMongoCommands {
@@ -23,6 +23,7 @@ public class WireMongo implements WireMongoCommands {
   private Vertx vertx;
   private final List<Mapping<?>> mappings = Collections.synchronizedList(new ArrayList<>());
   private final WireMongoClient client;
+  private int priorityCounter = 1;
 
   public WireMongo() {
     this(null);
@@ -66,6 +67,9 @@ public class WireMongo implements WireMongoCommands {
 
   @Override
   public <T extends Mapping<?>> T addMapping(T mapping) {
+    if (mapping.priority() == 0) {
+      mapping.priority(priorityCounter++);
+    }
     mappings.add(mapping);
     return mapping;
   }
@@ -105,12 +109,11 @@ public class WireMongo implements WireMongoCommands {
       //noinspection unchecked
       return (Mapping<T>) mappings.stream()
         .filter(m -> m.matches(request))
-        .findFirst()
+        .max(Comparator.comparingInt(Mapping::priority))
         .orElseGet(() -> {
           logger.info("no mapping found ({})", request);
           return null;
-        })
-        ;
+        });
     }
   }
 

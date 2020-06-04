@@ -7,9 +7,9 @@ import io.vertx.ext.mongo.WriteOption;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class SaveWithOptions extends Save {
+public class SaveWithOptions extends SaveBase<SaveWithOptions> {
 
-  public static class SaveWithOptionsCommand extends Save.SaveCommand {
+  public static class SaveWithOptionsCommand extends SaveBaseCommand {
 
     private WriteOption options;
 
@@ -50,32 +50,4 @@ public class SaveWithOptions extends Save {
     this.options = options;
     return this;
   }
-
-  // fluent
-
-  @Override
-  public SaveWithOptions priority(int priority) {
-    return (SaveWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public SaveWithOptions inCollection(String collection) {
-    return (SaveWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public SaveWithOptions inCollection(Matcher<String> collection) {
-    return (SaveWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public SaveWithOptions withDocument(JsonObject document) {
-    return (SaveWithOptions) super.withDocument(document);
-  }
-
-  @Override
-  public SaveWithOptions withDocument(Matcher<JsonObject> document) {
-    return (SaveWithOptions) super.withDocument(document);
-  }
-
 }

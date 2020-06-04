@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public abstract class WithDocument extends WithCollection<String> {
+public abstract class WithDocument<C extends WithDocument<C>> extends WithCollection<String, C> {
 
   public abstract static class WithDocumentCommand extends WithCollectionCommand {
 
@@ -34,17 +34,17 @@ public abstract class WithDocument extends WithCollection<String> {
     document = Matcher.create(json.getJsonObject("document"));
   }
 
-  public WithDocument withDocument(JsonObject document) {
+  public C withDocument(JsonObject document) {
     return withDocument(equalTo(document));
   }
 
-  public WithDocument withDocument(Matcher<JsonObject> document) {
+  public C withDocument(Matcher<JsonObject> document) {
     this.document = document;
-    return this;
+    return self();
   }
 
-  public WithDocument returnsObjectId() {
-    return (WithDocument) returns(ObjectId.get().toHexString());
+  public C returnsObjectId() {
+    return returns(ObjectId.get().toHexString());
   }
 
   @Override

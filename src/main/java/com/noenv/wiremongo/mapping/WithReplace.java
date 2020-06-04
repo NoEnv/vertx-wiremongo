@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-abstract class WithReplace<T> extends WithQuery<T> {
+abstract class WithReplace<T, C extends WithReplace<T, C>> extends WithQuery<T, C> {
 
   public abstract static class WithReplaceCommand extends WithQueryCommand {
 
@@ -45,12 +45,12 @@ abstract class WithReplace<T> extends WithQuery<T> {
     return replace == null || replace.matches(c.replace);
   }
 
-  public WithReplace<T> withReplace(JsonObject replace) {
+  public C withReplace(JsonObject replace) {
     return withReplace(equalTo(replace));
   }
 
-  public WithReplace<T> withReplace(Matcher<JsonObject> replace) {
+  public C withReplace(Matcher<JsonObject> replace) {
     this.replace = replace;
-    return this;
+    return self();
   }
 }

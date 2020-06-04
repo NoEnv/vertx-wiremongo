@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class FindOne extends WithQuery<JsonObject> {
+public class FindOne extends WithQuery<JsonObject, FindOne> {
 
   public static class FindOneCommand extends WithQueryCommand {
 
@@ -57,32 +57,5 @@ public class FindOne extends WithQuery<JsonObject> {
   public FindOne withFields(Matcher<JsonObject> fields) {
     this.fields = fields;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public FindOne priority(int priority) {
-    return (FindOne) super.priority(priority);
-  }
-
-  @Override
-  public FindOne inCollection(String collection) {
-    return (FindOne) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOne inCollection(Matcher<String> collection) {
-    return (FindOne) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOne withQuery(JsonObject query) {
-    return (FindOne) super.withQuery(query);
-  }
-
-  @Override
-  public FindOne withQuery(Matcher<JsonObject> query) {
-    return (FindOne) super.withQuery(query);
   }
 }

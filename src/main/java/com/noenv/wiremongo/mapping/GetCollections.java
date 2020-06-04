@@ -6,7 +6,7 @@ import io.vertx.core.json.JsonObject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GetCollections extends MappingBase<List<String>> {
+public class GetCollections extends MappingBase<List<String>, GetCollections> {
 
   public static class GetCollectionsCommand extends CommandBase {
     public GetCollectionsCommand() {

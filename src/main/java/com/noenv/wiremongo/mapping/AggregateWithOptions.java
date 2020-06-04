@@ -8,9 +8,9 @@ import io.vertx.ext.mongo.AggregateOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class AggregateWithOptions extends Aggregate {
+public class AggregateWithOptions extends AggregateBase<AggregateWithOptions> {
 
-  public static class AggregateWithOptionsCommand extends AggregateCommand {
+  public static class AggregateWithOptionsCommand extends AggregateBaseCommand {
 
     private final AggregateOptions options;
 
@@ -55,32 +55,5 @@ public class AggregateWithOptions extends Aggregate {
   public AggregateWithOptions withOptions(Matcher<AggregateOptions> options) {
     this.options = options;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public AggregateWithOptions priority(int priority) {
-    return (AggregateWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public AggregateWithOptions inCollection(String collection) {
-    return (AggregateWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public AggregateWithOptions inCollection(Matcher<String> collection) {
-    return (AggregateWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public AggregateWithOptions withPipeline(JsonArray query) {
-    return (AggregateWithOptions) super.withPipeline(query);
-  }
-
-  @Override
-  public AggregateWithOptions withPipeline(Matcher<JsonArray> query) {
-    return (AggregateWithOptions) super.withPipeline(query);
   }
 }

@@ -7,9 +7,9 @@ import io.vertx.ext.mongo.WriteOption;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class InsertWithOptions extends Insert {
+public class InsertWithOptions extends InsertBase<InsertWithOptions> {
 
-  public static class InsertWithOptionsCommand extends InsertCommand {
+  public static class InsertWithOptionsCommand extends InsertBaseCommand {
 
     private WriteOption options;
 
@@ -54,32 +54,5 @@ public class InsertWithOptions extends Insert {
   public InsertWithOptions withOptions(Matcher<WriteOption> options) {
     this.options = options;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public InsertWithOptions priority(int priority) {
-    return (InsertWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public InsertWithOptions inCollection(String collection) {
-    return (InsertWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public InsertWithOptions inCollection(Matcher<String> collection) {
-    return (InsertWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public InsertWithOptions withDocument(JsonObject document) {
-    return (InsertWithOptions) super.withDocument(document);
-  }
-
-  @Override
-  public InsertWithOptions withDocument(Matcher<JsonObject> document) {
-    return (InsertWithOptions) super.withDocument(document);
   }
 }

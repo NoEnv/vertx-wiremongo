@@ -22,8 +22,8 @@ public class PriorityTest {
 
   @Test
   public void testDefaultPriority(TestContext ctx) {
-    Mapping<?> a = wiremongo.count().returns(42L);
-    Mapping<?> b = wiremongo.count().returns(21L);
+    Mapping<?, ?> a = wiremongo.count().returns(42L);
+    Mapping<?, ?> b = wiremongo.count().returns(21L);
 
     ctx.assertTrue(b.priority() > a.priority()); // more recently added should have higher priority
 

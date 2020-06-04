@@ -31,11 +31,11 @@ public class WireMongo implements WireMongoCommands {
   }
 
   public Completable readFileMappings() {
-    return new AsyncResultCompletable(f -> delegate.readFileMappings().setHandler(f));
+    return new AsyncResultCompletable(f -> delegate.readFileMappings().onComplete(f));
   }
 
   public Completable readFileMappings(String path) {
-    return new AsyncResultCompletable(f -> delegate.readFileMappings(path).setHandler(f));
+    return new AsyncResultCompletable(f -> delegate.readFileMappings(path).onComplete(f));
   }
 
   public WireMongo clear() {
@@ -44,12 +44,12 @@ public class WireMongo implements WireMongoCommands {
   }
 
   @Override
-  public <T extends Mapping<?>> T addMapping(T mapping) {
+  public <T extends Mapping<?, ?>> T addMapping(T mapping) {
     return delegate.addMapping(mapping);
   }
 
   @Override
-  public <T extends Mapping<?>> boolean removeMapping(T mapping) {
+  public <T extends Mapping<?, ?>> boolean removeMapping(T mapping) {
     return delegate.removeMapping(mapping);
   }
 }

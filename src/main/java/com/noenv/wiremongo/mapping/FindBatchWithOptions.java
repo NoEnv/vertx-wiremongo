@@ -9,9 +9,9 @@ import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindBatchWithOptions extends FindBatch {
+public class FindBatchWithOptions extends FindBatchBase<FindBatchWithOptions> {
 
-  public static class FindBatchWithOptionsCommand extends FindBatchCommand {
+  public static class FindBatchWithOptionsCommand extends FindBatchBaseCommand {
     private final FindOptions options;
 
     public FindBatchWithOptionsCommand(String collection, JsonObject query, FindOptions options) {
@@ -55,32 +55,5 @@ public class FindBatchWithOptions extends FindBatch {
   public FindBatchWithOptions withOptions(Matcher<FindOptions> options) {
     this.options = options;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public FindBatchWithOptions priority(int priority) {
-    return (FindBatchWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public FindBatchWithOptions inCollection(String collection) {
-    return (FindBatchWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindBatchWithOptions inCollection(Matcher<String> collection) {
-    return (FindBatchWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindBatchWithOptions withQuery(JsonObject query) {
-    return (FindBatchWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public FindBatchWithOptions withQuery(Matcher<JsonObject> query) {
-    return (FindBatchWithOptions) super.withQuery(query);
   }
 }

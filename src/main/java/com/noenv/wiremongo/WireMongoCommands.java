@@ -164,7 +164,7 @@ public interface WireMongoCommands {
     return addMapping(new DistinctBatchWithQuery());
   }
 
-  <T extends Mapping<?>> T addMapping(T mapping);
+  <T extends Mapping<?, ?>> T addMapping(T mapping);
 
-  <T extends Mapping<?>> boolean removeMapping(T mapping);
+  <T extends Mapping<?, ?>> boolean removeMapping(T mapping);
 }

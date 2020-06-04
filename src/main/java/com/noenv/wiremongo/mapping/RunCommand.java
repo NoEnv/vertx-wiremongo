@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class RunCommand extends MappingBase<JsonObject> {
+public class RunCommand extends MappingBase<JsonObject, RunCommand> {
 
   public static class RunCommandCommand extends CommandBase {
 
@@ -60,12 +60,5 @@ public class RunCommand extends MappingBase<JsonObject> {
     this.commandName = commandName;
     this.command = command;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public RunCommand priority(int priority) {
-    return (RunCommand) super.priority(priority);
   }
 }

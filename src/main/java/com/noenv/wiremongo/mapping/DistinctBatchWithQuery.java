@@ -6,9 +6,9 @@ import io.vertx.core.json.JsonObject;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class DistinctBatchWithQuery extends DistinctBatch {
+public class DistinctBatchWithQuery extends DistinctBatchBase<DistinctBatchWithQuery> {
 
-  public static class DistinctBatchWithQueryCommand extends DistinctBatchCommand {
+  public static class DistinctBatchWithQueryCommand extends DistinctBatchBaseCommand {
 
     private final JsonObject query;
     private final int batchSize;
@@ -66,42 +66,5 @@ public class DistinctBatchWithQuery extends DistinctBatch {
   public DistinctBatchWithQuery withQuery(Matcher<JsonObject> query) {
     this.query = query;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public DistinctBatchWithQuery priority(int priority) {
-    return (DistinctBatchWithQuery) super.priority(priority);
-  }
-
-  @Override
-  public DistinctBatchWithQuery withFieldName(String fieldName) {
-    return (DistinctBatchWithQuery) super.withFieldName(fieldName);
-  }
-
-  @Override
-  public DistinctBatchWithQuery withFieldName(Matcher<String> fieldName) {
-    return (DistinctBatchWithQuery) super.withFieldName(fieldName);
-  }
-
-  @Override
-  public DistinctBatchWithQuery withResultClassname(String resultClassname) {
-    return (DistinctBatchWithQuery) super.withResultClassname(resultClassname);
-  }
-
-  @Override
-  public DistinctBatchWithQuery withResultClassname(Matcher<String> resultClassname) {
-    return (DistinctBatchWithQuery) super.withResultClassname(resultClassname);
-  }
-
-  @Override
-  public DistinctBatchWithQuery inCollection(String collection) {
-    return (DistinctBatchWithQuery) super.inCollection(collection);
-  }
-
-  @Override
-  public DistinctBatchWithQuery inCollection(Matcher<String> collection) {
-    return (DistinctBatchWithQuery) super.inCollection(collection);
   }
 }

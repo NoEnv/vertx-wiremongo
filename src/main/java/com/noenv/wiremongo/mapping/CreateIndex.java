@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class CreateIndex extends WithCollection<Void> {
+public class CreateIndex extends WithCollection<Void, CreateIndex> {
 
   public static class CreateIndexCommand extends WithCollectionCommand {
 
@@ -65,22 +65,5 @@ public class CreateIndex extends WithCollection<Void> {
   public CreateIndex withKey(Matcher<JsonObject> key) {
     this.key = key;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public CreateIndex priority(int priority) {
-    return (CreateIndex) super.priority(priority);
-  }
-
-  @Override
-  public CreateIndex inCollection(String collection) {
-    return (CreateIndex) super.inCollection(collection);
-  }
-
-  @Override
-  public CreateIndex inCollection(Matcher<String> collection) {
-    return (CreateIndex) super.inCollection(collection);
   }
 }

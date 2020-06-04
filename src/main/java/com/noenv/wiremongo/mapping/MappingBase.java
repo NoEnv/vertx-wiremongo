@@ -6,7 +6,7 @@ import io.vertx.core.json.JsonObject;
 import java.util.LinkedList;
 import java.util.Objects;
 
-public abstract class MappingBase<T> extends CommandBase implements Mapping<T> {
+public abstract class MappingBase<T, C extends MappingBase<T, C>> extends CommandBase implements Mapping<T, C> {
 
   private static final Stub DUMMY_STUB = () -> null;
   private LinkedList<Stub<T>> stubs = new LinkedList<>();
@@ -29,9 +29,9 @@ public abstract class MappingBase<T> extends CommandBase implements Mapping<T> {
   }
 
   @Override
-  public Mapping<T> priority(int priority) {
+  public C priority(int priority) {
     this.priority = priority;
-    return this;
+    return self();
   }
 
   @Override
@@ -43,12 +43,12 @@ public abstract class MappingBase<T> extends CommandBase implements Mapping<T> {
   }
 
   @Override
-  public MappingBase<T> stub(Stub<T> stub) {
+  public C stub(Stub<T> stub) {
     if (stubs.contains(DUMMY_STUB)) {
       stubs.remove(DUMMY_STUB);
     }
     stubs.add(stub);
-    return this;
+    return self();
   }
 
   @Override
@@ -67,4 +67,9 @@ public abstract class MappingBase<T> extends CommandBase implements Mapping<T> {
   }
 
   protected abstract T parseResponse(Object jsonValue);
+
+  @SuppressWarnings("unchecked")
+  protected C self() {
+    return (C) this;
+  }
 }

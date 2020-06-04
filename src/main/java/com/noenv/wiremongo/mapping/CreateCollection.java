@@ -1,9 +1,8 @@
 package com.noenv.wiremongo.mapping;
 
-import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
-public class CreateCollection extends WithCollection<Void> {
+public class CreateCollection extends WithCollection<Void, CreateCollection> {
 
   public static class CreateCollectionCommand extends WithCollectionCommand {
     public CreateCollectionCommand(String collection) {
@@ -22,22 +21,5 @@ public class CreateCollection extends WithCollection<Void> {
   @Override
   protected Void parseResponse(Object jsonValue) {
     return null;
-  }
-
-  // fluent
-
-  @Override
-  public CreateCollection priority(int priority) {
-    return (CreateCollection) super.priority(priority);
-  }
-
-  @Override
-  public CreateCollection inCollection(String collection) {
-    return (CreateCollection) super.inCollection(collection);
-  }
-
-  @Override
-  public CreateCollection inCollection(Matcher<String> collection) {
-    return (CreateCollection) super.inCollection(collection);
   }
 }

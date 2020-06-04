@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-abstract class WithUpdate<T> extends WithQuery<T> {
+abstract class WithUpdate<T, C extends WithUpdate<T, C>> extends WithQuery<T, C> {
 
   public abstract static class WithUpdateCommand extends WithQueryCommand {
 
@@ -45,12 +45,12 @@ abstract class WithUpdate<T> extends WithQuery<T> {
     return update == null || update.matches(c.update);
   }
 
-  public WithUpdate<T> withUpdate(JsonObject update) {
+  public C withUpdate(JsonObject update) {
     return withUpdate(equalTo(update));
   }
 
-  public WithUpdate<T> withUpdate(Matcher<JsonObject> update) {
+  public C withUpdate(Matcher<JsonObject> update) {
     this.update = update;
-    return this;
+    return self();
   }
 }

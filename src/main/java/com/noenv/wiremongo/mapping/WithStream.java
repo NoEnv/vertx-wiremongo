@@ -7,7 +7,7 @@ import io.vertx.core.streams.ReadStream;
 
 import java.util.stream.Collectors;
 
-abstract class WithStream extends WithCollection<ReadStream<JsonObject>> {
+abstract class WithStream<C extends WithStream<C>> extends WithCollection<ReadStream<JsonObject>, C> {
 
   public abstract static class WithStreamCommand extends WithCollectionCommand {
     public WithStreamCommand(String method, String collection) {
@@ -25,8 +25,8 @@ abstract class WithStream extends WithCollection<ReadStream<JsonObject>> {
 
   @Override
   protected ReadStream<JsonObject> parseResponse(Object jsonValue) {
-    return MemoryStream.fromList(((JsonArray)jsonValue).stream()
-      .map(o -> (JsonObject)o)
+    return MemoryStream.fromList(((JsonArray) jsonValue).stream()
+      .map(o -> (JsonObject) o)
       .collect(Collectors.toList()));
   }
 }

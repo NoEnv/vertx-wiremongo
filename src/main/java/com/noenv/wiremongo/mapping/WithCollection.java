@@ -6,7 +6,7 @@ import io.vertx.core.json.JsonObject;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 
-public abstract class WithCollection<T> extends MappingBase<T> {
+public abstract class WithCollection<T, C extends WithCollection<T, C>> extends MappingBase<T, C> {
 
   public abstract static class WithCollectionCommand extends CommandBase {
 
@@ -34,13 +34,13 @@ public abstract class WithCollection<T> extends MappingBase<T> {
     collection = Matcher.create(json.getJsonObject("collection"));
   }
 
-  public WithCollection<T> inCollection(String collection) {
+  public C inCollection(String collection) {
     return inCollection(equalTo(collection));
   }
 
-  public WithCollection<T> inCollection(Matcher<String> collection) {
+  public C inCollection(Matcher<String> collection) {
     this.collection = collection;
-    return this;
+    return self();
   }
 
   @Override

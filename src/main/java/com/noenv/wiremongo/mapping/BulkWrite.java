@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class BulkWrite extends WithCollection<MongoClientBulkWriteResult> {
+public class BulkWrite extends WithCollection<MongoClientBulkWriteResult, BulkWrite> {
 
   public static class BulkWriteCommand extends WithCollectionCommand {
     private final List<BulkOperation> operations;
@@ -73,22 +73,5 @@ public class BulkWrite extends WithCollection<MongoClientBulkWriteResult> {
   public BulkWrite withOperations(Matcher<List<BulkOperation>> operations) {
     this.operations = operations;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public BulkWrite priority(int priority) {
-    return (BulkWrite) super.priority(priority);
-  }
-
-  @Override
-  public BulkWrite inCollection(String collection) {
-    return (BulkWrite) super.inCollection(collection);
-  }
-
-  @Override
-  public BulkWrite inCollection(Matcher<String> collection) {
-    return (BulkWrite) super.inCollection(collection);
   }
 }

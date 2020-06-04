@@ -1,19 +1,9 @@
 package com.noenv.wiremongo.mapping;
 
-import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
-public class Insert extends WithDocument {
-
-  public static class InsertCommand extends WithDocumentCommand {
-    public InsertCommand(String collection, JsonObject document) {
-      super("insert", collection, document);
-    }
-
-    public InsertCommand(String method, String collection, JsonObject document) {
-      super(method, collection, document);
-    }
-  }
+@SuppressWarnings("squid:MaximumInheritanceDepth")
+public class Insert extends InsertBase<Insert> {
 
   public Insert() {
     super("insert");
@@ -26,32 +16,4 @@ public class Insert extends WithDocument {
   public Insert(JsonObject json) {
     super(json);
   }
-
-  // fluent
-
-  @Override
-  public Insert priority(int priority) {
-    return (Insert) super.priority(priority);
-  }
-
-  @Override
-  public Insert inCollection(String collection) {
-    return (Insert) super.inCollection(collection);
-  }
-
-  @Override
-  public Insert inCollection(Matcher<String> collection) {
-    return (Insert) super.inCollection(collection);
-  }
-
-  @Override
-  public Insert withDocument(JsonObject document) {
-    return (Insert) super.withDocument(document);
-  }
-
-  @Override
-  public Insert withDocument(Matcher<JsonObject> document) {
-    return (Insert) super.withDocument(document);
-  }
-
 }

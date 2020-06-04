@@ -7,39 +7,39 @@ import org.bson.BsonDocument;
 
 import java.net.ConnectException;
 
-public interface Mapping<T> extends Command {
+public interface Mapping<T, C extends Mapping<T, C>> extends Command {
 
   boolean matches(Command c);
 
   int priority();
 
-  Mapping<T> priority(int priority);
+  C priority(int priority);
 
   Stub<T> stub();
 
-  Mapping<T> stub(Stub<T> stub);
+  C stub(Stub<T> stub);
 
-  default Mapping<T> returns(T response) {
+  default C returns(T response) {
     return stub(() -> response);
   }
 
-  default Mapping<T> returnsError(Throwable error) {
+  default C returnsError(Throwable error) {
     return stub(() -> { throw error; });
   }
 
-  default Mapping<T> returnsDuplicateKeyError() {
+  default C returnsDuplicateKeyError() {
     return returnsError(new MongoWriteException(
       new WriteError(11000, "E11000 duplicate key error", new BsonDocument()), new ServerAddress()));
   }
 
-  default Mapping<T> returnsTimeoutException() {
+  default C returnsTimeoutException() {
     return returnsError(new MongoTimeoutException("Timed out after 30000 ms while waiting for a server that matches " +
       "ReadPreferenceServerSelector{readPreference=primary}. Client view of cluster state is {type=UNKNOWN, servers=[" +
       "{address=127.0.0.1:27017, type=UNKNOWN, state=CONNECTING, exception={com.mongodb.MongoSocketOpenException: Exc" +
       "eption opening socket}, caused by {java.net.ConnectException: Connection refused}}]"));
   }
 
-  default Mapping<T> returnsConnectionException() {
+  default C returnsConnectionException() {
     return returnsError(new MongoSocketOpenException("Exception opening socket",
       new ServerAddress(), new ConnectException("Connection refused")));
   }

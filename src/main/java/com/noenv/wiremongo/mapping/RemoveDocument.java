@@ -1,10 +1,9 @@
 package com.noenv.wiremongo.mapping;
 
-import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientDeleteResult;
 
-public class RemoveDocument extends WithQuery<MongoClientDeleteResult> {
+public class RemoveDocument extends WithQuery<MongoClientDeleteResult, RemoveDocument> {
 
   public static class RemoveDocumentCommand extends WithQueryCommand {
     public RemoveDocumentCommand(String collection, JsonObject query) {
@@ -31,32 +30,5 @@ public class RemoveDocument extends WithQuery<MongoClientDeleteResult> {
   @Override
   protected MongoClientDeleteResult parseResponse(Object jsonValue) {
     return new MongoClientDeleteResult((JsonObject) jsonValue);
-  }
-
-  // fluent
-
-  @Override
-  public RemoveDocument priority(int priority) {
-    return (RemoveDocument) super.priority(priority);
-  }
-
-  @Override
-  public RemoveDocument inCollection(String collection) {
-    return (RemoveDocument) super.inCollection(collection);
-  }
-
-  @Override
-  public RemoveDocument inCollection(Matcher<String> collection) {
-    return (RemoveDocument) super.inCollection(collection);
-  }
-
-  @Override
-  public RemoveDocument withQuery(JsonObject query) {
-    return (RemoveDocument) super.withQuery(query);
-  }
-
-  @Override
-  public RemoveDocument withQuery(Matcher<JsonObject> query) {
-    return (RemoveDocument) super.withQuery(query);
   }
 }

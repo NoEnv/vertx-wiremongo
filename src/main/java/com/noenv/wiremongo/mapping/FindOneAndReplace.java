@@ -1,10 +1,9 @@
 package com.noenv.wiremongo.mapping;
 
-import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindOneAndReplace extends WithReplace<JsonObject> {
+public class FindOneAndReplace extends WithReplace<JsonObject, FindOneAndReplace> {
 
   public static class FindOneAndReplaceCommand extends WithReplaceCommand {
 
@@ -32,42 +31,5 @@ public class FindOneAndReplace extends WithReplace<JsonObject> {
   @Override
   protected JsonObject parseResponse(Object jsonValue) {
     return (JsonObject) jsonValue;
-  }
-
-  // fluent
-
-  @Override
-  public FindOneAndReplace priority(int priority) {
-    return (FindOneAndReplace) super.priority(priority);
-  }
-
-  @Override
-  public FindOneAndReplace inCollection(String collection) {
-    return (FindOneAndReplace) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOneAndReplace inCollection(Matcher<String> collection) {
-    return (FindOneAndReplace) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOneAndReplace withQuery(JsonObject query) {
-    return (FindOneAndReplace) super.withQuery(query);
-  }
-
-  @Override
-  public FindOneAndReplace withQuery(Matcher<JsonObject> query) {
-    return (FindOneAndReplace) super.withQuery(query);
-  }
-
-  @Override
-  public FindOneAndReplace withReplace(JsonObject replace) {
-    return (FindOneAndReplace) super.withReplace(replace);
-  }
-
-  @Override
-  public FindOneAndReplace withReplace(Matcher<JsonObject> replace) {
-    return (FindOneAndReplace) super.withReplace(replace);
   }
 }

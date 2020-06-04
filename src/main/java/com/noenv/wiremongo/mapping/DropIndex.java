@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class DropIndex extends WithCollection<Void> {
+public class DropIndex extends WithCollection<Void, DropIndex> {
 
   public static class DropIndexCommand extends WithCollectionCommand {
 
@@ -57,22 +57,5 @@ public class DropIndex extends WithCollection<Void> {
   public DropIndex withName(Matcher<String> name) {
     this.name = name;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public DropIndex priority(int priority) {
-    return (DropIndex) super.priority(priority);
-  }
-
-  @Override
-  public DropIndex inCollection(String collection) {
-    return (DropIndex) super.inCollection(collection);
-  }
-
-  @Override
-  public DropIndex inCollection(Matcher<String> collection) {
-    return (DropIndex) super.inCollection(collection);
   }
 }

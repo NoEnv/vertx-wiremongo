@@ -6,7 +6,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class DistinctWithQuery extends WithQuery<JsonArray> {
+public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQuery> {
 
   public static class DistinctWithQueryCommand extends WithQueryCommand {
 
@@ -72,32 +72,5 @@ public class DistinctWithQuery extends WithQuery<JsonArray> {
   public DistinctWithQuery withResultClassname(Matcher<String> resultClassname) {
     this.resultClassname = resultClassname;
     return this;
-  }
-
-  // fluent
-
-  @Override
-  public DistinctWithQuery priority(int priority) {
-    return (DistinctWithQuery) super.priority(priority);
-  }
-
-  @Override
-  public DistinctWithQuery withQuery(JsonObject query) {
-    return (DistinctWithQuery) super.withQuery(query);
-  }
-
-  @Override
-  public DistinctWithQuery withQuery(Matcher<JsonObject> query) {
-    return (DistinctWithQuery) super.withQuery(query);
-  }
-
-  @Override
-  public DistinctWithQuery inCollection(String collection) {
-    return (DistinctWithQuery) super.inCollection(collection);
-  }
-
-  @Override
-  public DistinctWithQuery inCollection(Matcher<String> collection) {
-    return (DistinctWithQuery) super.inCollection(collection);
   }
 }

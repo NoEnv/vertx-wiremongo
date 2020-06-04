@@ -6,7 +6,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-abstract class WithStreamPipeline extends WithStream {
+abstract class WithStreamPipeline<C extends WithStreamPipeline<C>> extends WithStream<C> {
 
   public abstract static class WithStreamPipelineCommand extends WithStreamCommand {
 
@@ -46,12 +46,12 @@ abstract class WithStreamPipeline extends WithStream {
     return pipeline == null || pipeline.matches(c.pipeline);
   }
 
-  public WithStreamPipeline withPipeline(JsonArray pipeline) {
+  public C withPipeline(JsonArray pipeline) {
     return withPipeline(equalTo(pipeline));
   }
 
-  public WithStreamPipeline withPipeline(Matcher<JsonArray> pipeline) {
+  public C withPipeline(Matcher<JsonArray> pipeline) {
     this.pipeline = pipeline;
-    return this;
+    return self();
   }
 }

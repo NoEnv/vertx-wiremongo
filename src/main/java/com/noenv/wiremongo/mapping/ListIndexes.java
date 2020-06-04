@@ -1,10 +1,9 @@
 package com.noenv.wiremongo.mapping;
 
-import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
-public class ListIndexes extends WithCollection<JsonArray> {
+public class ListIndexes extends WithCollection<JsonArray, ListIndexes> {
 
   public static class ListIndexesCommand extends WithCollectionCommand {
     public ListIndexesCommand(String collection) {
@@ -23,22 +22,5 @@ public class ListIndexes extends WithCollection<JsonArray> {
   @Override
   protected JsonArray parseResponse(Object jsonValue) {
     return (JsonArray) jsonValue;
-  }
-
-  // fluent
-
-  @Override
-  public ListIndexes priority(int priority) {
-    return (ListIndexes) super.priority(priority);
-  }
-
-  @Override
-  public ListIndexes inCollection(String collection) {
-    return (ListIndexes) super.inCollection(collection);
-  }
-
-  @Override
-  public ListIndexes inCollection(Matcher<String> collection) {
-    return (ListIndexes) super.inCollection(collection);
   }
 }

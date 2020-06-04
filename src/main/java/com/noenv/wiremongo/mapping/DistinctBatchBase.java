@@ -1,20 +1,24 @@
 package com.noenv.wiremongo.mapping;
 
 import com.noenv.wiremongo.matching.Matcher;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class Distinct extends WithCollection<JsonArray, Distinct> {
+@SuppressWarnings("squid:MaximumInheritanceDepth")
+public abstract class DistinctBatchBase<C extends DistinctBatchBase<C>> extends WithStream<C> {
 
-  public static class DistinctCommand extends WithCollectionCommand {
+  public static class DistinctBatchBaseCommand extends WithStreamCommand {
 
     private final String fieldName;
     private final String resultClassname;
 
-    public DistinctCommand(String collection, String fieldName, String resultClassname) {
-      super("distinct", collection);
+    public DistinctBatchBaseCommand(String collection, String fieldName, String resultClassname) {
+      this("distinctBatch", collection, fieldName, resultClassname);
+    }
+
+    public DistinctBatchBaseCommand(String method, String collection, String fieldName, String resultClassname) {
+      super(method, collection);
       this.fieldName = fieldName;
       this.resultClassname = resultClassname;
     }
@@ -28,19 +32,14 @@ public class Distinct extends WithCollection<JsonArray, Distinct> {
   private Matcher<String> fieldName;
   private Matcher<String> resultClassname;
 
-  public Distinct() {
-    super("distinct");
+  public DistinctBatchBase(String method) {
+    super(method);
   }
 
-  public Distinct(JsonObject json) {
+  public DistinctBatchBase(JsonObject json) {
     super(json);
     fieldName = Matcher.create(json.getJsonObject("fieldName"));
     resultClassname = Matcher.create(json.getJsonObject("resultClassname"));
-  }
-
-  @Override
-  protected JsonArray parseResponse(Object jsonValue) {
-    return (JsonArray) jsonValue;
   }
 
   @Override
@@ -48,29 +47,29 @@ public class Distinct extends WithCollection<JsonArray, Distinct> {
     if (!super.matches(cmd)) {
       return false;
     }
-    if (!(cmd instanceof DistinctCommand)) {
+    if (!(cmd instanceof DistinctBatchBase.DistinctBatchBaseCommand)) {
       return false;
     }
-    DistinctCommand c = (DistinctCommand) cmd;
+    DistinctBatchBaseCommand c = (DistinctBatchBaseCommand) cmd;
     return (fieldName == null || fieldName.matches(c.fieldName))
       && (resultClassname == null || resultClassname.matches(c.resultClassname));
   }
 
-  public Distinct withFieldName(String fieldName) {
+  public C withFieldName(String fieldName) {
     return withFieldName(equalTo(fieldName));
   }
 
-  public Distinct withFieldName(Matcher<String> fieldName) {
+  public C withFieldName(Matcher<String> fieldName) {
     this.fieldName = fieldName;
-    return this;
+    return self();
   }
 
-  public Distinct withResultClassname(String resultClassname) {
+  public C withResultClassname(String resultClassname) {
     return withResultClassname(equalTo(resultClassname));
   }
 
-  public Distinct withResultClassname(Matcher<String> resultClassname) {
+  public C withResultClassname(Matcher<String> resultClassname) {
     this.resultClassname = resultClassname;
-    return this;
+    return self();
   }
 }

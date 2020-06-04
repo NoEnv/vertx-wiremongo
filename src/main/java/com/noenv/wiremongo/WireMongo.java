@@ -21,7 +21,7 @@ public class WireMongo implements WireMongoCommands {
   private static final Logger logger = LoggerFactory.getLogger(WireMongo.class);
 
   private Vertx vertx;
-  private final List<Mapping<?>> mappings = Collections.synchronizedList(new ArrayList<>());
+  private final List<Mapping<?, ?>> mappings = Collections.synchronizedList(new ArrayList<>());
   private final WireMongoClient client;
   private int priorityCounter = 1;
 
@@ -66,7 +66,7 @@ public class WireMongo implements WireMongoCommands {
   }
 
   @Override
-  public <T extends Mapping<?>> T addMapping(T mapping) {
+  public <T extends Mapping<?, ?>> T addMapping(T mapping) {
     if (mapping.priority() == 0) {
       mapping.priority(priorityCounter++);
     }
@@ -75,13 +75,13 @@ public class WireMongo implements WireMongoCommands {
   }
 
   @Override
-  public <T extends Mapping<?>> boolean removeMapping(T mapping) {
+  public <T extends Mapping<?, ?>> boolean removeMapping(T mapping) {
     return mappings.remove(mapping);
   }
 
   <T> Future<T> call(Command request) {
     logger.debug("wiremongo received request: " + request.toString());
-    Mapping<T> mapping = this.findMapping(request);
+    Mapping<T, ?> mapping = this.findMapping(request);
     if (mapping == null) {
       return Future.failedFuture("no mapping found: " + request);
     }
@@ -93,7 +93,7 @@ public class WireMongo implements WireMongoCommands {
   }
 
   ReadStream<JsonObject> callStream(Command request) {
-    Mapping<ReadStream<JsonObject>> mapping = this.findMapping(request);
+    Mapping<ReadStream<JsonObject>, ?> mapping = this.findMapping(request);
     if (mapping == null) {
       return MemoryStream.error(new IllegalArgumentException("no mapping found: " + request));
     }
@@ -104,10 +104,10 @@ public class WireMongo implements WireMongoCommands {
     }
   }
 
-  private <T> Mapping<T> findMapping(Command request) {
+  private <T> Mapping<T, ?> findMapping(Command request) {
     synchronized (mappings) {
       //noinspection unchecked
-      return (Mapping<T>) mappings.stream()
+      return (Mapping<T, ?>) mappings.stream()
         .filter(m -> m.matches(request))
         .max(Comparator.comparingInt(Mapping::priority))
         .orElseGet(() -> {

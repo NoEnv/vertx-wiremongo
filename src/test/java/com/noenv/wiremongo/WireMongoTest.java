@@ -79,4 +79,19 @@ public class WireMongoTest {
         async.complete();
       });
   }
+
+  @Test
+  public void testMatchError(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.find()
+      .withQuery(j -> {
+        throw new RuntimeException("intentional");
+      })
+      .returnsConnectionException();
+
+    db.rxFind("foobar", new JsonObject())
+      .doOnError(ex -> ctx.assertTrue(ex.getMessage().startsWith("no mapping found")))
+      .subscribe(x -> ctx.fail(), ex -> async.complete());
+  }
 }

@@ -108,7 +108,14 @@ public class WireMongo implements WireMongoCommands {
     synchronized (mappings) {
       //noinspection unchecked
       return (Mapping<T, ?>) mappings.stream()
-        .filter(m -> m.matches(request))
+        .filter(m -> {
+          try {
+            return m.matches(request);
+          } catch(Throwable ex) {
+            logger.error("error evaluating mapping", ex);
+            return false;
+          }
+        })
         .max(Comparator.comparingInt(Mapping::priority))
         .orElseGet(() -> {
           logger.info("no mapping found ({})", request);

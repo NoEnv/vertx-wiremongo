@@ -15,7 +15,7 @@ public interface Mapping<T, C extends Mapping<T, C>> extends Command {
 
   C priority(int priority);
 
-  C times(int times);
+  C validFor(int times);
 
   Stub<T> stub();
 

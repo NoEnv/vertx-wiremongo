@@ -1,7 +1,6 @@
 package com.noenv.wiremongo.mapping;
 
 import com.noenv.wiremongo.Stub;
-import com.noenv.wiremongo.WireMongoCommands;
 import io.vertx.core.json.JsonObject;
 
 import java.util.LinkedList;
@@ -38,7 +37,7 @@ public abstract class MappingBase<T, C extends MappingBase<T, C>> extends Comman
   }
 
   @Override
-  public C times(int times) {
+  public C validFor(int times) {
     this.times = times;
     return self();
   }

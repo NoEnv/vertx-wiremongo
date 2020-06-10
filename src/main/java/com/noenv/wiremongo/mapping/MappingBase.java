@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping;
 
 import com.noenv.wiremongo.Stub;
+import com.noenv.wiremongo.WireMongoCommands;
 import io.vertx.core.json.JsonObject;
 
 import java.util.LinkedList;
@@ -11,6 +12,8 @@ public abstract class MappingBase<T, C extends MappingBase<T, C>> extends Comman
   private static final Stub DUMMY_STUB = () -> null;
   private LinkedList<Stub<T>> stubs = new LinkedList<>();
   private int priority;
+  private int times;
+  private int matchCount;
 
   public MappingBase(String method) {
     super(method);
@@ -35,6 +38,12 @@ public abstract class MappingBase<T, C extends MappingBase<T, C>> extends Comman
   }
 
   @Override
+  public C times(int times) {
+    this.times = times;
+    return self();
+  }
+
+  @Override
   public Stub<T> stub() {
     if (stubs.size() > 1) {
       return stubs.pop();
@@ -53,7 +62,8 @@ public abstract class MappingBase<T, C extends MappingBase<T, C>> extends Comman
 
   @Override
   public boolean matches(Command c) {
-    return Objects.equals(method(), c.method());
+    boolean matchesResult = Objects.equals(method(), c.method());
+    return (times <= 0 || !matchesResult || ++matchCount <= times) && matchesResult;
   }
 
   private void parseStub(JsonObject json) {

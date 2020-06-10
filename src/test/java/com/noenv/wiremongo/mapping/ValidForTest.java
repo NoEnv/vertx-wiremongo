@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(VertxUnitRunner.class)
-public class TimesTest extends TestBase {
+public class ValidForTest extends TestBase {
 
   @Before
   public void before(TestContext ctx) {
@@ -45,7 +45,7 @@ public class TimesTest extends TestBase {
       .inCollection("findone")
       .withQuery(new JsonObject().put("test", "testFindOne"))
       .withFields(new JsonObject().put("field1", 1))
-      .times(3)
+      .validFor(3)
       .returns(new JsonObject().put("field1", "value1"));
 
     db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1))
@@ -63,7 +63,7 @@ public class TimesTest extends TestBase {
       .inCollection("findone")
       .withQuery(new JsonObject().put("test", "testFindOne"))
       .withFields(new JsonObject().put("field1", 1))
-      .times(2)
+      .validFor(2)
       .returns(new JsonObject().put("field1", "value1"));
 
     db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1))
@@ -72,5 +72,18 @@ public class TimesTest extends TestBase {
       .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
+  @Test
+  public void testFindOneMultipleTimesWithoutValidForRestriction(TestContext ctx) {
+    mock.findOne()
+      .inCollection("findone")
+      .withQuery(new JsonObject().put("test", "testFindOne"))
+      .withFields(new JsonObject().put("field1", 1))
+      .returns(new JsonObject().put("field1", "value1"));
+
+    db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1))
+      .flatMap(x -> db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1)))
+      .flatMap(x -> db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1)))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
 
 }

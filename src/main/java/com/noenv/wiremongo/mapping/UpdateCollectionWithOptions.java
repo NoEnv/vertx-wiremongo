@@ -8,9 +8,9 @@ import io.vertx.ext.mongo.UpdateOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class UpdateCollectionWithOptions extends UpdateCollection {
+public class UpdateCollectionWithOptions extends UpdateCollectionBase<UpdateCollectionWithOptions> {
 
-  public static class UpdateCollectionWithOptionsCommand extends UpdateCollectionCommand {
+  public static class UpdateCollectionWithOptionsCommand extends UpdateCollectionBaseCommand {
 
     private final UpdateOptions options;
 
@@ -59,43 +59,6 @@ public class UpdateCollectionWithOptions extends UpdateCollection {
 
   public UpdateCollectionWithOptions withOptions(Matcher<UpdateOptions> options) {
     this.options = options;
-    return this;
-  }
-
-  // fluent
-
-  @Override
-  public UpdateCollectionWithOptions priority(int priority) {
-    return (UpdateCollectionWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public UpdateCollectionWithOptions inCollection(String collection) {
-    return (UpdateCollectionWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public UpdateCollectionWithOptions inCollection(Matcher<String> collection) {
-    return (UpdateCollectionWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public UpdateCollectionWithOptions withQuery(JsonObject query) {
-    return (UpdateCollectionWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public UpdateCollectionWithOptions withQuery(Matcher<JsonObject> query) {
-    return (UpdateCollectionWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public UpdateCollectionWithOptions withUpdate(JsonObject update) {
-    return (UpdateCollectionWithOptions) super.withUpdate(update);
-  }
-
-  @Override
-  public UpdateCollectionWithOptions withUpdate(Matcher<JsonObject> update) {
-    return (UpdateCollectionWithOptions) super.withUpdate(update);
+    return self();
   }
 }

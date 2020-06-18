@@ -7,9 +7,9 @@ import io.vertx.ext.mongo.FindOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindOneAndDeleteWithOptions extends FindOneAndDelete {
+public class FindOneAndDeleteWithOptions extends FindOneAndDeleteBase<FindOneAndDeleteWithOptions> {
 
-  public static class FindOneAndDeleteWithOptionsCommand extends FindOneAndDeleteCommand {
+  public static class FindOneAndDeleteWithOptionsCommand extends FindOneAndDeleteBaseCommand {
 
     private FindOptions options;
 
@@ -57,33 +57,6 @@ public class FindOneAndDeleteWithOptions extends FindOneAndDelete {
 
   public FindOneAndDeleteWithOptions withOptions(Matcher<FindOptions> options) {
     this.options = options;
-    return this;
-  }
-
-  // fluent
-
-  @Override
-  public FindOneAndDeleteWithOptions priority(int priority) {
-    return (FindOneAndDeleteWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public FindOneAndDeleteWithOptions inCollection(String collection) {
-    return (FindOneAndDeleteWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOneAndDeleteWithOptions inCollection(Matcher<String> collection) {
-    return (FindOneAndDeleteWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOneAndDeleteWithOptions withQuery(JsonObject query) {
-    return (FindOneAndDeleteWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public FindOneAndDeleteWithOptions withQuery(Matcher<JsonObject> query) {
-    return (FindOneAndDeleteWithOptions) super.withQuery(query);
+    return self();
   }
 }

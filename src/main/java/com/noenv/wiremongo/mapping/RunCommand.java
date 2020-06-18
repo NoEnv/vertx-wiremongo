@@ -59,6 +59,6 @@ public class RunCommand extends MappingBase<JsonObject, RunCommand> {
   public RunCommand withCommand(Matcher<String> commandName, Matcher<JsonObject> command) {
     this.commandName = commandName;
     this.command = command;
-    return this;
+    return self();
   }
 }

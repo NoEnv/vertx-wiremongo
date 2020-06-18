@@ -7,9 +7,9 @@ import io.vertx.ext.mongo.FindOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindWithOptions extends Find {
+public class FindWithOptions extends FindBase<FindWithOptions> {
 
-  public static class FindWithOptionsCommand extends FindCommand {
+  public static class FindWithOptionsCommand extends FindBaseCommand {
 
     private final FindOptions options;
 
@@ -53,33 +53,6 @@ public class FindWithOptions extends Find {
 
   public FindWithOptions withOptions(Matcher<FindOptions> options) {
     this.options = options;
-    return this;
-  }
-
-  // fluent
-
-  @Override
-  public FindWithOptions priority(int priority) {
-    return (FindWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public FindWithOptions inCollection(Matcher<String> collection) {
-    return (FindWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindWithOptions inCollection(String collection) {
-    return (FindWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindWithOptions withQuery(Matcher<JsonObject> query) {
-    return (FindWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public FindWithOptions withQuery(JsonObject query) {
-    return (FindWithOptions) super.withQuery(query);
+    return self();
   }
 }

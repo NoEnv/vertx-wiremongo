@@ -48,6 +48,6 @@ public class SaveWithOptions extends SaveBase<SaveWithOptions> {
 
   public SaveWithOptions withOptions(Matcher<WriteOption> options) {
     this.options = options;
-    return this;
+    return self();
   }
 }

@@ -62,7 +62,7 @@ public class Distinct extends WithCollection<JsonArray, Distinct> {
 
   public Distinct withFieldName(Matcher<String> fieldName) {
     this.fieldName = fieldName;
-    return this;
+    return self();
   }
 
   public Distinct withResultClassname(String resultClassname) {
@@ -71,6 +71,6 @@ public class Distinct extends WithCollection<JsonArray, Distinct> {
 
   public Distinct withResultClassname(Matcher<String> resultClassname) {
     this.resultClassname = resultClassname;
-    return this;
+    return self();
   }
 }

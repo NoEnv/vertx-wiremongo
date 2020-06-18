@@ -65,6 +65,6 @@ public class DistinctBatchWithQuery extends DistinctBatchBase<DistinctBatchWithQ
 
   public DistinctBatchWithQuery withQuery(Matcher<JsonObject> query) {
     this.query = query;
-    return this;
+    return self();
   }
 }

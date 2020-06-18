@@ -7,9 +7,9 @@ import io.vertx.ext.mongo.UpdateOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class ReplaceDocumentsWithOptions extends ReplaceDocuments {
+public class ReplaceDocumentsWithOptions extends ReplaceDocumentsBase<ReplaceDocumentsWithOptions> {
 
-  public static class ReplaceDocumentsWithOptionsCommand extends ReplaceDocumentsCommand {
+  public static class ReplaceDocumentsWithOptionsCommand extends ReplaceDocumentsBaseCommand {
 
     private UpdateOptions options;
 
@@ -53,43 +53,6 @@ public class ReplaceDocumentsWithOptions extends ReplaceDocuments {
 
   public ReplaceDocumentsWithOptions withOptions(Matcher<UpdateOptions> options) {
     this.options = options;
-    return this;
-  }
-
-  // fluent
-
-  @Override
-  public ReplaceDocumentsWithOptions priority(int priority) {
-    return (ReplaceDocumentsWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public ReplaceDocumentsWithOptions inCollection(String collection) {
-    return (ReplaceDocumentsWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public ReplaceDocumentsWithOptions inCollection(Matcher<String> collection) {
-    return (ReplaceDocumentsWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public ReplaceDocumentsWithOptions withQuery(JsonObject query) {
-    return (ReplaceDocumentsWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public ReplaceDocumentsWithOptions withQuery(Matcher<JsonObject> query) {
-    return (ReplaceDocumentsWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public ReplaceDocumentsWithOptions withReplace(JsonObject replace) {
-    return (ReplaceDocumentsWithOptions) super.withReplace(replace);
-  }
-
-  @Override
-  public ReplaceDocumentsWithOptions withReplace(Matcher<JsonObject> replace) {
-    return (ReplaceDocumentsWithOptions) super.withReplace(replace);
+    return self();
   }
 }

@@ -70,7 +70,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient updateCollection(String collection, JsonObject query, JsonObject update, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
-    this.<MongoClientUpdateResult>call(new UpdateCollection.UpdateCollectionCommand(collection, query, update)).onComplete(resultHandler);
+    this.<MongoClientUpdateResult>call(new UpdateCollectionBase.UpdateCollectionBaseCommand(collection, query, update)).onComplete(resultHandler);
     return this;
   }
 
@@ -92,7 +92,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient replaceDocuments(String collection, JsonObject query, JsonObject replace, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
-    this.<MongoClientUpdateResult>call(new ReplaceDocuments.ReplaceDocumentsCommand(collection, query, replace)).onComplete(resultHandler);
+    this.<MongoClientUpdateResult>call(new ReplaceDocumentsBase.ReplaceDocumentsBaseCommand(collection, query, replace)).onComplete(resultHandler);
     return this;
   }
 
@@ -109,7 +109,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient bulkWrite(String collection, List<BulkOperation> operations, Handler<AsyncResult<MongoClientBulkWriteResult>> resultHandler) {
-    this.<MongoClientBulkWriteResult>call(new BulkWrite.BulkWriteCommand(collection, operations)).onComplete(resultHandler);
+    this.<MongoClientBulkWriteResult>call(new BulkWriteBase.BulkWriteBaseCommand(collection, operations)).onComplete(resultHandler);
     return this;
   }
 
@@ -121,7 +121,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient find(String collection, JsonObject query, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
-    this.<List<JsonObject>>call(new Find.FindCommand(collection, query)).onComplete(resultHandler);
+    this.<List<JsonObject>>call(new FindBase.FindBaseCommand(collection, query)).onComplete(resultHandler);
     return this;
   }
 
@@ -149,7 +149,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient findOneAndUpdate(String collection, JsonObject query, JsonObject update, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOneAndUpdate.FindOneAndUpdateCommand(collection, query, update)).onComplete(resultHandler);
+    this.<JsonObject>call(new FindOneAndUpdateBase.FindOneAndUpdateBaseCommand(collection, query, update)).onComplete(resultHandler);
     return this;
   }
 
@@ -161,7 +161,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient findOneAndReplace(String collection, JsonObject query, JsonObject replace, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOneAndReplace.FindOneAndReplaceCommand(collection, query, replace)).onComplete(resultHandler);
+    this.<JsonObject>call(new FindOneAndReplaceBase.FindOneAndReplaceBaseCommand(collection, query, replace)).onComplete(resultHandler);
     return this;
   }
 
@@ -173,7 +173,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient findOneAndDelete(String collection, JsonObject query, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOneAndDelete.FindOneAndDeleteCommand(collection, query)).onComplete(resultHandler);
+    this.<JsonObject>call(new FindOneAndDeleteBase.FindOneAndDeleteBaseCommand(collection, query)).onComplete(resultHandler);
     return this;
   }
 
@@ -196,7 +196,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient removeDocuments(String collection, JsonObject query, Handler<AsyncResult<MongoClientDeleteResult>> resultHandler) {
-    this.<MongoClientDeleteResult>call(new RemoveDocuments.RemoveDocumentsCommand(collection, query)).onComplete(resultHandler);
+    this.<MongoClientDeleteResult>call(new RemoveDocumentsBase.RemoveDocumentsBaseCommand(collection, query)).onComplete(resultHandler);
     return this;
   }
 
@@ -218,7 +218,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient removeDocument(String collection, JsonObject query, Handler<AsyncResult<MongoClientDeleteResult>> resultHandler) {
-    this.<MongoClientDeleteResult>call(new RemoveDocument.RemoveDocumentCommand(collection, query)).onComplete(resultHandler);
+    this.<MongoClientDeleteResult>call(new RemoveDocumentBase.RemoveDocumentBaseCommand(collection, query)).onComplete(resultHandler);
     return this;
   }
 
@@ -253,7 +253,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient createIndex(String collection, JsonObject key, Handler<AsyncResult<Void>> resultHandler) {
-    this.<Void>call(new CreateIndex.CreateIndexCommand(collection, key)).onComplete(resultHandler);
+    this.<Void>call(new CreateIndexBase.CreateIndexBaseCommand(collection, key)).onComplete(resultHandler);
     return this;
   }
 

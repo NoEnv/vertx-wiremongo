@@ -8,9 +8,9 @@ import io.vertx.ext.mongo.UpdateOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindOneAndReplaceWithOptions extends FindOneAndReplace {
+public class FindOneAndReplaceWithOptions extends FindOneAndReplaceBase<FindOneAndReplaceWithOptions> {
 
-  public static class FindOneAndReplaceWithOptionsCommand extends FindOneAndReplaceCommand {
+  public static class FindOneAndReplaceWithOptionsCommand extends FindOneAndReplaceBaseCommand {
 
     private final FindOptions findOptions;
     private final UpdateOptions updateOptions;
@@ -61,7 +61,7 @@ public class FindOneAndReplaceWithOptions extends FindOneAndReplace {
 
   public FindOneAndReplaceWithOptions withFindOptions(Matcher<FindOptions> findOptions) {
     this.findOptions = findOptions;
-    return this;
+    return self();
   }
 
   public FindOneAndReplaceWithOptions withUpdateOptions(UpdateOptions updateOptions) {
@@ -70,43 +70,6 @@ public class FindOneAndReplaceWithOptions extends FindOneAndReplace {
 
   public FindOneAndReplaceWithOptions withUpdateOptions(Matcher<UpdateOptions> updateOptions) {
     this.updateOptions = updateOptions;
-    return this;
-  }
-
-  // fluent
-
-  @Override
-  public FindOneAndReplaceWithOptions priority(int priority) {
-    return (FindOneAndReplaceWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public FindOneAndReplaceWithOptions inCollection(String collection) {
-    return (FindOneAndReplaceWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOneAndReplaceWithOptions inCollection(Matcher<String> collection) {
-    return (FindOneAndReplaceWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOneAndReplaceWithOptions withQuery(JsonObject query) {
-    return (FindOneAndReplaceWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public FindOneAndReplaceWithOptions withQuery(Matcher<JsonObject> query) {
-    return (FindOneAndReplaceWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public FindOneAndReplaceWithOptions withReplace(JsonObject replace) {
-    return (FindOneAndReplaceWithOptions) super.withReplace(replace);
-  }
-
-  @Override
-  public FindOneAndReplaceWithOptions withReplace(Matcher<JsonObject> replace) {
-    return (FindOneAndReplaceWithOptions) super.withReplace(replace);
+    return self();
   }
 }

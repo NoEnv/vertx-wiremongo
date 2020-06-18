@@ -56,6 +56,6 @@ public class FindOne extends WithQuery<JsonObject, FindOne> {
 
   public FindOne withFields(Matcher<JsonObject> fields) {
     this.fields = fields;
-    return this;
+    return self();
   }
 }

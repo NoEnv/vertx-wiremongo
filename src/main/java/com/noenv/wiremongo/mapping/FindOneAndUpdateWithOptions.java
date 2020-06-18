@@ -8,9 +8,9 @@ import io.vertx.ext.mongo.UpdateOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindOneAndUpdateWithOptions extends FindOneAndUpdate {
+public class FindOneAndUpdateWithOptions extends FindOneAndUpdateBase<FindOneAndUpdateWithOptions> {
 
-  public static class FindOneAndUpdateWithOptionsCommand extends FindOneAndUpdateCommand {
+  public static class FindOneAndUpdateWithOptionsCommand extends FindOneAndUpdateBaseCommand {
 
     private final FindOptions findOptions;
     private final UpdateOptions updateOptions;
@@ -66,7 +66,7 @@ public class FindOneAndUpdateWithOptions extends FindOneAndUpdate {
 
   public FindOneAndUpdateWithOptions withFindOptions(Matcher<FindOptions> options) {
     this.findOptions = options;
-    return this;
+    return self();
   }
 
   public FindOneAndUpdateWithOptions withUpdateOptions(UpdateOptions options) {
@@ -75,43 +75,6 @@ public class FindOneAndUpdateWithOptions extends FindOneAndUpdate {
 
   public FindOneAndUpdateWithOptions withUpdateOptions(Matcher<UpdateOptions> options) {
     this.updateOptions = options;
-    return this;
-  }
-
-  // fluent
-
-  @Override
-  public FindOneAndUpdateWithOptions priority(int priority) {
-    return (FindOneAndUpdateWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public FindOneAndUpdateWithOptions inCollection(String collection) {
-    return (FindOneAndUpdateWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOneAndUpdateWithOptions inCollection(Matcher<String> collection) {
-    return (FindOneAndUpdateWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public FindOneAndUpdateWithOptions withQuery(JsonObject query) {
-    return (FindOneAndUpdateWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public FindOneAndUpdateWithOptions withQuery(Matcher<JsonObject> query) {
-    return (FindOneAndUpdateWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public FindOneAndUpdateWithOptions withUpdate(JsonObject update) {
-    return (FindOneAndUpdateWithOptions) super.withUpdate(update);
-  }
-
-  @Override
-  public FindOneAndUpdateWithOptions withUpdate(Matcher<JsonObject> update) {
-    return (FindOneAndUpdateWithOptions) super.withUpdate(update);
+    return self();
   }
 }

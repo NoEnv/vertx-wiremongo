@@ -9,9 +9,9 @@ import java.util.List;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class BulkWriteWithOptions extends BulkWrite {
+public class BulkWriteWithOptions extends BulkWriteBase<BulkWriteWithOptions> {
 
-  public static class BulkWriteWithOptionsCommand extends BulkWriteCommand {
+  public static class BulkWriteWithOptionsCommand extends BulkWriteBaseCommand {
 
     private final BulkWriteOptions options;
 
@@ -55,33 +55,6 @@ public class BulkWriteWithOptions extends BulkWrite {
 
   public BulkWriteWithOptions withOptions(Matcher<BulkWriteOptions> options) {
     this.options = options;
-    return this;
-  }
-
-  // fluent
-
-  @Override
-  public BulkWriteWithOptions priority(int priority) {
-    return (BulkWriteWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public BulkWriteWithOptions inCollection(String collection) {
-    return (BulkWriteWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public BulkWriteWithOptions inCollection(Matcher<String> collection) {
-    return (BulkWriteWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public BulkWriteWithOptions withOperations(List<BulkOperation> operations) {
-    return (BulkWriteWithOptions) super.withOperations(operations);
-  }
-
-  @Override
-  public BulkWriteWithOptions withOperations(Matcher<List<BulkOperation>> operations) {
-    return (BulkWriteWithOptions) super.withOperations(operations);
+    return self();
   }
 }

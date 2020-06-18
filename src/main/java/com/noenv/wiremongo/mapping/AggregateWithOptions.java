@@ -54,6 +54,6 @@ public class AggregateWithOptions extends AggregateBase<AggregateWithOptions> {
 
   public AggregateWithOptions withOptions(Matcher<AggregateOptions> options) {
     this.options = options;
-    return this;
+    return self();
   }
 }

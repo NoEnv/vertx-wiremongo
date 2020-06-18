@@ -56,6 +56,6 @@ public class DropIndex extends WithCollection<Void, DropIndex> {
 
   public DropIndex withName(Matcher<String> name) {
     this.name = name;
-    return this;
+    return self();
   }
 }

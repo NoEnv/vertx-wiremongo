@@ -53,6 +53,6 @@ public class InsertWithOptions extends InsertBase<InsertWithOptions> {
 
   public InsertWithOptions withOptions(Matcher<WriteOption> options) {
     this.options = options;
-    return this;
+    return self();
   }
 }

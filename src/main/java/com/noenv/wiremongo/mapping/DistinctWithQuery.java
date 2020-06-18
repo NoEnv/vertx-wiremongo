@@ -62,7 +62,7 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQuery> {
 
   public DistinctWithQuery withFieldName(Matcher<String> fieldName) {
     this.fieldName = fieldName;
-    return this;
+    return self();
   }
 
   public DistinctWithQuery withResultClassname(String resultClassname) {
@@ -71,6 +71,6 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQuery> {
 
   public DistinctWithQuery withResultClassname(Matcher<String> resultClassname) {
     this.resultClassname = resultClassname;
-    return this;
+    return self();
   }
 }

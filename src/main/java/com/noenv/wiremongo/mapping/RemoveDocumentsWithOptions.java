@@ -7,9 +7,9 @@ import io.vertx.ext.mongo.WriteOption;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class RemoveDocumentsWithOptions extends RemoveDocuments {
+public class RemoveDocumentsWithOptions extends RemoveDocumentsBase<RemoveDocumentsWithOptions> {
 
-  public static class RemoveDocumentsWithOptionsCommand extends RemoveDocuments.RemoveDocumentsCommand {
+  public static class RemoveDocumentsWithOptionsCommand extends RemoveDocumentsBase.RemoveDocumentsBaseCommand {
 
     private WriteOption options;
 
@@ -53,33 +53,6 @@ public class RemoveDocumentsWithOptions extends RemoveDocuments {
 
   public RemoveDocumentsWithOptions withOptions(Matcher<WriteOption> options) {
     this.options = options;
-    return this;
-  }
-
-  // fluent
-
-  @Override
-  public RemoveDocumentsWithOptions priority(int priority) {
-    return (RemoveDocumentsWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public RemoveDocumentsWithOptions inCollection(String collection) {
-    return (RemoveDocumentsWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public RemoveDocumentsWithOptions inCollection(Matcher<String> collection) {
-    return (RemoveDocumentsWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public RemoveDocumentsWithOptions withQuery(JsonObject query) {
-    return (RemoveDocumentsWithOptions) super.withQuery(query);
-  }
-
-  @Override
-  public RemoveDocumentsWithOptions withQuery(Matcher<JsonObject> query) {
-    return (RemoveDocumentsWithOptions) super.withQuery(query);
+    return self();
   }
 }

@@ -6,9 +6,9 @@ import io.vertx.ext.mongo.IndexOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class CreateIndexWithOptions extends CreateIndex {
+public class CreateIndexWithOptions extends CreateIndexBase<CreateIndexWithOptions> {
 
-  public static class CreateIndexWithOptionsCommand extends CreateIndexCommand {
+  public static class CreateIndexWithOptionsCommand extends CreateIndexBaseCommand {
 
     private final IndexOptions options;
 
@@ -52,33 +52,6 @@ public class CreateIndexWithOptions extends CreateIndex {
 
   public CreateIndexWithOptions withOptions(Matcher<IndexOptions> options) {
     this.options = options;
-    return this;
-  }
-
-  // fluent
-
-  @Override
-  public CreateIndexWithOptions priority(int priority) {
-    return (CreateIndexWithOptions) super.priority(priority);
-  }
-
-  @Override
-  public CreateIndexWithOptions inCollection(String collection) {
-    return (CreateIndexWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public CreateIndexWithOptions inCollection(Matcher<String> collection) {
-    return (CreateIndexWithOptions) super.inCollection(collection);
-  }
-
-  @Override
-  public CreateIndexWithOptions withKey(JsonObject key) {
-    return (CreateIndexWithOptions) super.withKey(key);
-  }
-
-  @Override
-  public CreateIndexWithOptions withKey(Matcher<JsonObject> key) {
-    return (CreateIndexWithOptions) super.withKey(key);
+    return self();
   }
 }

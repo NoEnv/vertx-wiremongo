@@ -54,6 +54,6 @@ public class FindBatchWithOptions extends FindBatchBase<FindBatchWithOptions> {
 
   public FindBatchWithOptions withOptions(Matcher<FindOptions> options) {
     this.options = options;
-    return this;
+    return self();
   }
 }

@@ -1,5 +1,6 @@
 package com.noenv.wiremongo.mapping;
 
+import com.noenv.wiremongo.mapping.collection.WithCollection;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 

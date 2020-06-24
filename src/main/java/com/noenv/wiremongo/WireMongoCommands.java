@@ -1,6 +1,35 @@
 package com.noenv.wiremongo;
 
 import com.noenv.wiremongo.mapping.*;
+import com.noenv.wiremongo.mapping.aggregate.Aggregate;
+import com.noenv.wiremongo.mapping.aggregate.AggregateWithOptions;
+import com.noenv.wiremongo.mapping.bulkwrite.BulkWrite;
+import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteWithOptions;
+import com.noenv.wiremongo.mapping.collection.DropCollection;
+import com.noenv.wiremongo.mapping.collection.GetCollections;
+import com.noenv.wiremongo.mapping.count.Count;
+import com.noenv.wiremongo.mapping.collection.CreateCollection;
+import com.noenv.wiremongo.mapping.index.CreateIndex;
+import com.noenv.wiremongo.mapping.index.CreateIndexWithOptions;
+import com.noenv.wiremongo.mapping.distinct.Distinct;
+import com.noenv.wiremongo.mapping.distinct.DistinctBatch;
+import com.noenv.wiremongo.mapping.distinct.DistinctBatchWithQuery;
+import com.noenv.wiremongo.mapping.distinct.DistinctWithQuery;
+import com.noenv.wiremongo.mapping.find.*;
+import com.noenv.wiremongo.mapping.index.DropIndex;
+import com.noenv.wiremongo.mapping.index.ListIndexes;
+import com.noenv.wiremongo.mapping.insert.Insert;
+import com.noenv.wiremongo.mapping.insert.InsertWithOptions;
+import com.noenv.wiremongo.mapping.remove.RemoveDocument;
+import com.noenv.wiremongo.mapping.remove.RemoveDocumentWithOptions;
+import com.noenv.wiremongo.mapping.remove.RemoveDocuments;
+import com.noenv.wiremongo.mapping.remove.RemoveDocumentsWithOptions;
+import com.noenv.wiremongo.mapping.replace.ReplaceDocuments;
+import com.noenv.wiremongo.mapping.replace.ReplaceDocumentsWithOptions;
+import com.noenv.wiremongo.mapping.save.Save;
+import com.noenv.wiremongo.mapping.save.SaveWithOptions;
+import com.noenv.wiremongo.mapping.update.UpdateCollection;
+import com.noenv.wiremongo.mapping.update.UpdateCollectionWithOptions;
 
 public interface WireMongoCommands {
 

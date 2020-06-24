@@ -36,7 +36,7 @@ import org.bson.BsonDocument;
 
 import java.net.ConnectException;
 
-public interface Mapping<T, C extends Mapping<T, C>> extends Command {
+public interface Mapping<T, C extends Mapping<T, C>> {
 
   boolean matches(Command c);
 

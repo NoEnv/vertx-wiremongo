@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.replace;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.replace.ReplaceDocumentsWithOptionsCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.UpdateOptions;
@@ -8,22 +9,7 @@ import io.vertx.ext.mongo.UpdateOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class ReplaceDocumentsWithOptions extends ReplaceDocumentsBase<ReplaceDocumentsWithOptions> {
-
-  public static class ReplaceDocumentsWithOptionsCommand extends ReplaceDocumentsBaseCommand {
-
-    private UpdateOptions options;
-
-    public ReplaceDocumentsWithOptionsCommand(String collection, JsonObject query, JsonObject replace, UpdateOptions options) {
-      super("replaceDocumentsWithOptions", collection, query, replace);
-      this.options = options;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", options: " + (options == null ? "null" : options.toJson().encode());
-    }
-  }
+public class ReplaceDocumentsWithOptions extends ReplaceDocumentsBase<ReplaceDocumentsWithOptionsCommand, ReplaceDocumentsWithOptions> {
 
   private Matcher<UpdateOptions> options;
 
@@ -45,7 +31,7 @@ public class ReplaceDocumentsWithOptions extends ReplaceDocumentsBase<ReplaceDoc
       return false;
     }
     ReplaceDocumentsWithOptionsCommand c = (ReplaceDocumentsWithOptionsCommand) cmd;
-    return options == null || options.matches(c.options);
+    return options == null || options.matches(c.getOptions());
   }
 
   public ReplaceDocumentsWithOptions withOptions(UpdateOptions options) {

@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.find;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.find.FindWithOptionsCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
@@ -8,22 +9,7 @@ import io.vertx.ext.mongo.FindOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindWithOptions extends FindBase<FindWithOptions> {
-
-  public static class FindWithOptionsCommand extends FindBaseCommand {
-
-    private final FindOptions options;
-
-    public FindWithOptionsCommand(String collection, JsonObject query, FindOptions options) {
-      super("findWithOptions", collection, query);
-      this.options = options;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", options: " + (options != null ? options.toJson().encode() : "null");
-    }
-  }
+public class FindWithOptions extends FindBase<FindWithOptionsCommand, FindWithOptions> {
 
   private Matcher<FindOptions> options;
 
@@ -45,7 +31,7 @@ public class FindWithOptions extends FindBase<FindWithOptions> {
       return false;
     }
     FindWithOptionsCommand c = (FindWithOptionsCommand) cmd;
-    return options == null || options.matches(c.options);
+    return options == null || options.matches(c.getOptions());
   }
 
   public FindWithOptions withOptions(FindOptions options) {

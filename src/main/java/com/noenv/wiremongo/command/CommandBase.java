@@ -1,4 +1,4 @@
-package com.noenv.wiremongo.mapping;
+package com.noenv.wiremongo.command;
 
 public abstract class CommandBase implements Command {
 

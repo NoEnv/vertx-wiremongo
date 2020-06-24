@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.remove;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.remove.RemoveDocumentWithOptionsCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.WriteOption;
@@ -8,22 +9,7 @@ import io.vertx.ext.mongo.WriteOption;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class RemoveDocumentWithOptions extends RemoveDocumentBase<RemoveDocumentWithOptions> {
-
-  public static class RemoveDocumentWithOptionsCommand extends RemoveDocumentBaseCommand {
-
-    private WriteOption options;
-
-    public RemoveDocumentWithOptionsCommand(String collection, JsonObject query, WriteOption options) {
-      super("removeDocumentWithOptions", collection, query);
-      this.options = options;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", options: " + (options != null ? options.name() : "null");
-    }
-  }
+public class RemoveDocumentWithOptions extends RemoveDocumentBase<RemoveDocumentWithOptionsCommand, RemoveDocumentWithOptions> {
 
   private Matcher<WriteOption> options;
 
@@ -45,7 +31,7 @@ public class RemoveDocumentWithOptions extends RemoveDocumentBase<RemoveDocument
       return false;
     }
     RemoveDocumentWithOptionsCommand c = (RemoveDocumentWithOptionsCommand) cmd;
-    return options == null || options.matches(c.options);
+    return options == null || options.matches(c.getOptions());
   }
 
   public RemoveDocumentWithOptions withOptions(WriteOption options) {

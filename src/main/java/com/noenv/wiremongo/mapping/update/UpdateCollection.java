@@ -1,10 +1,11 @@
 package com.noenv.wiremongo.mapping.update;
 
+import com.noenv.wiremongo.command.update.UpdateCollectionBaseCommand;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class UpdateCollection extends UpdateCollectionBase<UpdateCollection> {
+public class UpdateCollection extends UpdateCollectionBase<UpdateCollectionBaseCommand, UpdateCollection> {
 
   public UpdateCollection() {
     this("updateCollection");

@@ -1,34 +1,14 @@
 package com.noenv.wiremongo.mapping.distinct;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.distinct.DistinctBatchWithQueryCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class DistinctBatchWithQuery extends DistinctBatchBase<DistinctBatchWithQuery> {
-
-  public static class DistinctBatchWithQueryCommand extends DistinctBatchBaseCommand {
-
-    private final JsonObject query;
-    private final int batchSize;
-
-    public DistinctBatchWithQueryCommand(String collection, String fieldName, String resultClassname, JsonObject query) {
-      this(collection, fieldName, resultClassname, query, 20);
-    }
-
-    public DistinctBatchWithQueryCommand(String collection, String fieldName, String resultClassname, JsonObject query, int batchSize) {
-      super(collection, "distinctBatchWithQuery", fieldName, resultClassname);
-      this.query = query;
-      this.batchSize = batchSize;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", query: " + (query != null ? query.encode() : "null");
-    }
-  }
+public class DistinctBatchWithQuery extends DistinctBatchBase<DistinctBatchWithQueryCommand, DistinctBatchWithQuery> {
 
   private Matcher<JsonObject> query;
   private Matcher<Integer> batchSize;
@@ -56,8 +36,8 @@ public class DistinctBatchWithQuery extends DistinctBatchBase<DistinctBatchWithQ
       return false;
     }
     DistinctBatchWithQueryCommand c = (DistinctBatchWithQueryCommand) cmd;
-    return (query == null || query.matches(c.query))
-      && (batchSize == null || batchSize.matches(c.batchSize));
+    return (query == null || query.matches(c.getQuery()))
+      && (batchSize == null || batchSize.matches(c.getBatchSize()));
   }
 
   public DistinctBatchWithQuery withQuery(JsonObject query) {

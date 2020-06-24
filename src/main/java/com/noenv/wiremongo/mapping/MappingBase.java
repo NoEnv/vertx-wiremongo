@@ -1,12 +1,14 @@
 package com.noenv.wiremongo.mapping;
 
 import com.noenv.wiremongo.Stub;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.CommandBase;
 import io.vertx.core.json.JsonObject;
 
 import java.util.LinkedList;
 import java.util.Objects;
 
-public abstract class MappingBase<T, C extends MappingBase<T, C>> extends CommandBase implements Mapping<T, C> {
+public abstract class MappingBase<T, U extends Command, C extends MappingBase<T, U, C>> extends CommandBase implements Mapping<T, U, C> {
 
   private static final Stub DUMMY_STUB = () -> null;
   private LinkedList<Stub<T>> stubs = new LinkedList<>();

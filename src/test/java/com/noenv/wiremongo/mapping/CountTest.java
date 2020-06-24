@@ -1,4 +1,4 @@
-package com.noenv.wiremongo.mapping.count;
+package com.noenv.wiremongo.mapping;
 
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonObject;

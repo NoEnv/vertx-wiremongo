@@ -1,9 +1,10 @@
 package com.noenv.wiremongo.mapping.find;
 
+import com.noenv.wiremongo.command.find.FindOneAndDeleteBaseCommand;
 import io.vertx.core.json.JsonObject;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindOneAndDelete extends FindOneAndDeleteBase<FindOneAndDelete> {
+public class FindOneAndDelete extends FindOneAndDeleteBase<FindOneAndDeleteBaseCommand, FindOneAndDelete> {
 
   public FindOneAndDelete() {
     this("findOneAndDelete");

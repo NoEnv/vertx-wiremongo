@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.distinct;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.distinct.DistinctWithQueryCommand;
 import com.noenv.wiremongo.mapping.WithQuery;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonArray;
@@ -8,24 +9,7 @@ import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQuery> {
-
-  public static class DistinctWithQueryCommand extends WithQueryCommand {
-
-    private final String fieldName;
-    private final String resultClassname;
-
-    public DistinctWithQueryCommand(String collection, String fieldName, String resultClassname, JsonObject query) {
-      super("distinctWithQuery", collection, query);
-      this.fieldName = fieldName;
-      this.resultClassname = resultClassname;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", fieldName: " + fieldName + ", resultClassname: " + resultClassname;
-    }
-  }
+public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQueryCommand, DistinctWithQuery> {
 
   private Matcher<String> fieldName;
   private Matcher<String> resultClassname;
@@ -54,8 +38,8 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQuery> {
       return false;
     }
     DistinctWithQueryCommand c = (DistinctWithQueryCommand) cmd;
-    return (fieldName == null || fieldName.matches(c.fieldName))
-      && (resultClassname == null || resultClassname.matches(c.resultClassname));
+    return (fieldName == null || fieldName.matches(c.getFieldName()))
+      && (resultClassname == null || resultClassname.matches(c.getResultClassname()));
   }
 
   public DistinctWithQuery withFieldName(String fieldName) {

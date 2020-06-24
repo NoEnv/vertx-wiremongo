@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.distinct;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.distinct.DistinctBatchBaseCommand;
 import com.noenv.wiremongo.mapping.stream.WithStream;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
@@ -8,28 +9,7 @@ import io.vertx.core.json.JsonObject;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public abstract class DistinctBatchBase<C extends DistinctBatchBase<C>> extends WithStream<C> {
-
-  public static class DistinctBatchBaseCommand extends WithStreamCommand {
-
-    private final String fieldName;
-    private final String resultClassname;
-
-    public DistinctBatchBaseCommand(String collection, String fieldName, String resultClassname) {
-      this("distinctBatch", collection, fieldName, resultClassname);
-    }
-
-    public DistinctBatchBaseCommand(String method, String collection, String fieldName, String resultClassname) {
-      super(method, collection);
-      this.fieldName = fieldName;
-      this.resultClassname = resultClassname;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", fieldName: " + fieldName + ", resultClassname: " + resultClassname;
-    }
-  }
+public abstract class DistinctBatchBase<U extends DistinctBatchBaseCommand, C extends DistinctBatchBase<U, C>> extends WithStream<U, C> {
 
   private Matcher<String> fieldName;
   private Matcher<String> resultClassname;
@@ -49,12 +29,12 @@ public abstract class DistinctBatchBase<C extends DistinctBatchBase<C>> extends 
     if (!super.matches(cmd)) {
       return false;
     }
-    if (!(cmd instanceof DistinctBatchBase.DistinctBatchBaseCommand)) {
+    if (!(cmd instanceof DistinctBatchBaseCommand)) {
       return false;
     }
     DistinctBatchBaseCommand c = (DistinctBatchBaseCommand) cmd;
-    return (fieldName == null || fieldName.matches(c.fieldName))
-      && (resultClassname == null || resultClassname.matches(c.resultClassname));
+    return (fieldName == null || fieldName.matches(c.getFieldName()))
+      && (resultClassname == null || resultClassname.matches(c.getResultClassname()));
   }
 
   public C withFieldName(String fieldName) {

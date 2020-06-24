@@ -1,14 +1,9 @@
 package com.noenv.wiremongo.mapping.collection;
 
+import com.noenv.wiremongo.command.collection.DropCollectionCommand;
 import io.vertx.core.json.JsonObject;
 
-public class DropCollection extends WithCollection<Void, DropCollection> {
-
-  public static class DropCollectionCommand extends WithCollectionCommand {
-    public DropCollectionCommand(String collection) {
-      super("dropCollection", collection);
-    }
-  }
+public class DropCollection extends WithCollection<Void, DropCollectionCommand, DropCollection> {
 
   public DropCollection() {
     super("dropCollection");

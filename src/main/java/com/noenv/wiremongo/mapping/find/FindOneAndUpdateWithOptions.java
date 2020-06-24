@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.find;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.find.FindOneAndUpdateWithOptionsCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
@@ -9,26 +10,7 @@ import io.vertx.ext.mongo.UpdateOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindOneAndUpdateWithOptions extends FindOneAndUpdateBase<FindOneAndUpdateWithOptions> {
-
-  public static class FindOneAndUpdateWithOptionsCommand extends FindOneAndUpdateBaseCommand {
-
-    private final FindOptions findOptions;
-    private final UpdateOptions updateOptions;
-
-    public FindOneAndUpdateWithOptionsCommand(String collection, JsonObject query, JsonObject update, FindOptions findOptions, UpdateOptions updateOptions) {
-      super("findOneAndUpdateWithOptions", collection, query, update);
-      this.findOptions = findOptions;
-      this.updateOptions = updateOptions;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString()
-        + ", findOptions: " + (findOptions != null ? findOptions.toJson().encode() : "null")
-        + ", updateOptions: " + (updateOptions != null ? updateOptions.toJson().encode() : "null");
-    }
-  }
+public class FindOneAndUpdateWithOptions extends FindOneAndUpdateBase<FindOneAndUpdateWithOptionsCommand, FindOneAndUpdateWithOptions> {
 
   private Matcher<FindOptions> findOptions;
   private Matcher<UpdateOptions> updateOptions;
@@ -57,8 +39,8 @@ public class FindOneAndUpdateWithOptions extends FindOneAndUpdateBase<FindOneAnd
       return false;
     }
     FindOneAndUpdateWithOptionsCommand c = (FindOneAndUpdateWithOptionsCommand) cmd;
-    return (findOptions == null || findOptions.matches(c.findOptions))
-      && (updateOptions == null || updateOptions.matches(c.updateOptions));
+    return (findOptions == null || findOptions.matches(c.getFindOptions()))
+      && (updateOptions == null || updateOptions.matches(c.getUpdateOptions()));
   }
 
   public FindOneAndUpdateWithOptions withFindOptions(FindOptions options) {

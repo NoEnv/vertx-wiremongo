@@ -1,28 +1,14 @@
 package com.noenv.wiremongo.mapping.find;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.find.FindOneCommand;
 import com.noenv.wiremongo.mapping.WithQuery;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class FindOne extends WithQuery<JsonObject, FindOne> {
-
-  public static class FindOneCommand extends WithQueryCommand {
-
-    private final JsonObject fields;
-
-    public FindOneCommand(String collection, JsonObject query, JsonObject fields) {
-      super("findOne", collection, query);
-      this.fields = fields;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", fields: " + fields;
-    }
-  }
+public class FindOne extends WithQuery<JsonObject, FindOneCommand, FindOne> {
 
   private Matcher<JsonObject> fields;
 
@@ -44,7 +30,7 @@ public class FindOne extends WithQuery<JsonObject, FindOne> {
       return false;
     }
     FindOneCommand c = (FindOneCommand) cmd;
-    return fields == null || fields.matches(c.fields);
+    return fields == null || fields.matches(c.getFields());
   }
 
   @Override

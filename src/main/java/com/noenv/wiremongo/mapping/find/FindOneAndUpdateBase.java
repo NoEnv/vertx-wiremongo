@@ -1,21 +1,11 @@
 package com.noenv.wiremongo.mapping.find;
 
+import com.noenv.wiremongo.command.find.FindOneAndUpdateBaseCommand;
 import com.noenv.wiremongo.mapping.update.WithUpdate;
 import io.vertx.core.json.JsonObject;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public abstract class FindOneAndUpdateBase<C extends FindOneAndUpdateBase<C>> extends WithUpdate<JsonObject, C> {
-
-  public static class FindOneAndUpdateBaseCommand extends WithUpdateCommand {
-
-    public FindOneAndUpdateBaseCommand(String collection, JsonObject query, JsonObject update) {
-      this("findOneAndUpdate", collection, query, update);
-    }
-
-    public FindOneAndUpdateBaseCommand(String method, String collection, JsonObject query, JsonObject update) {
-      super(method, collection, query, update);
-    }
-  }
+public abstract class FindOneAndUpdateBase<U extends FindOneAndUpdateBaseCommand, C extends FindOneAndUpdateBase<U, C>> extends WithUpdate<JsonObject, U, C> {
 
   public FindOneAndUpdateBase() {
     this("findOneAndUpdate");

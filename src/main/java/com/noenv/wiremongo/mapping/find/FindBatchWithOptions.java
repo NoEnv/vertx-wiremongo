@@ -1,7 +1,8 @@
 package com.noenv.wiremongo.mapping.find;
 
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.find.FindBatchWithOptionsCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
@@ -10,21 +11,7 @@ import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindBatchWithOptions extends FindBatchBase<FindBatchWithOptions> {
-
-  public static class FindBatchWithOptionsCommand extends FindBatchBaseCommand {
-    private final FindOptions options;
-
-    public FindBatchWithOptionsCommand(String collection, JsonObject query, FindOptions options) {
-      super("findBatchWithOptions", collection, query);
-      this.options = options;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", options: " + (options != null ? options.toJson().encode() : "null");
-    }
-  }
+public class FindBatchWithOptions extends FindBatchBase<FindBatchWithOptionsCommand, FindBatchWithOptions> {
 
   private Matcher<FindOptions> options;
 
@@ -46,7 +33,7 @@ public class FindBatchWithOptions extends FindBatchBase<FindBatchWithOptions> {
       return false;
     }
     FindBatchWithOptionsCommand c = (FindBatchWithOptionsCommand) cmd;
-    return options == null || options.matches(c.options);
+    return options == null || options.matches(c.getOptions());
   }
 
   public FindBatchWithOptions withOptions(FindOptions options) {

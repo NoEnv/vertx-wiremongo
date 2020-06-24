@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.bulkwrite;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.bulkwrite.BulkWriteBaseCommand;
 import com.noenv.wiremongo.mapping.collection.WithCollection;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonArray;
@@ -13,26 +14,7 @@ import java.util.stream.Collectors;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public abstract class BulkWriteBase<C extends BulkWriteBase<C>> extends WithCollection<MongoClientBulkWriteResult, C> {
-
-  public static class BulkWriteBaseCommand extends WithCollectionCommand {
-    private final List<BulkOperation> operations;
-
-    public BulkWriteBaseCommand(String collection, List<BulkOperation> operations) {
-      this("bulkWrite", collection, operations);
-    }
-
-    public BulkWriteBaseCommand(String method, String collection, List<BulkOperation> operations) {
-      super(method, collection);
-      this.operations = operations;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", operations: " + (operations == null ? "null" : operations.stream()
-        .map(o -> o.toJson().encode()).collect(Collectors.joining(",")));
-    }
-  }
+public abstract class BulkWriteBase<U extends BulkWriteBaseCommand, C extends BulkWriteBase<U, C>> extends WithCollection<MongoClientBulkWriteResult, U, C> {
 
   private Matcher<List<BulkOperation>> operations;
 
@@ -61,11 +43,11 @@ public abstract class BulkWriteBase<C extends BulkWriteBase<C>> extends WithColl
     if (!super.matches(cmd)) {
       return false;
     }
-    if (!(cmd instanceof BulkWriteBase.BulkWriteBaseCommand)) {
+    if (!(cmd instanceof BulkWriteBaseCommand)) {
       return false;
     }
     BulkWriteBaseCommand c = (BulkWriteBaseCommand) cmd;
-    return operations == null || operations.matches(c.operations);
+    return operations == null || operations.matches(c.getOperations());
   }
 
   public C withOperations(List<BulkOperation> operations) {

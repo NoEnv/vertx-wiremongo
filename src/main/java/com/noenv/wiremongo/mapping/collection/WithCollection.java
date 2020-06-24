@@ -1,7 +1,7 @@
 package com.noenv.wiremongo.mapping.collection;
 
-import com.noenv.wiremongo.mapping.Command;
-import com.noenv.wiremongo.mapping.CommandBase;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.collection.WithCollectionCommand;
 import com.noenv.wiremongo.mapping.MappingBase;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
@@ -9,22 +9,7 @@ import io.vertx.core.json.JsonObject;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 
-public abstract class WithCollection<T, C extends WithCollection<T, C>> extends MappingBase<T, C> {
-
-  public abstract static class WithCollectionCommand extends CommandBase {
-
-    private final String collection;
-
-    public WithCollectionCommand(String method, String collection) {
-      super(method);
-      this.collection = collection;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", collection: " + collection;
-    }
-  }
+public abstract class WithCollection<T, U extends WithCollectionCommand, C extends WithCollection<T, U, C>> extends MappingBase<T, U, C> {
 
   private Matcher<String> collection;
 
@@ -55,6 +40,6 @@ public abstract class WithCollection<T, C extends WithCollection<T, C>> extends 
       return false;
     }
     WithCollectionCommand c = (WithCollectionCommand) cmd;
-    return collection == null || collection.matches(c.collection);
+    return collection == null || collection.matches(c.getCollection());
   }
 }

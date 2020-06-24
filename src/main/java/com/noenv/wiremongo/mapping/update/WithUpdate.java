@@ -1,28 +1,14 @@
 package com.noenv.wiremongo.mapping.update;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.update.WithUpdateCommand;
 import com.noenv.wiremongo.mapping.WithQuery;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public abstract class WithUpdate<T, C extends WithUpdate<T, C>> extends WithQuery<T, C> {
-
-  public abstract static class WithUpdateCommand extends WithQueryCommand {
-
-    private final JsonObject update;
-
-    public WithUpdateCommand(String method, String collection, JsonObject query, JsonObject update) {
-      super(method, collection, query);
-      this.update = update;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", update: " + update;
-    }
-  }
+public abstract class WithUpdate<T, U extends WithUpdateCommand, C extends WithUpdate<T, U, C>> extends WithQuery<T, U, C> {
 
   private Matcher<JsonObject> update;
 
@@ -44,7 +30,7 @@ public abstract class WithUpdate<T, C extends WithUpdate<T, C>> extends WithQuer
       return false;
     }
     WithUpdateCommand c = (WithUpdateCommand) cmd;
-    return update == null || update.matches(c.update);
+    return update == null || update.matches(c.getUpdate());
   }
 
   public C withUpdate(JsonObject update) {

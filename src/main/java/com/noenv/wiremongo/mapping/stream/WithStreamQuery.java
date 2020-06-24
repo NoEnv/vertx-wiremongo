@@ -1,28 +1,14 @@
 package com.noenv.wiremongo.mapping.stream;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.stream.WithStreamQueryCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 
-public abstract class WithStreamQuery<C extends WithStreamQuery<C>> extends WithStream<C> {
-
-  public abstract static class WithStreamQueryCommand extends WithStreamCommand {
-
-    private final JsonObject query;
-
-    public WithStreamQueryCommand(String method, String collection, JsonObject query) {
-      super(method, collection);
-      this.query = query;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", query: " + query;
-    }
-  }
+public abstract class WithStreamQuery<U extends WithStreamQueryCommand, C extends WithStreamQuery<U, C>> extends WithStream<U, C> {
 
   private Matcher<JsonObject> query;
 
@@ -44,7 +30,7 @@ public abstract class WithStreamQuery<C extends WithStreamQuery<C>> extends With
       return false;
     }
     WithStreamQueryCommand c = (WithStreamQueryCommand) cmd;
-    return query == null || query.matches(c.query);
+    return query == null || query.matches(c.getQuery());
   }
 
   public C withQuery(JsonObject query) {

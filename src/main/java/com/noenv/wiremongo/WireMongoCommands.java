@@ -7,7 +7,7 @@ import com.noenv.wiremongo.mapping.bulkwrite.BulkWrite;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteWithOptions;
 import com.noenv.wiremongo.mapping.collection.DropCollection;
 import com.noenv.wiremongo.mapping.collection.GetCollections;
-import com.noenv.wiremongo.mapping.count.Count;
+import com.noenv.wiremongo.mapping.Count;
 import com.noenv.wiremongo.mapping.collection.CreateCollection;
 import com.noenv.wiremongo.mapping.index.CreateIndex;
 import com.noenv.wiremongo.mapping.index.CreateIndexWithOptions;
@@ -193,7 +193,7 @@ public interface WireMongoCommands {
     return addMapping(new DistinctBatchWithQuery());
   }
 
-  <T extends Mapping<?, ?>> T addMapping(T mapping);
+  <T extends Mapping<?, ?, ?>> T addMapping(T mapping);
 
-  <T extends Mapping<?, ?>> boolean removeMapping(T mapping);
+  <T extends Mapping<?, ?, ?>> boolean removeMapping(T mapping);
 }

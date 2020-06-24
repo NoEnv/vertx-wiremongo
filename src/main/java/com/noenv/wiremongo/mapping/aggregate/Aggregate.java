@@ -1,9 +1,10 @@
 package com.noenv.wiremongo.mapping.aggregate;
 
+import com.noenv.wiremongo.command.aggregate.AggregateBaseCommand;
 import io.vertx.core.json.JsonObject;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class Aggregate extends AggregateBase<Aggregate> {
+public class Aggregate extends AggregateBase<AggregateBaseCommand, Aggregate> {
 
   public Aggregate() {
     this("aggregate");

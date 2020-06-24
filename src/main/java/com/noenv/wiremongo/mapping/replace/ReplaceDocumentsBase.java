@@ -1,21 +1,11 @@
 package com.noenv.wiremongo.mapping.replace;
 
+import com.noenv.wiremongo.command.replace.ReplaceDocumentsBaseCommand;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public abstract class ReplaceDocumentsBase<C extends ReplaceDocumentsBase<C>> extends WithReplace<MongoClientUpdateResult, C> {
-
-  public static class ReplaceDocumentsBaseCommand extends WithReplaceCommand {
-
-    public ReplaceDocumentsBaseCommand(String collection, JsonObject query, JsonObject replace) {
-      this("replaceDocuments", collection, query, replace);
-    }
-
-    public ReplaceDocumentsBaseCommand(String method, String collection, JsonObject query, JsonObject replace) {
-      super(method, collection, query, replace);
-    }
-  }
+public abstract class ReplaceDocumentsBase<U extends ReplaceDocumentsBaseCommand, C extends ReplaceDocumentsBase<U, C>> extends WithReplace<MongoClientUpdateResult, U, C> {
 
   public ReplaceDocumentsBase() {
     this("replaceDocuments");

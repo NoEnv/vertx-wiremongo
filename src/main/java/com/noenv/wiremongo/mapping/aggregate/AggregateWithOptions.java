@@ -1,30 +1,15 @@
 package com.noenv.wiremongo.mapping.aggregate;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.aggregate.AggregateWithOptionsCommand;
 import com.noenv.wiremongo.matching.Matcher;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.AggregateOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class AggregateWithOptions extends AggregateBase<AggregateWithOptions> {
-
-  public static class AggregateWithOptionsCommand extends AggregateBaseCommand {
-
-    private final AggregateOptions options;
-
-    public AggregateWithOptionsCommand(String collection, JsonArray pipeline, AggregateOptions options) {
-      super("aggregateWithOptions", collection, pipeline);
-      this.options = options;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", options: " + (options == null ? "null" : options.toJson().encode());
-    }
-  }
+public class AggregateWithOptions extends AggregateBase<AggregateWithOptionsCommand, AggregateWithOptions> {
 
   private Matcher<AggregateOptions> options;
 
@@ -46,7 +31,7 @@ public class AggregateWithOptions extends AggregateBase<AggregateWithOptions> {
       return false;
     }
     AggregateWithOptionsCommand c = (AggregateWithOptionsCommand) cmd;
-    return options == null || options.matches(c.options);
+    return options == null || options.matches(c.getOptions());
   }
 
   public AggregateWithOptions withOptions(AggregateOptions options) {

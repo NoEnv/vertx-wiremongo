@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.find;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.find.FindOneAndDeleteWithOptionsCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
@@ -8,22 +9,7 @@ import io.vertx.ext.mongo.FindOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class FindOneAndDeleteWithOptions extends FindOneAndDeleteBase<FindOneAndDeleteWithOptions> {
-
-  public static class FindOneAndDeleteWithOptionsCommand extends FindOneAndDeleteBaseCommand {
-
-    private FindOptions options;
-
-    public FindOneAndDeleteWithOptionsCommand(String collection, JsonObject query, FindOptions options) {
-      super("findOneAndDeleteWithOptions", collection, query);
-      this.options = options;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", options: " + (options == null ? "null" : options.toJson().encode());
-    }
-  }
+public class FindOneAndDeleteWithOptions extends FindOneAndDeleteBase<FindOneAndDeleteWithOptionsCommand, FindOneAndDeleteWithOptions> {
 
   private Matcher<FindOptions> options;
 
@@ -49,7 +35,7 @@ public class FindOneAndDeleteWithOptions extends FindOneAndDeleteBase<FindOneAnd
       return false;
     }
     FindOneAndDeleteWithOptionsCommand c = (FindOneAndDeleteWithOptionsCommand) cmd;
-    return options == null || options.matches(c.options);
+    return options == null || options.matches(c.getOptions());
   }
 
   public FindOneAndDeleteWithOptions withOptions(FindOptions options) {

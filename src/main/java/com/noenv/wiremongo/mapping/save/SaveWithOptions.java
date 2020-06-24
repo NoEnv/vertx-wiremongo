@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.save;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.save.SaveWithOptionsCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.WriteOption;
@@ -8,17 +9,7 @@ import io.vertx.ext.mongo.WriteOption;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class SaveWithOptions extends SaveBase<SaveWithOptions> {
-
-  public static class SaveWithOptionsCommand extends SaveBaseCommand {
-
-    private WriteOption options;
-
-    public SaveWithOptionsCommand(String collection, JsonObject document, WriteOption options) {
-      super("saveWithOptions", collection, document);
-      this.options = options;
-    }
-  }
+public class SaveWithOptions extends SaveBase<SaveWithOptionsCommand, SaveWithOptions> {
 
   private Matcher<WriteOption> options;
 
@@ -40,7 +31,7 @@ public class SaveWithOptions extends SaveBase<SaveWithOptions> {
       return false;
     }
     SaveWithOptionsCommand c = (SaveWithOptionsCommand) cmd;
-    return options == null || options.matches(c.options);
+    return options == null || options.matches(c.getOptions());
   }
 
   public SaveWithOptions withOptions(WriteOption options) {

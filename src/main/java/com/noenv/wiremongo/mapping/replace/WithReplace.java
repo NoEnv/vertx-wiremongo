@@ -1,28 +1,14 @@
 package com.noenv.wiremongo.mapping.replace;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.replace.WithReplaceCommand;
 import com.noenv.wiremongo.mapping.WithQuery;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public abstract class WithReplace<T, C extends WithReplace<T, C>> extends WithQuery<T, C> {
-
-  public abstract static class WithReplaceCommand extends WithQueryCommand {
-
-    private final JsonObject replace;
-
-    public WithReplaceCommand(String method, String collection, JsonObject query, JsonObject replace) {
-      super(method, collection, query);
-      this.replace = replace;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", replace: " + replace;
-    }
-  }
+public abstract class WithReplace<T, U extends WithReplaceCommand, C extends WithReplace<T, U, C>> extends WithQuery<T, U, C> {
 
   private Matcher<JsonObject> replace;
 
@@ -44,7 +30,7 @@ public abstract class WithReplace<T, C extends WithReplace<T, C>> extends WithQu
       return false;
     }
     WithReplaceCommand c = (WithReplaceCommand) cmd;
-    return replace == null || replace.matches(c.replace);
+    return replace == null || replace.matches(c.getReplace());
   }
 
   public C withReplace(JsonObject replace) {

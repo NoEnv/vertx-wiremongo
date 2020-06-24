@@ -1,20 +1,11 @@
 package com.noenv.wiremongo.mapping.remove;
 
+import com.noenv.wiremongo.command.remove.RemoveDocumentsBaseCommand;
 import com.noenv.wiremongo.mapping.WithQuery;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientDeleteResult;
 
-public abstract class RemoveDocumentsBase<C extends RemoveDocumentsBase<C>> extends WithQuery<MongoClientDeleteResult, C> {
-
-  public static class RemoveDocumentsBaseCommand extends WithQueryCommand {
-    public RemoveDocumentsBaseCommand(String collection, JsonObject query) {
-      super("removeDocuments", collection, query);
-    }
-
-    public RemoveDocumentsBaseCommand(String method, String collection, JsonObject query) {
-      super(method, collection, query);
-    }
-  }
+public abstract class RemoveDocumentsBase<U extends RemoveDocumentsBaseCommand, C extends RemoveDocumentsBase<U, C>> extends WithQuery<MongoClientDeleteResult, U, C> {
 
   public RemoveDocumentsBase() {
     super("removeDocuments");

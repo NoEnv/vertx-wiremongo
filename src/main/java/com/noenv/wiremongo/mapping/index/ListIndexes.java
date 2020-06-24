@@ -1,16 +1,11 @@
 package com.noenv.wiremongo.mapping.index;
 
+import com.noenv.wiremongo.command.index.ListIndexesCommand;
 import com.noenv.wiremongo.mapping.collection.WithCollection;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
-public class ListIndexes extends WithCollection<JsonArray, ListIndexes> {
-
-  public static class ListIndexesCommand extends WithCollectionCommand {
-    public ListIndexesCommand(String collection) {
-      super("listIndexes", collection);
-    }
-  }
+public class ListIndexes extends WithCollection<JsonArray, ListIndexesCommand, ListIndexes> {
 
   public ListIndexes() {
     super("listIndexes");

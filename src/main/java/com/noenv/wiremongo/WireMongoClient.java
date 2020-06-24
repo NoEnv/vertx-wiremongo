@@ -1,35 +1,36 @@
 package com.noenv.wiremongo;
 
-import com.noenv.wiremongo.mapping.*;
-import com.noenv.wiremongo.mapping.aggregate.Aggregate;
-import com.noenv.wiremongo.mapping.aggregate.AggregateWithOptions;
-import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteBase;
-import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteWithOptions;
-import com.noenv.wiremongo.mapping.collection.DropCollection;
-import com.noenv.wiremongo.mapping.collection.GetCollections;
-import com.noenv.wiremongo.mapping.count.Count;
-import com.noenv.wiremongo.mapping.collection.CreateCollection;
-import com.noenv.wiremongo.mapping.index.CreateIndexBase;
-import com.noenv.wiremongo.mapping.index.CreateIndexWithOptions;
-import com.noenv.wiremongo.mapping.distinct.Distinct;
-import com.noenv.wiremongo.mapping.distinct.DistinctBatch;
-import com.noenv.wiremongo.mapping.distinct.DistinctBatchWithQuery;
-import com.noenv.wiremongo.mapping.distinct.DistinctWithQuery;
-import com.noenv.wiremongo.mapping.find.*;
-import com.noenv.wiremongo.mapping.index.DropIndex;
-import com.noenv.wiremongo.mapping.index.ListIndexes;
-import com.noenv.wiremongo.mapping.insert.Insert;
-import com.noenv.wiremongo.mapping.insert.InsertWithOptions;
-import com.noenv.wiremongo.mapping.remove.RemoveDocumentBase;
-import com.noenv.wiremongo.mapping.remove.RemoveDocumentWithOptions;
-import com.noenv.wiremongo.mapping.remove.RemoveDocumentsBase;
-import com.noenv.wiremongo.mapping.remove.RemoveDocumentsWithOptions;
-import com.noenv.wiremongo.mapping.replace.ReplaceDocumentsBase;
-import com.noenv.wiremongo.mapping.replace.ReplaceDocumentsWithOptions;
-import com.noenv.wiremongo.mapping.save.Save;
-import com.noenv.wiremongo.mapping.save.SaveWithOptions;
-import com.noenv.wiremongo.mapping.update.UpdateCollectionBase;
-import com.noenv.wiremongo.mapping.update.UpdateCollectionWithOptions;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.RunCommandCommand;
+import com.noenv.wiremongo.command.aggregate.AggregateBaseCommand;
+import com.noenv.wiremongo.command.aggregate.AggregateWithOptionsCommand;
+import com.noenv.wiremongo.command.bulkwrite.BulkWriteBaseCommand;
+import com.noenv.wiremongo.command.bulkwrite.BulkWriteWithOptionsCommand;
+import com.noenv.wiremongo.command.collection.CreateCollectionCommand;
+import com.noenv.wiremongo.command.collection.DropCollectionCommand;
+import com.noenv.wiremongo.command.collection.GetCollectionsCommand;
+import com.noenv.wiremongo.command.CountCommand;
+import com.noenv.wiremongo.command.distinct.DistinctBatchBaseCommand;
+import com.noenv.wiremongo.command.distinct.DistinctBatchWithQueryCommand;
+import com.noenv.wiremongo.command.distinct.DistinctCommand;
+import com.noenv.wiremongo.command.distinct.DistinctWithQueryCommand;
+import com.noenv.wiremongo.command.find.*;
+import com.noenv.wiremongo.command.index.CreateIndexBaseCommand;
+import com.noenv.wiremongo.command.index.CreateIndexWithOptionsCommand;
+import com.noenv.wiremongo.command.index.DropIndexCommand;
+import com.noenv.wiremongo.command.index.ListIndexesCommand;
+import com.noenv.wiremongo.command.insert.InsertBaseCommand;
+import com.noenv.wiremongo.command.insert.InsertWithOptionsCommand;
+import com.noenv.wiremongo.command.remove.RemoveDocumentBaseCommand;
+import com.noenv.wiremongo.command.remove.RemoveDocumentWithOptionsCommand;
+import com.noenv.wiremongo.command.remove.RemoveDocumentsBaseCommand;
+import com.noenv.wiremongo.command.remove.RemoveDocumentsWithOptionsCommand;
+import com.noenv.wiremongo.command.replace.ReplaceDocumentsBaseCommand;
+import com.noenv.wiremongo.command.replace.ReplaceDocumentsWithOptionsCommand;
+import com.noenv.wiremongo.command.save.SaveBaseCommand;
+import com.noenv.wiremongo.command.save.SaveWithOptionsCommand;
+import com.noenv.wiremongo.command.update.UpdateCollectionBaseCommand;
+import com.noenv.wiremongo.command.update.UpdateCollectionWithOptionsCommand;
 import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -60,7 +61,7 @@ public class WireMongoClient implements MongoClient {
     return this;
   }
 
-  private <T> Future<T> call(Command request) {
+  private <T, U extends Command> Future<T> call(U request) {
     return wireMongo.call(request);
   }
 
@@ -70,25 +71,25 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient save(String collection, JsonObject document, Handler<AsyncResult<String>> resultHandler) {
-    this.<String>call(new Save.SaveBaseCommand(collection, document)).onComplete(resultHandler);
+    this.<String, SaveBaseCommand>call(new SaveBaseCommand(collection, document)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient saveWithOptions(String collection, JsonObject document, @Nullable WriteOption writeOption, Handler<AsyncResult<String>> resultHandler) {
-    this.<String>call(new SaveWithOptions.SaveWithOptionsCommand(collection, document, writeOption)).onComplete(resultHandler);
+    this.<String, SaveWithOptionsCommand>call(new SaveWithOptionsCommand(collection, document, writeOption)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient insert(String collection, JsonObject document, Handler<AsyncResult<String>> resultHandler) {
-    this.<String>call(new Insert.InsertBaseCommand(collection, document)).onComplete(resultHandler);
+    this.<String, InsertBaseCommand>call(new InsertBaseCommand(collection, document)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient insertWithOptions(String collection, JsonObject document, @Nullable WriteOption writeOption, Handler<AsyncResult<String>> resultHandler) {
-    this.<String>call(new InsertWithOptions.InsertWithOptionsCommand(collection, document, writeOption)).onComplete(resultHandler);
+    this.<String, InsertWithOptionsCommand>call(new InsertWithOptionsCommand(collection, document, writeOption)).onComplete(resultHandler);
     return this;
   }
 
@@ -99,7 +100,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient updateCollection(String collection, JsonObject query, JsonObject update, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
-    this.<MongoClientUpdateResult>call(new UpdateCollectionBase.UpdateCollectionBaseCommand(collection, query, update)).onComplete(resultHandler);
+    this.<MongoClientUpdateResult, UpdateCollectionBaseCommand>call(new UpdateCollectionBaseCommand(collection, query, update)).onComplete(resultHandler);
     return this;
   }
 
@@ -110,7 +111,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient updateCollectionWithOptions(String collection, JsonObject query, JsonObject update, UpdateOptions options, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
-    this.<MongoClientUpdateResult>call(new UpdateCollectionWithOptions.UpdateCollectionWithOptionsCommand(collection, query, update, options)).onComplete(resultHandler);
+    this.<MongoClientUpdateResult, UpdateCollectionWithOptionsCommand>call(new UpdateCollectionWithOptionsCommand(collection, query, update, options)).onComplete(resultHandler);
     return this;
   }
 
@@ -121,7 +122,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient replaceDocuments(String collection, JsonObject query, JsonObject replace, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
-    this.<MongoClientUpdateResult>call(new ReplaceDocumentsBase.ReplaceDocumentsBaseCommand(collection, query, replace)).onComplete(resultHandler);
+    this.<MongoClientUpdateResult, ReplaceDocumentsBaseCommand>call(new ReplaceDocumentsBaseCommand(collection, query, replace)).onComplete(resultHandler);
     return this;
   }
 
@@ -132,89 +133,89 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient replaceDocumentsWithOptions(String collection, JsonObject query, JsonObject replace, UpdateOptions options, Handler<AsyncResult<MongoClientUpdateResult>> resultHandler) {
-    this.<MongoClientUpdateResult>call(new ReplaceDocumentsWithOptions.ReplaceDocumentsWithOptionsCommand(collection, query, replace, options)).onComplete(resultHandler);
+    this.<MongoClientUpdateResult, ReplaceDocumentsWithOptionsCommand>call(new ReplaceDocumentsWithOptionsCommand(collection, query, replace, options)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient bulkWrite(String collection, List<BulkOperation> operations, Handler<AsyncResult<MongoClientBulkWriteResult>> resultHandler) {
-    this.<MongoClientBulkWriteResult>call(new BulkWriteBase.BulkWriteBaseCommand(collection, operations)).onComplete(resultHandler);
+    this.<MongoClientBulkWriteResult, BulkWriteBaseCommand>call(new BulkWriteBaseCommand(collection, operations)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient bulkWriteWithOptions(String collection, List<BulkOperation> operations, BulkWriteOptions bulkWriteOptions, Handler<AsyncResult<MongoClientBulkWriteResult>> resultHandler) {
-    this.<MongoClientBulkWriteResult>call(new BulkWriteWithOptions.BulkWriteWithOptionsCommand(collection, operations, bulkWriteOptions)).onComplete(resultHandler);
+    this.<MongoClientBulkWriteResult, BulkWriteWithOptionsCommand>call(new BulkWriteWithOptionsCommand(collection, operations, bulkWriteOptions)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient find(String collection, JsonObject query, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
-    this.<List<JsonObject>>call(new FindBase.FindBaseCommand(collection, query)).onComplete(resultHandler);
+    this.<List<JsonObject>, FindBaseCommand>call(new FindBaseCommand(collection, query)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public ReadStream<JsonObject> findBatch(String collection, JsonObject query) {
-    return callStream(new FindBatch.FindBatchBaseCommand(collection, query));
+    return callStream(new FindBatchBaseCommand(collection, query));
   }
 
   @Override
   public MongoClient findWithOptions(String collection, JsonObject query, FindOptions options, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
-    this.<List<JsonObject>>call(new FindWithOptions.FindWithOptionsCommand(collection, query, options)).onComplete(resultHandler);
+    this.<List<JsonObject>, FindWithOptionsCommand>call(new FindWithOptionsCommand(collection, query, options)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public ReadStream<JsonObject> findBatchWithOptions(String collection, JsonObject query, FindOptions options) {
-    return callStream(new FindBatchWithOptions.FindBatchWithOptionsCommand(collection, query, options));
+    return callStream(new FindBatchWithOptionsCommand(collection, query, options));
   }
 
   @Override
   public MongoClient findOne(String collection, JsonObject query, @Nullable JsonObject fields, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOne.FindOneCommand(collection, query, fields)).onComplete(resultHandler);
+    this.<JsonObject, FindOneCommand>call(new FindOneCommand(collection, query, fields)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient findOneAndUpdate(String collection, JsonObject query, JsonObject update, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOneAndUpdateBase.FindOneAndUpdateBaseCommand(collection, query, update)).onComplete(resultHandler);
+    this.<JsonObject, FindOneAndUpdateBaseCommand>call(new FindOneAndUpdateBaseCommand(collection, query, update)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient findOneAndUpdateWithOptions(String collection, JsonObject query, JsonObject update, FindOptions findOptions, UpdateOptions updateOptions, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOneAndUpdateWithOptions.FindOneAndUpdateWithOptionsCommand(collection, query, update, findOptions, updateOptions)).onComplete(resultHandler);
+    this.<JsonObject, FindOneAndUpdateWithOptionsCommand>call(new FindOneAndUpdateWithOptionsCommand(collection, query, update, findOptions, updateOptions)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient findOneAndReplace(String collection, JsonObject query, JsonObject replace, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOneAndReplaceBase.FindOneAndReplaceBaseCommand(collection, query, replace)).onComplete(resultHandler);
+    this.<JsonObject, FindOneAndReplaceBaseCommand>call(new FindOneAndReplaceBaseCommand(collection, query, replace)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient findOneAndReplaceWithOptions(String collection, JsonObject query, JsonObject replace, FindOptions findOptions, UpdateOptions updateOptions, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOneAndReplaceWithOptions.FindOneAndReplaceWithOptionsCommand(collection, query, replace, findOptions, updateOptions)).onComplete(resultHandler);
+    this.<JsonObject, FindOneAndReplaceWithOptionsCommand>call(new FindOneAndReplaceWithOptionsCommand(collection, query, replace, findOptions, updateOptions)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient findOneAndDelete(String collection, JsonObject query, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOneAndDeleteBase.FindOneAndDeleteBaseCommand(collection, query)).onComplete(resultHandler);
+    this.<JsonObject, FindOneAndDeleteBaseCommand>call(new FindOneAndDeleteBaseCommand(collection, query)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient findOneAndDeleteWithOptions(String collection, JsonObject query, FindOptions findOptions, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new FindOneAndDeleteWithOptions.FindOneAndDeleteWithOptionsCommand(collection, query, findOptions)).onComplete(resultHandler);
+    this.<JsonObject, FindOneAndDeleteWithOptionsCommand>call(new FindOneAndDeleteWithOptionsCommand(collection, query, findOptions)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient count(String collection, JsonObject query, Handler<AsyncResult<Long>> resultHandler) {
-    this.<Long>call(new Count.CountCommand(collection, query)).onComplete(resultHandler);
+    this.<Long, CountCommand>call(new CountCommand(collection, query)).onComplete(resultHandler);
     return this;
   }
 
@@ -225,7 +226,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient removeDocuments(String collection, JsonObject query, Handler<AsyncResult<MongoClientDeleteResult>> resultHandler) {
-    this.<MongoClientDeleteResult>call(new RemoveDocumentsBase.RemoveDocumentsBaseCommand(collection, query)).onComplete(resultHandler);
+    this.<MongoClientDeleteResult, RemoveDocumentsBaseCommand>call(new RemoveDocumentsBaseCommand(collection, query)).onComplete(resultHandler);
     return this;
   }
 
@@ -236,7 +237,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient removeDocumentsWithOptions(String collection, JsonObject query, @Nullable WriteOption writeOption, Handler<AsyncResult<MongoClientDeleteResult>> resultHandler) {
-    this.<MongoClientDeleteResult>call(new RemoveDocumentsWithOptions.RemoveDocumentsWithOptionsCommand(collection, query, writeOption)).onComplete(resultHandler);
+    this.<MongoClientDeleteResult, RemoveDocumentsWithOptionsCommand>call(new RemoveDocumentsWithOptionsCommand(collection, query, writeOption)).onComplete(resultHandler);
     return this;
   }
 
@@ -247,7 +248,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient removeDocument(String collection, JsonObject query, Handler<AsyncResult<MongoClientDeleteResult>> resultHandler) {
-    this.<MongoClientDeleteResult>call(new RemoveDocumentBase.RemoveDocumentBaseCommand(collection, query)).onComplete(resultHandler);
+    this.<MongoClientDeleteResult, RemoveDocumentBaseCommand>call(new RemoveDocumentBaseCommand(collection, query)).onComplete(resultHandler);
     return this;
   }
 
@@ -258,93 +259,93 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient removeDocumentWithOptions(String collection, JsonObject query, @Nullable WriteOption writeOption, Handler<AsyncResult<MongoClientDeleteResult>> resultHandler) {
-    this.<MongoClientDeleteResult>call(new RemoveDocumentWithOptions.RemoveDocumentWithOptionsCommand(collection, query, writeOption)).onComplete(resultHandler);
+    this.<MongoClientDeleteResult, RemoveDocumentWithOptionsCommand>call(new RemoveDocumentWithOptionsCommand(collection, query, writeOption)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient createCollection(String collection, Handler<AsyncResult<Void>> resultHandler) {
-    this.<Void>call(new CreateCollection.CreateCollectionCommand(collection)).onComplete(resultHandler);
+    this.<Void, CreateCollectionCommand>call(new CreateCollectionCommand(collection)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient getCollections(Handler<AsyncResult<List<String>>> resultHandler) {
-    this.<List<String>>call(new GetCollections.GetCollectionsCommand()).onComplete(resultHandler);
+    this.<List<String>, GetCollectionsCommand>call(new GetCollectionsCommand()).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient dropCollection(String collection, Handler<AsyncResult<Void>> resultHandler) {
-    this.<Void>call(new DropCollection.DropCollectionCommand(collection)).onComplete(resultHandler);
+    this.<Void, DropCollectionCommand>call(new DropCollectionCommand(collection)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient createIndex(String collection, JsonObject key, Handler<AsyncResult<Void>> resultHandler) {
-    this.<Void>call(new CreateIndexBase.CreateIndexBaseCommand(collection, key)).onComplete(resultHandler);
+    this.<Void, CreateIndexBaseCommand>call(new CreateIndexBaseCommand(collection, key)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient createIndexWithOptions(String collection, JsonObject key, IndexOptions options, Handler<AsyncResult<Void>> resultHandler) {
-    this.<Void>call(new CreateIndexWithOptions.CreateIndexWithOptionsCommand(collection, key, options)).onComplete(resultHandler);
+    this.<Void, CreateIndexWithOptionsCommand>call(new CreateIndexWithOptionsCommand(collection, key, options)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient listIndexes(String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
-    this.<JsonArray>call(new ListIndexes.ListIndexesCommand(collection)).onComplete(resultHandler);
+    this.<JsonArray, ListIndexesCommand>call(new ListIndexesCommand(collection)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient dropIndex(String collection, String indexName, Handler<AsyncResult<Void>> resultHandler) {
-    this.<Void>call(new DropIndex.DropIndexCommand(collection, indexName)).onComplete(resultHandler);
+    this.<Void, DropIndexCommand>call(new DropIndexCommand(collection, indexName)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient runCommand(String commandName, JsonObject command, Handler<AsyncResult<JsonObject>> resultHandler) {
-    this.<JsonObject>call(new RunCommand.RunCommandCommand(commandName, command)).onComplete(resultHandler);
+    this.<JsonObject, RunCommandCommand>call(new RunCommandCommand(commandName, command)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient distinct(String collection, String fieldName, String resultClassname, Handler<AsyncResult<JsonArray>> resultHandler) {
-    this.<JsonArray>call(new Distinct.DistinctCommand(collection, fieldName, resultClassname)).onComplete(resultHandler);
+    this.<JsonArray, DistinctCommand>call(new DistinctCommand(collection, fieldName, resultClassname)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public MongoClient distinctWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, Handler<AsyncResult<JsonArray>> resultHandler) {
-    this.<JsonArray>call(new DistinctWithQuery.DistinctWithQueryCommand(collection, fieldName, resultClassname, query)).onComplete(resultHandler);
+    this.<JsonArray, DistinctWithQueryCommand>call(new DistinctWithQueryCommand(collection, fieldName, resultClassname, query)).onComplete(resultHandler);
     return this;
   }
 
   @Override
   public ReadStream<JsonObject> distinctBatch(String collection, String fieldName, String resultClassname) {
-    return callStream(new DistinctBatch.DistinctBatchBaseCommand(collection, fieldName, resultClassname));
+    return callStream(new DistinctBatchBaseCommand(collection, fieldName, resultClassname));
   }
 
   @Override
   public ReadStream<JsonObject> distinctBatchWithQuery(String collection, String fieldName, String resultClassname, JsonObject query) {
-    return callStream(new DistinctBatchWithQuery.DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query));
+    return callStream(new DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query));
   }
 
   @Override
   public ReadStream<JsonObject> distinctBatchWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, int batchSize) {
-    return callStream(new DistinctBatchWithQuery.DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query, batchSize));
+    return callStream(new DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query, batchSize));
   }
 
   @Override
   public ReadStream<JsonObject> aggregate(String collection, JsonArray pipeline) {
-    return callStream(new Aggregate.AggregateBaseCommand(collection, pipeline));
+    return callStream(new AggregateBaseCommand(collection, pipeline));
   }
 
   @Override
   public ReadStream<JsonObject> aggregateWithOptions(String collection, JsonArray pipeline, AggregateOptions options) {
-    return callStream(new AggregateWithOptions.AggregateWithOptionsCommand(collection, pipeline, options));
+    return callStream(new AggregateWithOptionsCommand(collection, pipeline, options));
   }
 
   @Override

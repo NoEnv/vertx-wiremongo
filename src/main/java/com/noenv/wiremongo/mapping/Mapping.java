@@ -2,13 +2,13 @@ package com.noenv.wiremongo.mapping;
 
 import com.mongodb.*;
 import com.noenv.wiremongo.Stub;
+import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.mapping.aggregate.Aggregate;
 import com.noenv.wiremongo.mapping.aggregate.AggregateWithOptions;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWrite;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteWithOptions;
 import com.noenv.wiremongo.mapping.collection.DropCollection;
 import com.noenv.wiremongo.mapping.collection.GetCollections;
-import com.noenv.wiremongo.mapping.count.Count;
 import com.noenv.wiremongo.mapping.collection.CreateCollection;
 import com.noenv.wiremongo.mapping.index.CreateIndex;
 import com.noenv.wiremongo.mapping.index.CreateIndexWithOptions;
@@ -36,7 +36,7 @@ import org.bson.BsonDocument;
 
 import java.net.ConnectException;
 
-public interface Mapping<T, C extends Mapping<T, C>> {
+public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
 
   boolean matches(Command c);
 

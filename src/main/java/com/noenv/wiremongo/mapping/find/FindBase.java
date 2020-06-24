@@ -1,5 +1,6 @@
 package com.noenv.wiremongo.mapping.find;
 
+import com.noenv.wiremongo.command.find.FindBaseCommand;
 import com.noenv.wiremongo.mapping.WithQuery;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -7,17 +8,7 @@ import io.vertx.core.json.JsonObject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class FindBase<C extends FindBase<C>> extends WithQuery<List<JsonObject>, C> {
-
-  public static class FindBaseCommand extends WithQueryCommand {
-    public FindBaseCommand(String collection, JsonObject query) {
-      this("find", collection, query);
-    }
-
-    public FindBaseCommand(String method, String collection, JsonObject query) {
-      super(method, collection, query);
-    }
-  }
+public abstract class FindBase<U extends FindBaseCommand, C extends FindBase<U, C>> extends WithQuery<List<JsonObject>, U, C> {
 
   public FindBase() {
     this("find");

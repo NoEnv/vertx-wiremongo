@@ -1,28 +1,14 @@
 package com.noenv.wiremongo.mapping.index;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.index.DropIndexCommand;
 import com.noenv.wiremongo.mapping.collection.WithCollection;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class DropIndex extends WithCollection<Void, DropIndex> {
-
-  public static class DropIndexCommand extends WithCollectionCommand {
-
-    private final String name;
-
-    public DropIndexCommand(String collection, String name) {
-      super("dropIndex", collection);
-      this.name = name;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", name: " + name;
-    }
-  }
+public class DropIndex extends WithCollection<Void, DropIndexCommand, DropIndex> {
 
   private Matcher<String> name;
 
@@ -49,7 +35,7 @@ public class DropIndex extends WithCollection<Void, DropIndex> {
       return false;
     }
     DropIndexCommand c = (DropIndexCommand) cmd;
-    return name == null || name.matches(c.name);
+    return name == null || name.matches(c.getName());
   }
 
   public DropIndex withName(String name) {

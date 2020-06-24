@@ -1,21 +1,11 @@
 package com.noenv.wiremongo.mapping.update;
 
+import com.noenv.wiremongo.command.update.UpdateCollectionBaseCommand;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public abstract class UpdateCollectionBase<C extends UpdateCollectionBase<C>> extends WithUpdate<MongoClientUpdateResult, C> {
-
-  public static class UpdateCollectionBaseCommand extends WithUpdateCommand {
-
-    public UpdateCollectionBaseCommand(String collection, JsonObject query, JsonObject update) {
-      this("updateCollection", collection, query, update);
-    }
-
-    public UpdateCollectionBaseCommand(String method, String collection, JsonObject query, JsonObject update) {
-      super(method, collection, query, update);
-    }
-  }
+public abstract class UpdateCollectionBase<U extends UpdateCollectionBaseCommand, C extends UpdateCollectionBase<U, C>> extends WithUpdate<MongoClientUpdateResult, U, C> {
 
   public UpdateCollectionBase() {
     this("updateCollection");

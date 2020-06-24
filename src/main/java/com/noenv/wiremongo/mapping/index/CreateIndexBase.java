@@ -1,32 +1,14 @@
 package com.noenv.wiremongo.mapping.index;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.index.CreateIndexBaseCommand;
 import com.noenv.wiremongo.mapping.collection.WithCollection;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public abstract class CreateIndexBase<C extends CreateIndexBase<C>> extends WithCollection<Void, C> {
-
-  public static class CreateIndexBaseCommand extends WithCollectionCommand {
-
-    private final JsonObject key;
-
-    public CreateIndexBaseCommand(String collection, JsonObject key) {
-      this("createIndex", collection, key);
-    }
-
-    public CreateIndexBaseCommand(String method, String collection, JsonObject key) {
-      super(method, collection);
-      this.key = key;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", key: " + key;
-    }
-  }
+public abstract class CreateIndexBase<U extends CreateIndexBaseCommand, C extends CreateIndexBase<U, C>> extends WithCollection<Void, U, C> {
 
   private Matcher<JsonObject> key;
 
@@ -53,11 +35,11 @@ public abstract class CreateIndexBase<C extends CreateIndexBase<C>> extends With
     if (!super.matches(cmd)) {
       return false;
     }
-    if (!(cmd instanceof CreateIndexBase.CreateIndexBaseCommand)) {
+    if (!(cmd instanceof CreateIndexBaseCommand)) {
       return false;
     }
     CreateIndexBaseCommand c = (CreateIndexBaseCommand) cmd;
-    return key == null || key.matches(c.key);
+    return key == null || key.matches(c.getKey());
   }
 
   public C withKey(JsonObject key) {

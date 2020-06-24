@@ -1,6 +1,6 @@
 package com.noenv.wiremongo.mapping.collection;
 
-import com.noenv.wiremongo.mapping.CommandBase;
+import com.noenv.wiremongo.command.collection.GetCollectionsCommand;
 import com.noenv.wiremongo.mapping.MappingBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -8,13 +8,7 @@ import io.vertx.core.json.JsonObject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GetCollections extends MappingBase<List<String>, GetCollections> {
-
-  public static class GetCollectionsCommand extends CommandBase {
-    public GetCollectionsCommand() {
-      super("getCollections");
-    }
-  }
+public class GetCollections extends MappingBase<List<String>, GetCollectionsCommand, GetCollections> {
 
   public GetCollections() {
     super("getCollections");

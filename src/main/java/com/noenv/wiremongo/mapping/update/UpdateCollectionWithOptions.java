@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.update;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.update.UpdateCollectionWithOptionsCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
@@ -9,22 +10,7 @@ import io.vertx.ext.mongo.UpdateOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class UpdateCollectionWithOptions extends UpdateCollectionBase<UpdateCollectionWithOptions> {
-
-  public static class UpdateCollectionWithOptionsCommand extends UpdateCollectionBaseCommand {
-
-    private final UpdateOptions options;
-
-    public UpdateCollectionWithOptionsCommand(String collection, JsonObject query, JsonObject update, UpdateOptions options) {
-      super("updateCollectionWithOptions", collection, query, update);
-      this.options = options;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", options: " + (options != null ? options.toJson().encode() : "null");
-    }
-  }
+public class UpdateCollectionWithOptions extends UpdateCollectionBase<UpdateCollectionWithOptionsCommand, UpdateCollectionWithOptions> {
 
   private Matcher<UpdateOptions> options;
 
@@ -51,7 +37,7 @@ public class UpdateCollectionWithOptions extends UpdateCollectionBase<UpdateColl
       return false;
     }
     UpdateCollectionWithOptionsCommand c = (UpdateCollectionWithOptionsCommand) cmd;
-    return options == null || options.matches(c.options);
+    return options == null || options.matches(c.getOptions());
   }
 
   public UpdateCollectionWithOptions withOptions(UpdateOptions options) {

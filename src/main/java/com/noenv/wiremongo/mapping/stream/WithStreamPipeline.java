@@ -1,28 +1,14 @@
 package com.noenv.wiremongo.mapping.stream;
 
-import com.noenv.wiremongo.mapping.Command;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.stream.WithStreamPipelineCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public abstract class WithStreamPipeline<C extends WithStreamPipeline<C>> extends WithStream<C> {
-
-  public abstract static class WithStreamPipelineCommand extends WithStreamCommand {
-
-    private final JsonArray pipeline;
-
-    public WithStreamPipelineCommand(String method, String collection, JsonArray pipeline) {
-      super(method, collection);
-      this.pipeline = pipeline;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", pipeline: " + pipeline;
-    }
-  }
+public abstract class WithStreamPipeline<U extends WithStreamPipelineCommand, C extends WithStreamPipeline<U, C>> extends WithStream<U, C> {
 
   private Matcher<JsonArray> pipeline;
 
@@ -44,7 +30,7 @@ public abstract class WithStreamPipeline<C extends WithStreamPipeline<C>> extend
       return false;
     }
     WithStreamPipelineCommand c = (WithStreamPipelineCommand) cmd;
-    return pipeline == null || pipeline.matches(c.pipeline);
+    return pipeline == null || pipeline.matches(c.getPipeline());
   }
 
   public C withPipeline(JsonArray pipeline) {

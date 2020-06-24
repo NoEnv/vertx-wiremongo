@@ -17,7 +17,7 @@ public class GetCollectionsTest extends TestBase {
   @Test
   public void testGetCollections(TestContext ctx) {
     Async async = ctx.async();
-    Mapping<?, ?> m = mock.getCollections()
+    Mapping<?, ?, ?> m = mock.getCollections()
       .returns(Arrays.asList("collection1", "collection2"));
 
     db.rxGetCollections()
@@ -31,7 +31,7 @@ public class GetCollectionsTest extends TestBase {
   @Test
   public void testGetCollectionError(TestContext ctx) {
     Async async = ctx.async();
-    Mapping<?, ?> m = mock.getCollections()
+    Mapping<?, ?, ?> m = mock.getCollections()
       .returnsError(new Exception("intentional"));
 
     db.rxGetCollections()

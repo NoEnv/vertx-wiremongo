@@ -81,24 +81,24 @@ public class WireMongo implements WireMongoCommands {
 
   <T, U extends Command> Future<T> call(U request) {
     logger.debug("wiremongo received request: " + request.toString());
-    Mapping<T, ?, ?> mapping = this.findMapping(request);
+    Mapping<T, U, ?> mapping = this.findMapping(request);
     if (mapping == null) {
       return Future.failedFuture("no mapping found: " + request);
     }
     try {
-      return Future.succeededFuture(mapping.stub().get());
+      return Future.succeededFuture(mapping.invoke(request));
     } catch (Throwable ex) {
       return Future.failedFuture(ex);
     }
   }
 
-  ReadStream<JsonObject> callStream(Command request) {
-    Mapping<ReadStream<JsonObject>, ?, ?> mapping = this.findMapping(request);
+  <U extends Command> ReadStream<JsonObject> callStream(U request) {
+    Mapping<ReadStream<JsonObject>, U, ?> mapping = this.findMapping(request);
     if (mapping == null) {
       return MemoryStream.error(new IllegalArgumentException("no mapping found: " + request));
     }
     try {
-      return mapping.stub().get();
+      return mapping.invoke(request);
     } catch (Throwable ex) {
       return MemoryStream.error(ex);
     }

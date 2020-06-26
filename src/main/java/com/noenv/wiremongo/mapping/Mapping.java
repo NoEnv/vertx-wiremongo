@@ -2,21 +2,22 @@ package com.noenv.wiremongo.mapping;
 
 import com.mongodb.*;
 import com.noenv.wiremongo.Stub;
+import com.noenv.wiremongo.StubBase;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.mapping.aggregate.Aggregate;
 import com.noenv.wiremongo.mapping.aggregate.AggregateWithOptions;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWrite;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteWithOptions;
+import com.noenv.wiremongo.mapping.collection.CreateCollection;
 import com.noenv.wiremongo.mapping.collection.DropCollection;
 import com.noenv.wiremongo.mapping.collection.GetCollections;
-import com.noenv.wiremongo.mapping.collection.CreateCollection;
-import com.noenv.wiremongo.mapping.index.CreateIndex;
-import com.noenv.wiremongo.mapping.index.CreateIndexWithOptions;
 import com.noenv.wiremongo.mapping.distinct.Distinct;
 import com.noenv.wiremongo.mapping.distinct.DistinctBatch;
 import com.noenv.wiremongo.mapping.distinct.DistinctBatchWithQuery;
 import com.noenv.wiremongo.mapping.distinct.DistinctWithQuery;
 import com.noenv.wiremongo.mapping.find.*;
+import com.noenv.wiremongo.mapping.index.CreateIndex;
+import com.noenv.wiremongo.mapping.index.CreateIndexWithOptions;
 import com.noenv.wiremongo.mapping.index.DropIndex;
 import com.noenv.wiremongo.mapping.index.ListIndexes;
 import com.noenv.wiremongo.mapping.insert.Insert;
@@ -46,16 +47,28 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
 
   C validFor(int times);
 
-  Stub<T> stub();
+  C stub(StubBase<T, U> stub);
 
-  C stub(Stub<T> stub);
+  T invoke(U command) throws Throwable;
+
+  /**
+   * @param stub
+   * @return
+   * @deprecated use stub(StubBase<T, U> stub) instead
+   */
+  @Deprecated
+  default C stub(Stub<T> stub) {
+    return stub(c -> stub.invoke());
+  }
 
   default C returns(T response) {
-    return stub(() -> response);
+    return stub(x -> response);
   }
 
   default C returnsError(Throwable error) {
-    return stub(() -> { throw error; });
+    return stub(x -> {
+      throw error;
+    });
   }
 
   default C returnsDuplicateKeyError() {
@@ -78,50 +91,90 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
   static Mapping create(JsonObject json) {
     try {
       switch (json.getString("method")) {
-        case "insert": return new Insert(json);
-        case "insertWithOptions": return new InsertWithOptions(json);
-        case "save": return new Save(json);
-        case "saveWithOptions": return new SaveWithOptions(json);
-        case "updateCollection": return new UpdateCollection(json);
-        case "updateCollectionWithOptions": return new UpdateCollectionWithOptions(json);
-        case "find": return new Find(json);
-        case "findWithOptions": return new FindWithOptions(json);
-        case "findBatch": return new FindBatch(json);
-        case "findBatchWithOptions": return new FindBatchWithOptions(json);
-        case "findOne": return new FindOne(json);
-        case "findOneAndUpdate": return new FindOneAndUpdate(json);
-        case "findOneAndReplace": return new FindOneAndReplace(json);
-        case "findOneAndReplaceWithOptions": return new FindOneAndReplaceWithOptions(json);
-        case "findOneAndDelete": return new FindOneAndDelete(json);
-        case "findOneAndDeleteWithOptions": return new FindOneAndDeleteWithOptions(json);
-        case "findOneAndUpdateWithOptions": return new FindOneAndUpdateWithOptions(json);
-        case "createCollection": return new CreateCollection(json);
-        case "dropCollection": return new DropCollection(json);
-        case "listIndexes": return new ListIndexes(json);
-        case "createIndex": return new CreateIndex(json);
-        case "createIndexWithOptions": return new CreateIndexWithOptions(json);
-        case "runCommand": return new RunCommand(json);
-        case "count": return new Count(json);
-        case "bulkWrite": return new BulkWrite(json);
-        case "bulkWriteWithOptions": return new BulkWriteWithOptions(json);
-        case "getCollections": return new GetCollections(json);
-        case "removeDocument": return new RemoveDocument(json);
-        case "removeDocumentWithOptions": return new RemoveDocumentWithOptions(json);
-        case "removeDocuments": return new RemoveDocuments(json);
-        case "removeDocumentsWithOptions": return new RemoveDocumentsWithOptions(json);
-        case "replaceDocuments": return new ReplaceDocuments(json);
-        case "replaceDocumentsWithOptions": return new ReplaceDocumentsWithOptions(json);
-        case "dropIndex": return new DropIndex(json);
-        case "distinct": return new Distinct(json);
-        case "distinctBatch": return new DistinctBatch(json);
-        case "distinctBatchWithQuery": return new DistinctBatchWithQuery(json);
-        case "distinctWithQuery": return new DistinctWithQuery(json);
-        case "aggregate": return new Aggregate(json);
-        case "aggregateWithOptions": return new AggregateWithOptions(json);
+        case "insert":
+          return new Insert(json);
+        case "insertWithOptions":
+          return new InsertWithOptions(json);
+        case "save":
+          return new Save(json);
+        case "saveWithOptions":
+          return new SaveWithOptions(json);
+        case "updateCollection":
+          return new UpdateCollection(json);
+        case "updateCollectionWithOptions":
+          return new UpdateCollectionWithOptions(json);
+        case "find":
+          return new Find(json);
+        case "findWithOptions":
+          return new FindWithOptions(json);
+        case "findBatch":
+          return new FindBatch(json);
+        case "findBatchWithOptions":
+          return new FindBatchWithOptions(json);
+        case "findOne":
+          return new FindOne(json);
+        case "findOneAndUpdate":
+          return new FindOneAndUpdate(json);
+        case "findOneAndReplace":
+          return new FindOneAndReplace(json);
+        case "findOneAndReplaceWithOptions":
+          return new FindOneAndReplaceWithOptions(json);
+        case "findOneAndDelete":
+          return new FindOneAndDelete(json);
+        case "findOneAndDeleteWithOptions":
+          return new FindOneAndDeleteWithOptions(json);
+        case "findOneAndUpdateWithOptions":
+          return new FindOneAndUpdateWithOptions(json);
+        case "createCollection":
+          return new CreateCollection(json);
+        case "dropCollection":
+          return new DropCollection(json);
+        case "listIndexes":
+          return new ListIndexes(json);
+        case "createIndex":
+          return new CreateIndex(json);
+        case "createIndexWithOptions":
+          return new CreateIndexWithOptions(json);
+        case "runCommand":
+          return new RunCommand(json);
+        case "count":
+          return new Count(json);
+        case "bulkWrite":
+          return new BulkWrite(json);
+        case "bulkWriteWithOptions":
+          return new BulkWriteWithOptions(json);
+        case "getCollections":
+          return new GetCollections(json);
+        case "removeDocument":
+          return new RemoveDocument(json);
+        case "removeDocumentWithOptions":
+          return new RemoveDocumentWithOptions(json);
+        case "removeDocuments":
+          return new RemoveDocuments(json);
+        case "removeDocumentsWithOptions":
+          return new RemoveDocumentsWithOptions(json);
+        case "replaceDocuments":
+          return new ReplaceDocuments(json);
+        case "replaceDocumentsWithOptions":
+          return new ReplaceDocumentsWithOptions(json);
+        case "dropIndex":
+          return new DropIndex(json);
+        case "distinct":
+          return new Distinct(json);
+        case "distinctBatch":
+          return new DistinctBatch(json);
+        case "distinctBatchWithQuery":
+          return new DistinctBatchWithQuery(json);
+        case "distinctWithQuery":
+          return new DistinctWithQuery(json);
+        case "aggregate":
+          return new Aggregate(json);
+        case "aggregateWithOptions":
+          return new AggregateWithOptions(json);
         default:
           throw new IllegalArgumentException("couldn't parse mapping, " + json.encode());
       }
-    } catch(Exception ex) {
+    } catch (Exception ex) {
       throw new IllegalArgumentException("error parsing mapping " + json.encode());
     }
   }

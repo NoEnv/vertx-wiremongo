@@ -64,6 +64,9 @@ public class MemoryStream<T> implements ReadStream<T> {
       dataHandler.handle(this.items.remove());
       counter++;
     }
+    if (this.items.isEmpty() && endHandler != null) {
+      endHandler.handle(null);
+    }
     return this;
   }
 

@@ -12,6 +12,7 @@ public class MemoryStream<T> implements ReadStream<T> {
   private Throwable error;
   private Handler<Void> endHandler;
   boolean done;
+  boolean paused;
 
   private MemoryStream(Collection<T> items) {
     this.items.addAll(items);
@@ -31,7 +32,7 @@ public class MemoryStream<T> implements ReadStream<T> {
 
   @Override
   public ReadStream<T> handler(@Nullable Handler<T> handler) {
-    if (handler != null) {
+    if (handler != null && !paused) {
       while (!items.isEmpty()) {
         handler.handle(items.remove());
       }
@@ -45,11 +46,13 @@ public class MemoryStream<T> implements ReadStream<T> {
 
   @Override
   public ReadStream<T> pause() {
+    paused = true;
     return this;
   }
 
   @Override
   public ReadStream<T> resume() {
+    paused = false;
     return this;
   }
 

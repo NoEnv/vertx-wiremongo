@@ -11,8 +11,8 @@ public class MemoryStream<T> implements ReadStream<T> {
   private final Queue<T> items = new LinkedList<>();
   private Throwable error;
   private Handler<Void> endHandler;
-  boolean done;
-  boolean paused;
+  private Handler<T> dataHandler;
+  boolean flowingMode = true;
 
   private MemoryStream(Collection<T> items) {
     this.items.addAll(items);
@@ -32,11 +32,11 @@ public class MemoryStream<T> implements ReadStream<T> {
 
   @Override
   public ReadStream<T> handler(@Nullable Handler<T> handler) {
-    if (handler != null && !paused) {
+    this.dataHandler = handler;
+    if (dataHandler != null && flowingMode) {
       while (!items.isEmpty()) {
-        handler.handle(items.remove());
+        dataHandler.handle(items.remove());
       }
-      done = true;
       if (endHandler != null) {
         endHandler.handle(null);
       }
@@ -46,25 +46,31 @@ public class MemoryStream<T> implements ReadStream<T> {
 
   @Override
   public ReadStream<T> pause() {
-    paused = true;
+    flowingMode = false;
     return this;
   }
 
   @Override
   public ReadStream<T> resume() {
-    paused = false;
+    flowingMode = true;
+    fetch(Long.MAX_VALUE);
     return this;
   }
 
   @Override
   public ReadStream<T> fetch(long amount) {
+    long counter = 0;
+    while (counter < amount && !this.items.isEmpty()) {
+      dataHandler.handle(this.items.remove());
+      counter++;
+    }
     return this;
   }
 
   @Override
   public ReadStream<T> endHandler(@Nullable Handler<Void> endHandler) {
     this.endHandler = endHandler;
-    if (done) {
+    if (this.items.isEmpty()) {
       endHandler.handle(null);
     }
     return this;

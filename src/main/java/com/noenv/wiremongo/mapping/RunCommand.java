@@ -1,28 +1,13 @@
 package com.noenv.wiremongo.mapping;
 
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.RunCommandCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public class RunCommand extends MappingBase<JsonObject, RunCommand> {
-
-  public static class RunCommandCommand extends CommandBase {
-
-    private final String commandName;
-    private final JsonObject command;
-
-    public RunCommandCommand(String commandName, JsonObject command) {
-      super("runCommand");
-      this.commandName = commandName;
-      this.command = command;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", commandName: " + commandName + ", command: " + command;
-    }
-  }
+public class RunCommand extends MappingBase<JsonObject, RunCommandCommand, RunCommand> {
 
   private Matcher<String> commandName;
   private Matcher<JsonObject> command;
@@ -48,8 +33,8 @@ public class RunCommand extends MappingBase<JsonObject, RunCommand> {
       return false;
     }
     RunCommandCommand c = (RunCommandCommand) cmd;
-    return (commandName == null || commandName.matches(c.commandName))
-      && (command == null || command.matches(c.command));
+    return (commandName == null || commandName.matches(c.getCommandName()))
+      && (command == null || command.matches(c.getCommand()));
   }
 
   public RunCommand withCommand(String commandName, JsonObject command) {
@@ -59,6 +44,6 @@ public class RunCommand extends MappingBase<JsonObject, RunCommand> {
   public RunCommand withCommand(Matcher<String> commandName, Matcher<JsonObject> command) {
     this.commandName = commandName;
     this.command = command;
-    return this;
+    return self();
   }
 }

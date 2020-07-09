@@ -1,8 +1,13 @@
 package com.noenv.wiremongo;
 
+/***
+ * @deprecated use StubBase instead
+ * @param <T>
+ */
+@Deprecated
 @FunctionalInterface
 public interface Stub<T> {
 
   @SuppressWarnings("squid:S00112")
-  T get() throws Throwable;
+  T invoke() throws Throwable;
 }

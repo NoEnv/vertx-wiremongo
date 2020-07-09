@@ -44,12 +44,12 @@ public class WireMongo implements WireMongoCommands {
   }
 
   @Override
-  public <T extends Mapping<?, ?>> T addMapping(T mapping) {
+  public <T extends Mapping<?, ?, ?>> T addMapping(T mapping) {
     return delegate.addMapping(mapping);
   }
 
   @Override
-  public <T extends Mapping<?, ?>> boolean removeMapping(T mapping) {
+  public <T extends Mapping<?, ?, ?>> boolean removeMapping(T mapping) {
     return delegate.removeMapping(mapping);
   }
 }

@@ -1,27 +1,15 @@
 package com.noenv.wiremongo.mapping;
 
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.WithDocumentCommand;
+import com.noenv.wiremongo.mapping.collection.WithCollection;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import org.bson.types.ObjectId;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public abstract class WithDocument<C extends WithDocument<C>> extends WithCollection<String, C> {
-
-  public abstract static class WithDocumentCommand extends WithCollectionCommand {
-
-    private final JsonObject document;
-
-    public WithDocumentCommand(String method, String collection, JsonObject document) {
-      super(method, collection);
-      this.document = document;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", document: " + document;
-    }
-  }
+public abstract class WithDocument<U extends WithDocumentCommand, C extends WithDocument<U, C>> extends WithCollection<String, U, C> {
 
   private Matcher<JsonObject> document;
 
@@ -56,7 +44,7 @@ public abstract class WithDocument<C extends WithDocument<C>> extends WithCollec
       return false;
     }
     WithDocumentCommand c = (WithDocumentCommand) cmd;
-    return document == null || document.matches(c.document);
+    return document == null || document.matches(c.getDocument());
   }
 
   @Override

@@ -2,7 +2,6 @@ package com.noenv.wiremongo.mapping.aggregate;
 
 import com.noenv.wiremongo.MemoryStream;
 import com.noenv.wiremongo.TestBase;
-import com.noenv.wiremongo.mapping.Aggregate;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;

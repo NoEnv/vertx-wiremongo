@@ -1,16 +1,20 @@
 package com.noenv.wiremongo.mapping;
 
-import com.noenv.wiremongo.Stub;
+import com.noenv.wiremongo.StubBase;
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.CommandBase;
 import io.vertx.core.json.JsonObject;
 
 import java.util.LinkedList;
 import java.util.Objects;
 
-public abstract class MappingBase<T, C extends MappingBase<T, C>> extends CommandBase implements Mapping<T, C> {
+public abstract class MappingBase<T, U extends Command, C extends MappingBase<T, U, C>> extends CommandBase implements Mapping<T, U, C> {
 
-  private static final Stub DUMMY_STUB = () -> null;
-  private LinkedList<Stub<T>> stubs = new LinkedList<>();
+  private static final StubBase DUMMY_STUB = x -> null;
+  private final LinkedList<StubBase<T, U>> stubs = new LinkedList<>();
   private int priority;
+  private int times;
+  private int matchCount;
 
   public MappingBase(String method) {
     super(method);
@@ -35,25 +39,28 @@ public abstract class MappingBase<T, C extends MappingBase<T, C>> extends Comman
   }
 
   @Override
-  public Stub<T> stub() {
-    if (stubs.size() > 1) {
-      return stubs.pop();
-    }
-    return stubs.peek();
+  public C validFor(int times) {
+    this.times = times;
+    return self();
   }
 
   @Override
-  public C stub(Stub<T> stub) {
-    if (stubs.contains(DUMMY_STUB)) {
-      stubs.remove(DUMMY_STUB);
-    }
+  public T invoke(U command) throws Throwable {
+    StubBase<T, U> s = stubs.size() > 1 ? stubs.pop() : stubs.peek();
+    return s.invoke(command);
+  }
+
+  @Override
+  public C stub(StubBase<T, U> stub) {
+    stubs.remove(DUMMY_STUB);
     stubs.add(stub);
     return self();
   }
 
   @Override
   public boolean matches(Command c) {
-    return Objects.equals(method(), c.method());
+    boolean matchesResult = Objects.equals(method(), c.method());
+    return (times <= 0 || !matchesResult || ++matchCount <= times) && matchesResult;
   }
 
   private void parseStub(JsonObject json) {

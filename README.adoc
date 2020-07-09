@@ -171,7 +171,7 @@ Stubs are the *response* part of the mock, i.e. they define how the mock *respon
 ----
 wiremongo.findOne()
   .inCollection("fruits")
-  .stub(() -> new JsonObject()
+  .stub(c -> new JsonObject()
     .put("type", "apple")
     .put("mass", 123)
     .put("expiration", new JsonObject().put("$date", Instant.now())));
@@ -185,7 +185,7 @@ Sometimes it may be useful to assert that the application actually invokes the e
 public void testInsert(TestContext ctx) {
   Async async = ctx.async();
   wiremongo.insert()
-    .stub(() -> {
+    .stub(c -> {
       async.countDown();
       return "37bd238fa";
     });
@@ -194,14 +194,14 @@ public void testInsert(TestContext ctx) {
 }
 ----
 
-The `returns("1234")` method is just a more convenient way for `stub(() -> "1234")`.
+The `returns("1234")` method is just a more convenient way for `stub(c -> "1234")`.
 
 Stubs can also throw exceptions:
 
 [source,java]
 ----
 wiremongo.count()
-  .stub(() -> { throw new MongoTimeoutException("intentional"); });
+  .stub(c -> { throw new MongoTimeoutException("intentional"); });
 ----
 
 For the most common errors, wiremongo contains helper methods that match the types and messages of an actual mongo instance (`returnsDuplicateKeyError`, `returnsTimeoutException`, `returnsConnectionException`).

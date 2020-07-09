@@ -1,26 +1,14 @@
 package com.noenv.wiremongo.mapping;
 
+import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.WithQueryCommand;
+import com.noenv.wiremongo.mapping.collection.WithCollection;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
-public abstract class WithQuery<T, C extends WithQuery<T, C>> extends WithCollection<T, C> {
-
-  public abstract static class WithQueryCommand extends WithCollectionCommand {
-
-    private final JsonObject query;
-
-    public WithQueryCommand(String method, String collection, JsonObject query) {
-      super(method, collection);
-      this.query = query;
-    }
-
-    @Override
-    public String toString() {
-      return super.toString() + ", query: " + query;
-    }
-  }
+public abstract class WithQuery<T, U extends WithQueryCommand, C extends WithQuery<T, U, C>> extends WithCollection<T, U, C> {
 
   private Matcher<JsonObject> query;
 
@@ -51,6 +39,6 @@ public abstract class WithQuery<T, C extends WithQuery<T, C>> extends WithCollec
       return false;
     }
     WithQueryCommand c = (WithQueryCommand) cmd;
-    return query == null || query.matches(c.query);
+    return query == null || query.matches(c.getQuery());
   }
 }

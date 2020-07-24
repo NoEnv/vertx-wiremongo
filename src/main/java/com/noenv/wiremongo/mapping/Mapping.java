@@ -51,12 +51,6 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
 
   T invoke(U command) throws Throwable;
 
-  /**
-   * @param stub
-   * @return
-   * @deprecated use stub(StubBase<T, U> stub) instead
-   */
-  @Deprecated
   default C stub(Stub<T> stub) {
     return stub(c -> stub.invoke());
   }

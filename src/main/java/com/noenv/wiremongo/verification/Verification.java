@@ -12,13 +12,14 @@ public class Verification {
   Verification(String label, List<Verification> previousVerifications) {
     this.label = label;
     this.previousVerifications = previousVerifications;
+    isRunAtLeastOnce();
   }
 
   public Verification isRunExactlyOnce() {
     this.check = () -> {
       if (checked) {
         throw new AssertionError(String.format(
-          "expected '%s' to run exactly once but ran more often",
+          "expected '%s' to run exactly once, but it ran more often",
           label
         ));
       }
@@ -34,6 +35,14 @@ public class Verification {
     return this;
   }
 
+  /**
+   * Makes sure that the verification is run after others created previously using same {@link Verifier}.
+   */
+  public Verification isRunAfterPreviousVerifications() {
+    this.checkOrder = true;
+    return this;
+  }
+
   private void checkOrder() {
     this.checked = true;
 
@@ -44,9 +53,9 @@ public class Verification {
         .findFirst()
         .ifPresent(verification -> {
           throw new AssertionError(String.format(
-            "'%s' expected all previous verifications to be already checked, but '%s' was not",
-            this.label,
-            verification.label
+            "expected '%s' to be run before '%s', but it was not",
+            verification.label,
+            this.label
           ));
         })
       ;
@@ -57,15 +66,13 @@ public class Verification {
     return this.checked;
   }
 
-  public void assertSucceed() {
+  void assertSucceed() {
     if (!checked) {
-      throw new AssertionError(String.format("expected '%s' to be already checked, but it was not", label));
+      throw new AssertionError(String.format(
+        "expected '%s' to be checked, but it was not",
+        label
+      ));
     }
-  }
-
-  public Verification isRunAfterPreviousVerifications() {
-    this.checkOrder = true;
-    return this;
   }
 
   public void runCheck() {

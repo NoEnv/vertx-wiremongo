@@ -32,6 +32,7 @@ import com.noenv.wiremongo.mapping.save.Save;
 import com.noenv.wiremongo.mapping.save.SaveWithOptions;
 import com.noenv.wiremongo.mapping.update.UpdateCollection;
 import com.noenv.wiremongo.mapping.update.UpdateCollectionWithOptions;
+import com.noenv.wiremongo.verification.Verification;
 import io.vertx.core.json.JsonObject;
 import org.bson.BsonDocument;
 
@@ -50,6 +51,8 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
   C stub(StubBase<T, U> stub);
 
   T invoke(U command) throws Throwable;
+
+  C verify(Verification v);
 
   default C stub(Stub<T> stub) {
     return stub(c -> stub.invoke());

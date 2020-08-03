@@ -3,6 +3,7 @@ package com.noenv.wiremongo.mapping;
 import com.noenv.wiremongo.StubBase;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.CommandBase;
+import com.noenv.wiremongo.verification.Verification;
 import io.vertx.core.json.JsonObject;
 
 import java.util.LinkedList;
@@ -15,6 +16,7 @@ public abstract class MappingBase<T, U extends Command, C extends MappingBase<T,
   private int priority;
   private int times;
   private int matchCount;
+  private Verification verification;
 
   public MappingBase(String method) {
     super(method);
@@ -47,6 +49,9 @@ public abstract class MappingBase<T, U extends Command, C extends MappingBase<T,
   @Override
   public T invoke(U command) throws Throwable {
     StubBase<T, U> s = stubs.size() > 1 ? stubs.pop() : stubs.peek();
+    if (verification != null) {
+      verification.runCheck();
+    }
     return s.invoke(command);
   }
 
@@ -61,6 +66,12 @@ public abstract class MappingBase<T, U extends Command, C extends MappingBase<T,
   public boolean matches(Command c) {
     boolean matchesResult = Objects.equals(method(), c.method());
     return (times <= 0 || !matchesResult || ++matchCount <= times) && matchesResult;
+  }
+
+  @Override
+  public C verify(Verification verification) {
+    this.verification = verification;
+    return self();
   }
 
   private void parseStub(JsonObject json) {

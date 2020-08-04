@@ -8,6 +8,8 @@ public class Verification {
   private Runnable check;
   private boolean checkOrder;
   private boolean checked;
+  private boolean failed;
+  private String failure;
 
   Verification(String label, List<Verification> previousVerifications) {
     this.label = label;
@@ -18,10 +20,11 @@ public class Verification {
   public Verification isRunExactlyOnce() {
     this.check = () -> {
       if (checked) {
-        throw new AssertionError(String.format(
+        this.failed = true;
+        this.failure = String.format(
           "expected '%s' to run exactly once, but it ran more often",
           label
-        ));
+        );
       }
 
       checkOrder();
@@ -52,11 +55,12 @@ public class Verification {
         .filter(verification -> !verification.isChecked())
         .findFirst()
         .ifPresent(verification -> {
-          throw new AssertionError(String.format(
+          this.failed = true;
+          this.failure = String.format(
             "expected '%s' to be run before '%s', but it was not",
             verification.label,
             this.label
-          ));
+          );
         })
       ;
     }
@@ -72,6 +76,9 @@ public class Verification {
         "expected '%s' to be checked, but it was not",
         label
       ));
+
+    } else if (failed) {
+      throw new AssertionError(this.failure);
     }
   }
 

@@ -209,8 +209,8 @@ public class VerificationTest extends TestBase {
   @Test
   public void verifyOrder_shall_fail_ifNotRunInExpectedOrder(TestContext ctx) {
 
-    thrown.expect(MultipleFailureException.class);
-    thrown.expectMessage("There were 2 errors:\n  java.lang.AssertionError(expected 'update in collection-1' to be run before 'update in collection-2', but it was not)\n  java.lang.AssertionError(expected 'update in collection-1' to be checked, but it was not)");
+    thrown.expect(AssertionError.class);
+    thrown.expectMessage("expected 'update in collection-1' to be run before 'update in collection-2', but it was not");
 
     mock
       .updateCollection()

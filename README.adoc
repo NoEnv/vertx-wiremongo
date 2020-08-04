@@ -253,3 +253,54 @@ The wiremongo json files look like this:
 ----
 
 The details depend on the command that is mocked. To get started, it is easiest to just look at the json file for the command you want to mock in the `src/test/resources/wiremongo-mocks` folder of this project.
+
+== Verifications
+
+Very often it is not only important to have mocks for a database ready, but also to make sure those are used or even used properly. Verifications let you check if a call to database is made at all, or made for specific times or even never made.
+
+Basic setup for verification is to have a `Verifier` and make sure it is reset before each test and all its verifications are asserted after each test. For example using JUnit:
+
+[source,java]
+----
+public class SomeTestClass {
+
+  private Verifier verifier;
+
+  @Before
+  public void setUpTest() {
+    verifier = new Verifier();
+  }
+
+  @After
+  public void tearDownTest() {
+    verifier.assertAllSucceeded();
+  }
+
+  // your tests go here
+}
+----
+
+Then each mock can define a verification when it is set up. For example:
+
+[source,java]
+----
+public class SomeTestClass {
+    // ...
+    @Test
+    public void verify_RunExactlyOnce_shall_fail_ifRunTwice(TestContext ctx) {
+        // ...
+
+        mock
+          .findOneAndUpdate()
+          .inCollection("some-collection")
+          .verify(
+            verifier
+              .checkIf("find one and update in some-collection")
+              .isRunExactlyOnce()
+          )
+          .returns(null);
+
+        // ...
+    }
+}
+----

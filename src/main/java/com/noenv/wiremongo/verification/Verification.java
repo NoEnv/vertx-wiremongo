@@ -1,11 +1,13 @@
 package com.noenv.wiremongo.verification;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Verification {
   private final String label;
   private final List<Verification> previousVerifications;
-  private Runnable check;
+  private Runnable execution;
+  private Runnable assertion;
   private boolean checkOrder;
   private boolean checked;
   private boolean failed;
@@ -18,23 +20,82 @@ public class Verification {
   }
 
   public Verification isRunExactlyOnce() {
-    this.check = () -> {
-      if (checked) {
+    return isRunExactly(1);
+  }
+
+  public Verification isRunExactly(int times) {
+    AtomicInteger actualRuns = new AtomicInteger();
+
+    this.execution = () -> {
+      actualRuns.incrementAndGet();
+      checkOrder();
+    };
+
+    this.assertion = () -> {
+      if (actualRuns.get() > times) {
         this.failed = true;
         this.failure = String.format(
-          "expected '%s' to run exactly once, but it ran more often",
-          label
+          "expected '%s' to run exactly %d time(s), but it ran more often",
+          label,
+          times
         );
       }
-
-      checkOrder();
     };
 
     return this;
   }
 
   public Verification isRunAtLeastOnce() {
-    this.check = this::checkOrder;
+    return isRunAtLeast(1);
+  }
+
+  public Verification isRunAtLeast(int times) {
+    AtomicInteger actualRuns = new AtomicInteger();
+
+    this.execution = () -> {
+      actualRuns.incrementAndGet();
+      checkOrder();
+    };
+
+    this.assertion = () -> {
+      if (actualRuns.get() < times) {
+        this.failed = true;
+        this.failure = String.format(
+          "expected '%s' to run at least %d time(s), but it ran less often",
+          label,
+          times
+        );
+      }
+    };
+
+    return this;
+  }
+
+  public Verification isNeverRun() {
+    return isRunAtMost(0);
+  }
+
+  public Verification isRunAtMost(int times) {
+    AtomicInteger actualRuns = new AtomicInteger();
+    // at most always means possibly never
+    this.checked = true;
+
+    this.execution = () -> {
+      actualRuns.incrementAndGet();
+      checkOrder();
+    };
+
+    this.assertion = () -> {
+      if (actualRuns.get() > times) {
+        this.failed = true;
+        this.failure = String.format(
+          "expected '%s' to run at most %d time(s), but it ran more often",
+          label,
+          times
+        );
+      }
+    };
+
     return this;
   }
 
@@ -52,7 +113,7 @@ public class Verification {
     if (checkOrder) {
       previousVerifications
         .stream()
-        .filter(verification -> !verification.isChecked())
+        .filter(verification -> !verification.checked)
         .findFirst()
         .ifPresent(verification -> {
           this.failed = true;
@@ -66,11 +127,11 @@ public class Verification {
     }
   }
 
-  private boolean isChecked() {
-    return this.checked;
-  }
-
   void assertSucceed() {
+    if (this.assertion != null) {
+      this.assertion.run();
+    }
+
     if (!checked) {
       throw new AssertionError(String.format(
         "expected '%s' to be checked, but it was not",
@@ -82,8 +143,8 @@ public class Verification {
     }
   }
 
-  public void runCheck() {
-    this.check.run();
+  public void execute() {
+    this.execution.run();
   }
 
 }

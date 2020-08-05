@@ -77,10 +77,42 @@ public class VerificationTest extends TestBase {
   }
 
   @Test
+  public void verify_RunExactlyTwice_shall_succeed_ifRunTwice(TestContext ctx) {
+    mock
+      .findOneAndUpdate()
+      .inCollection("some-collection")
+      .verify(
+        verifier
+          .checkIf("find one and update in some-collection")
+          .isRunExactly(2)
+      )
+      .returns(null);
+
+    Completable
+      .mergeArray(
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement(),
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement()
+      )
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
   public void verify_RunExactlyOnce_shall_fail_ifRunTwice(TestContext ctx) {
 
     thrown.expect(AssertionError.class);
-    thrown.expectMessage("expected 'find one and update in some-collection' to run exactly once, but it ran more often");
+    thrown.expectMessage("expected 'find one and update in some-collection' to run exactly 1 time(s), but it ran more often");
 
     mock
       .findOneAndUpdate()
@@ -95,6 +127,57 @@ public class VerificationTest extends TestBase {
 
     Completable
       .mergeArray(
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement(),
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement()
+      )
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void verify_RunExactly3Times_shall_fail_ifRun4Times(TestContext ctx) {
+
+    thrown.expect(AssertionError.class);
+    thrown.expectMessage("expected 'find one and update in some-collection' to run exactly 3 time(s), but it ran more often");
+
+    mock
+      .findOneAndUpdate()
+      .inCollection("some-collection")
+      .verify(
+        verifier
+          .checkIf("find one and update in some-collection")
+          .isRunExactly(3)
+      )
+      .returns(null);
+
+
+    Completable
+      .mergeArray(
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement(),
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement(),
         db
           .rxFindOneAndUpdate(
             "some-collection",
@@ -134,6 +217,46 @@ public class VerificationTest extends TestBase {
   }
 
   @Test
+  public void verify_RunAtLeastTwice_shall_succeed_ifRun3Times(TestContext ctx) {
+
+    mock
+      .findOneAndUpdate()
+      .inCollection("some-collection")
+      .verify(
+        verifier
+          .checkIf("find one and update in some-collection")
+          .isRunAtLeast(2)
+      )
+      .returns(null);
+
+    Completable
+      .mergeArray(
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement(),
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement(),
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement()
+      )
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
   public void verify_RunAtLeastOnce_shall_succeed_ifRunTwice(TestContext ctx) {
     mock
       .updateCollection()
@@ -156,6 +279,35 @@ public class VerificationTest extends TestBase {
         db
           .rxUpdateCollection(
             "any-collection-2",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement()
+      )
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void verify_RunAtLeastTwice_shall_fail_ifRunOnce(TestContext ctx) {
+
+    thrown.expect(AssertionError.class);
+    thrown.expectMessage("expected 'find one and update in some-collection' to run at least 2 time(s), but it ran less often");
+
+    mock
+      .findOneAndUpdate()
+      .inCollection("some-collection")
+      .verify(
+        verifier
+          .checkIf("find one and update in some-collection")
+          .isRunAtLeast(2)
+      )
+      .returns(null);
+
+    Completable
+      .mergeArray(
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
             new JsonObject(),
             new JsonObject()
           )
@@ -249,6 +401,111 @@ public class VerificationTest extends TestBase {
           )
           .ignoreElement()
       )
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void verify_RunAtMostOnce_shall_succeed_ifNeverRun() {
+    mock
+      .updateCollection()
+      .verify(
+        verifier
+          .checkIf("update in any collection")
+          .isRunAtMost(1)
+      )
+      .returns(null);
+  }
+
+  @Test
+  public void verify_RunAtMostOnce_shall_succeed_ifRanOnce(TestContext ctx) {
+    mock
+      .updateCollection()
+      .verify(
+        verifier
+          .checkIf("update in any collection")
+          .isRunAtMost(1)
+      )
+      .returns(null);
+
+    Completable
+      .concatArray(
+        db
+          .rxUpdateCollection(
+            "any-collection-2",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement()
+      )
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void verify_RunAtMostTwice_shall_fail_ifRan3Times(TestContext ctx) {
+
+    thrown.expect(AssertionError.class);
+    thrown.expectMessage("expected 'update in any collection' to run at most 2 time(s), but it ran more often");
+
+    mock
+      .updateCollection()
+      .verify(
+        verifier
+          .checkIf("update in any collection")
+          .isRunAtMost(2)
+      )
+      .returns(null);
+
+    Completable
+      .concatArray(
+        db
+          .rxUpdateCollection(
+            "any-collection-2",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement(),
+        db
+          .rxUpdateCollection(
+            "any-collection-2",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement(),
+        db
+          .rxUpdateCollection(
+            "any-collection-2",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement()
+      )
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void verify_NeverRun_shall_fail_ifRun(TestContext ctx) {
+
+    thrown.expect(AssertionError.class);
+    thrown.expectMessage("expected 'find one and update in some-collection' to run at most 0 time(s), but it ran more often");
+
+    mock
+      .findOneAndUpdate()
+      .inCollection("some-collection")
+      .verify(
+        verifier
+          .checkIf("find one and update in some-collection")
+          .isNeverRun()
+      )
+      .returns(null);
+
+
+    db
+      .rxFindOneAndUpdate(
+        "some-collection",
+        new JsonObject(),
+        new JsonObject()
+      )
+      .ignoreElement()
       .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
 

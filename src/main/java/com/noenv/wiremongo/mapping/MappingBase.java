@@ -50,7 +50,7 @@ public abstract class MappingBase<T, U extends Command, C extends MappingBase<T,
   public T invoke(U command) throws Throwable {
     StubBase<T, U> s = stubs.size() > 1 ? stubs.pop() : stubs.peek();
     if (verification != null) {
-      verification.runCheck();
+      verification.execute();
     }
     return s.invoke(command);
   }

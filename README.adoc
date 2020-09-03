@@ -93,7 +93,7 @@ public class FruitDatabaseTest {
       .returnsObjectId();
 
     db.addApple(161, expiration)
-      .setHandler(ctx.asyncAssertSuccess());
+      .onComplete(ctx.asyncAssertSuccess());
   }
 }
 ----
@@ -108,7 +108,7 @@ public void testInsertError(TestContext ctx) {
     .returnsDuplicateKeyError();
 
   db.addApple(123, Instant.now().plus(3, ChronoUnit.DAYS))
-    .setHandler(ctx.asyncAssertFailure());
+    .onComplete(ctx.asyncAssertFailure());
 }
 ----
 
@@ -228,7 +228,7 @@ Mocks can also be defined in json files. You can ask wiremongo to read files fro
 public void setUp(TestContext ctx) {
   wiremongo = new WireMongo(vertx);
   wiremongo.readFileMappings("test/resources/wiremongo-files")
-    .setHandler(ctx.asyncAssertSuccess());
+    .onComplete(ctx.asyncAssertSuccess());
 }
 ----
 

@@ -39,7 +39,7 @@ public class FruitDatabaseTest {
       .returnsObjectId();
 
     db.addApple(161, expiration)
-      .setHandler(ctx.asyncAssertSuccess());
+      .onComplete(ctx.asyncAssertSuccess());
   }
 
   @Test
@@ -52,7 +52,7 @@ public class FruitDatabaseTest {
       .returnsObjectId();
 
     db.addBanana(721, null)
-      .setHandler(ctx.asyncAssertSuccess());
+      .onComplete(ctx.asyncAssertSuccess());
   }
 
   @Test
@@ -64,7 +64,7 @@ public class FruitDatabaseTest {
 
     db.countFruitByType("banana")
       .onSuccess(c -> ctx.assertEquals(42L, c))
-      .setHandler(ctx.asyncAssertSuccess());
+      .onComplete(ctx.asyncAssertSuccess());
   }
 
   @Test
@@ -77,7 +77,7 @@ public class FruitDatabaseTest {
 
     db.removeExpiredFruit(cutoff)
       .onSuccess(c -> ctx.assertEquals(16L, c))
-      .setHandler(ctx.asyncAssertSuccess());
+      .onComplete(ctx.asyncAssertSuccess());
   }
 
   @Test
@@ -86,6 +86,6 @@ public class FruitDatabaseTest {
       .returnsDuplicateKeyError();
 
     db.addApple(123, Instant.now().plus(3, ChronoUnit.DAYS))
-      .setHandler(ctx.asyncAssertFailure());
+      .onComplete(ctx.asyncAssertFailure());
   }
 }

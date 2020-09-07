@@ -20,6 +20,11 @@ public abstract class WithStream<U extends WithStreamCommand, C extends WithStre
   }
 
   @Override
+  public C returns(final ReadStream<JsonObject> response) {
+    return super.stub(c -> response instanceof MemoryStream ? ((MemoryStream<JsonObject>) response).copy(JsonObject::copy) : response);
+  }
+
+  @Override
   protected ReadStream<JsonObject> parseResponse(Object jsonValue) {
     return MemoryStream.fromList(((JsonArray) jsonValue).stream()
       .map(o -> (JsonObject) o)

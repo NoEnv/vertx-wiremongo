@@ -5,21 +5,24 @@ import io.vertx.core.Handler;
 import io.vertx.core.streams.ReadStream;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+// ToDo: proper support toFlowable() toObservable()
 public class MemoryStream<T> implements ReadStream<T> {
 
   private final Queue<T> items = new LinkedList<>();
-  private Throwable error;
+  private final Throwable error;
   private Handler<Void> endHandler;
   private Handler<T> dataHandler;
   boolean flowingMode = true;
 
-  private MemoryStream(Collection<T> items) {
+  private MemoryStream(final Collection<T> items, final Throwable error) {
     this.items.addAll(items);
+    this.error = error;
   }
 
-  private MemoryStream(Throwable error) {
-    this.error = error;
+  public MemoryStream<T> copy(final java.util.function.Function<T, T> copyItem) {
+    return new MemoryStream<>(items.stream().map(copyItem).collect(Collectors.toList()), error);
   }
 
   @Override
@@ -80,14 +83,14 @@ public class MemoryStream<T> implements ReadStream<T> {
   }
 
   public static <T> ReadStream<T> of(T... items) {
-    return new MemoryStream<>(Arrays.asList(items));
+    return new MemoryStream<>(Arrays.asList(items), null);
   }
 
   public static <T> ReadStream<T> fromList(List<T> list) {
-    return new MemoryStream<>(list);
+    return new MemoryStream<>(list, null);
   }
 
   public static <T> ReadStream<T> error(Throwable error) {
-    return new MemoryStream<>(error);
+    return new MemoryStream<>(Collections.emptyList(), error);
   }
 }

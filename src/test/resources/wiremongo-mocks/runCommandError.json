@@ -5,7 +5,7 @@
   },
   "command": {
     "equalTo": {
-      "ping": 1,
+      "pingFile": 1,
       "fail": true
     }
   },

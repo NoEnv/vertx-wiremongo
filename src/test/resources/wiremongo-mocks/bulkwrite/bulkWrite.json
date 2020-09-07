@@ -16,6 +16,7 @@
     ]
   },
   "response": {
-    "deletedCount": 28
+    "deletedCount": 28,
+    "upserts": [ { "field1": "value1" } ]
   }
 }

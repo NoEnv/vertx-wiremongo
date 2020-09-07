@@ -53,4 +53,40 @@ public class DistinctTest extends TestBase {
         async.complete();
       });
   }
+
+  @Test
+  public void testDistinctReturnedObjectNotModified(TestContext ctx) {
+    final JsonArray given = new JsonArray().add("value1").add("value2");
+    final JsonArray expected = given.copy();
+
+    mock.distinct()
+      .inCollection("distinct")
+      .withFieldName("testDistinct")
+      .returns(given);
+
+    db.rxDistinct("distinct", "testDistinct", null)
+      .doOnSuccess(actual -> ctx.assertEquals(expected, actual))
+      .doOnSuccess(actual -> {
+        actual.remove(0);
+        actual.add("add");
+      })
+      .repeat(2)
+      .ignoreElements()
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void testDistinctFileReturnedObjectNotModified(TestContext ctx) {
+    final JsonArray expected = new JsonArray().add("A").add("B").add("C");
+
+    db.rxDistinct("distinct", "testDistinctFile", "java.lang.String")
+      .doOnSuccess(actual -> ctx.assertEquals(expected, actual))
+      .doOnSuccess(actual -> {
+        actual.remove(0);
+        actual.add("add");
+      })
+      .repeat(2)
+      .ignoreElements()
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
 }

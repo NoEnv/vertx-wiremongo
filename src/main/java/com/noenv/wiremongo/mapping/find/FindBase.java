@@ -23,6 +23,11 @@ public abstract class FindBase<U extends FindBaseCommand, C extends FindBase<U, 
   }
 
   @Override
+  public C returns(final List<JsonObject> response) {
+    return super.stub(c -> null == response ? null : response.stream().map(JsonObject::copy).collect(java.util.stream.Collectors.toList()));
+  }
+
+  @Override
   protected List<JsonObject> parseResponse(Object jsonValue) {
     return ((JsonArray) jsonValue).stream()
       .map(o -> (JsonObject) o)

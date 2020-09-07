@@ -20,6 +20,7 @@
   },
   "response": {
     "doc_matched": 46,
-    "doc_modified": 17
+    "doc_modified": 17,
+    "upserted_id": { "field1": "value1" }
   }
 }

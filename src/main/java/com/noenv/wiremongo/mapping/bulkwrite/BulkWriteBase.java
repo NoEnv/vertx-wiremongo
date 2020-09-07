@@ -40,6 +40,11 @@ public abstract class BulkWriteBase<U extends BulkWriteBaseCommand, C extends Bu
   }
 
   @Override
+  public C returns(final MongoClientBulkWriteResult response) {
+    return super.stub(c -> null == response ? null : new MongoClientBulkWriteResult(response.toJson().copy()));
+  }
+
+  @Override
   protected MongoClientBulkWriteResult parseResponse(Object jsonValue) {
     return new MongoClientBulkWriteResult((JsonObject) jsonValue);
   }

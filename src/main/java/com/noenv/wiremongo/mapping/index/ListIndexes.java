@@ -16,6 +16,11 @@ public class ListIndexes extends WithCollection<JsonArray, ListIndexesCommand, L
   }
 
   @Override
+  public ListIndexes returns(final JsonArray response) {
+    return stub(c -> null == response ? null : response.copy());
+  }
+
+  @Override
   protected JsonArray parseResponse(Object jsonValue) {
     return (JsonArray) jsonValue;
   }

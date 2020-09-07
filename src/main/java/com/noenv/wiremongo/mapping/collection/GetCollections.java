@@ -5,6 +5,7 @@ import com.noenv.wiremongo.mapping.MappingBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,11 @@ public class GetCollections extends MappingBase<List<String>, GetCollectionsComm
 
   public GetCollections(JsonObject json) {
     super(json);
+  }
+
+  @Override
+  public GetCollections returns(final List<String> response) {
+    return stub(c -> null == response ? null : new ArrayList<>(response));
   }
 
   @Override

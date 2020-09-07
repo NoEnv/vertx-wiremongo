@@ -20,6 +20,11 @@ public abstract class FindOneAndUpdateBase<U extends FindOneAndUpdateBaseCommand
   }
 
   @Override
+  public C returns(final JsonObject response) {
+    return super.stub(c -> null == response ? null : response.copy());
+  }
+
+  @Override
   protected JsonObject parseResponse(Object jsonValue) {
     return (JsonObject) jsonValue;
   }

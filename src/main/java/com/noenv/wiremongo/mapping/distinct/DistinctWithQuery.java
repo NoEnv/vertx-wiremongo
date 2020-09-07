@@ -25,6 +25,11 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQueryCom
   }
 
   @Override
+  public DistinctWithQuery returns(final JsonArray response) {
+    return stub(c -> null == response ? null : response.copy());
+  }
+
+  @Override
   protected JsonArray parseResponse(Object jsonValue) {
     return (JsonArray) jsonValue;
   }

@@ -23,6 +23,11 @@ public class RunCommand extends MappingBase<JsonObject, RunCommandCommand, RunCo
   }
 
   @Override
+  public RunCommand returns(final JsonObject response) {
+    return stub(c -> null == response ? null : response.copy());
+  }
+
+  @Override
   protected JsonObject parseResponse(Object jsonValue) {
     return (JsonObject) jsonValue;
   }

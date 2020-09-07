@@ -2,7 +2,9 @@ package com.noenv.wiremongo;
 
 import io.vertx.core.Handler;
 import io.vertx.core.streams.ReadStream;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MemoryStreamTest {
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   @Test
   public void pausedBeforeHandlerSet() {
@@ -86,6 +91,23 @@ public class MemoryStreamTest {
     readStream.handler(dataHandler);
     readStream.fetch(-42);
     assertEquals(0, dataHandler.handledList.size());
+  }
+
+  @Test
+  public void error() {
+    ReadStream<String> readStream = MemoryStream.error(new RuntimeException("intentional"));
+    TestDataHandler<String> dataHandler = new TestDataHandler<>();
+    readStream.handler(dataHandler);
+    assertEquals(0, dataHandler.handledList.size());
+  }
+
+  @Test
+  public void errorWithErrorhandler() {
+    thrown.expect(RuntimeException.class);
+    thrown.expectMessage("intentional");
+
+    ReadStream<String> readStream = MemoryStream.error(new RuntimeException("intentional"));
+    readStream.exceptionHandler(cause -> {throw (RuntimeException)cause;});
   }
 
   private static class TestDataHandler<T> implements Handler<T> {

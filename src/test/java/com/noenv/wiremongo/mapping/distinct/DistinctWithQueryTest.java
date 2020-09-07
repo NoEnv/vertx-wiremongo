@@ -6,6 +6,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.reactivex.CompletableHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -55,5 +56,42 @@ public class DistinctWithQueryTest extends TestBase {
         ctx.assertEquals("intentional", ex.getMessage());
         async.complete();
       });
+  }
+
+  @Test
+  public void testDistinctWithQueryReturnedObjectNotModified(TestContext ctx) {
+    final JsonArray given = new JsonArray().add("value1").add("value2");
+    final JsonArray expected = given.copy();
+
+    mock.distinctWithQuery()
+      .inCollection("distinctWithQuery")
+      .withFieldName("testDistinctWithQuery")
+      .withQuery(new JsonObject().put("foo", "bar"))
+      .returns(given);
+
+    db.rxDistinctWithQuery("distinctWithQuery", "testDistinctWithQuery", null, new JsonObject().put("foo", "bar"))
+      .doOnSuccess(actual -> ctx.assertEquals(expected, actual))
+      .doOnSuccess(actual -> {
+        actual.remove(0);
+        actual.add("add");
+      })
+      .repeat(2)
+      .ignoreElements()
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void testDistinctWithQueryFileReturnedObjectNotModified(TestContext ctx) {
+    final JsonArray expected = new JsonArray().add("A").add("B").add("C");
+
+    db.rxDistinctWithQuery("distinctWithQuery", "testDistinctWithQueryFile", "java.lang.String", new JsonObject().put("foo", "bar"))
+      .doOnSuccess(actual -> ctx.assertEquals(expected, actual))
+      .doOnSuccess(actual -> {
+        actual.remove(0);
+        actual.add("add");
+      })
+      .repeat(2)
+      .ignoreElements()
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
 }

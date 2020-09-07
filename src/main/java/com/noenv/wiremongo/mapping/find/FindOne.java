@@ -22,6 +22,11 @@ public class FindOne extends WithQuery<JsonObject, FindOneCommand, FindOne> {
   }
 
   @Override
+  public FindOne returns(final JsonObject response) {
+    return super.stub(c -> null == response ? null : response.copy());
+  }
+
+  @Override
   public boolean matches(Command cmd) {
     if (!super.matches(cmd)) {
       return false;

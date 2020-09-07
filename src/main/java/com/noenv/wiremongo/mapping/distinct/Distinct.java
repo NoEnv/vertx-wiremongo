@@ -25,6 +25,11 @@ public class Distinct extends WithCollection<JsonArray, DistinctCommand, Distinc
   }
 
   @Override
+  public Distinct returns(final JsonArray response) {
+    return stub(c -> null == response ? null : response.copy());
+  }
+
+  @Override
   protected JsonArray parseResponse(Object jsonValue) {
     return (JsonArray) jsonValue;
   }

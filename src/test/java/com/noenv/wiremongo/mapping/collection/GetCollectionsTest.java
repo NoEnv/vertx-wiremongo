@@ -5,9 +5,11 @@ import com.noenv.wiremongo.mapping.Mapping;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.reactivex.CompletableHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,5 +42,23 @@ public class GetCollectionsTest extends TestBase {
         mock.removeMapping(m);
         async.complete();
       });
+  }
+
+  @Test
+  public void testGetCollectionReturnedObjectNotModified(TestContext ctx) {
+    final List<String> given = Arrays.asList("first", "second");
+    final List<String> expected = new ArrayList<>(given);
+
+    mock.getCollections().returns(given);
+
+    db.rxGetCollections()
+      .doOnSuccess(actual -> ctx.assertEquals(expected, actual))
+      .doOnSuccess(actual -> {
+        actual.remove(0);
+        actual.add("add");
+      })
+      .repeat(2)
+      .ignoreElements()
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
 }

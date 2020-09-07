@@ -20,6 +20,11 @@ public abstract class UpdateCollectionBase<U extends UpdateCollectionBaseCommand
   }
 
   @Override
+  public C returns(final MongoClientUpdateResult response) {
+    return stub(c -> null == response ? null : new MongoClientUpdateResult(response.toJson().copy()));
+  }
+
+  @Override
   protected MongoClientUpdateResult parseResponse(Object jsonValue) {
     return new MongoClientUpdateResult((JsonObject) jsonValue);
   }

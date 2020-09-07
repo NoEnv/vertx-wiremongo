@@ -218,6 +218,22 @@ wiremongo.insert()
 
 The above code will return ids for the first two and a duplicate key error for every subsequent insert command.
 
+== Match All
+
+If you want to add a mapping that matches *all* mongo commands, you can use `matchAll`:
+
+[source,java]
+----
+wiremongo.matchAll()
+  .stub(c -> {
+    ctx.assertTrue(c.method().equals("replaceDocuments") || c.method().equals("insert"));
+    log("mongo received command: " + c);
+    return 42;
+  });
+----
+
+Match All is not supported for file mappings however.
+
 == Files
 
 Mocks can also be defined in json files. You can ask wiremongo to read files from a directory like this:

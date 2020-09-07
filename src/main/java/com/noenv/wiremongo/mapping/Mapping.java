@@ -37,6 +37,7 @@ import io.vertx.core.json.JsonObject;
 import org.bson.BsonDocument;
 
 import java.net.ConnectException;
+import java.util.function.Function;
 
 public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
 
@@ -68,6 +69,12 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
     });
   }
 
+  default C returnsError(Function<U, Throwable> stub) {
+    return stub(c -> {
+      throw stub.apply(c);
+    });
+  }
+
   default C returnsDuplicateKeyError() {
     return returnsError(new MongoWriteException(
       new WriteError(11000, "E11000 duplicate key error", new BsonDocument()), new ServerAddress()));
@@ -88,6 +95,8 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
   static Mapping create(JsonObject json) {
     try {
       switch (json.getString("method")) {
+        case "matchAll":
+          throw new UnsupportedOperationException("matchAll is not supported in file mappings");
         case "insert":
           return new Insert(json);
         case "insertWithOptions":

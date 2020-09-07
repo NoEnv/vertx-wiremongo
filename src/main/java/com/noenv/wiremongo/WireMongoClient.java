@@ -1,6 +1,7 @@
 package com.noenv.wiremongo;
 
 import com.noenv.wiremongo.command.Command;
+import com.noenv.wiremongo.command.CountCommand;
 import com.noenv.wiremongo.command.RunCommandCommand;
 import com.noenv.wiremongo.command.aggregate.AggregateBaseCommand;
 import com.noenv.wiremongo.command.aggregate.AggregateWithOptionsCommand;
@@ -9,7 +10,6 @@ import com.noenv.wiremongo.command.bulkwrite.BulkWriteWithOptionsCommand;
 import com.noenv.wiremongo.command.collection.CreateCollectionCommand;
 import com.noenv.wiremongo.command.collection.DropCollectionCommand;
 import com.noenv.wiremongo.command.collection.GetCollectionsCommand;
-import com.noenv.wiremongo.command.CountCommand;
 import com.noenv.wiremongo.command.distinct.DistinctBatchBaseCommand;
 import com.noenv.wiremongo.command.distinct.DistinctBatchWithQueryCommand;
 import com.noenv.wiremongo.command.distinct.DistinctCommand;

@@ -7,8 +7,8 @@ import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.streams.ReadStream;
 
 import java.util.ArrayList;
@@ -118,7 +118,7 @@ public class WireMongo implements WireMongoCommands {
         })
         .max(Comparator.comparingInt(Mapping::priority))
         .orElseGet(() -> {
-          logger.info("no mapping found ({})", request);
+          logger.info("no mapping found (" + request.toString() + ")");
           return null;
         });
     }

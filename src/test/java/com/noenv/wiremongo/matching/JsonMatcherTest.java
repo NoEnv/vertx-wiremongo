@@ -102,7 +102,7 @@ public class JsonMatcherTest {
 
   private static void assrt(TestContext ctx, boolean expected, Object a, Object b, boolean ignoreExtraElements, boolean ignoreArrayOrder) {
     if(a instanceof JsonObject) {
-      ctx.assertTrue(expected == equalToJson((JsonObject)a, ignoreExtraElements, ignoreArrayOrder).matches(JsonObject.mapFrom(b)));
+      ctx.assertTrue(expected == equalToJson((JsonObject)a, ignoreExtraElements, ignoreArrayOrder).matches((JsonObject)b));
     } else {
       ctx.assertTrue(expected == equalToJson((JsonArray) a, ignoreExtraElements, ignoreArrayOrder).matches((JsonArray)b));
     }

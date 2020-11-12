@@ -16,10 +16,7 @@ import com.noenv.wiremongo.mapping.distinct.DistinctBatch;
 import com.noenv.wiremongo.mapping.distinct.DistinctBatchWithQuery;
 import com.noenv.wiremongo.mapping.distinct.DistinctWithQuery;
 import com.noenv.wiremongo.mapping.find.*;
-import com.noenv.wiremongo.mapping.index.CreateIndex;
-import com.noenv.wiremongo.mapping.index.CreateIndexWithOptions;
-import com.noenv.wiremongo.mapping.index.DropIndex;
-import com.noenv.wiremongo.mapping.index.ListIndexes;
+import com.noenv.wiremongo.mapping.index.*;
 import com.noenv.wiremongo.mapping.insert.Insert;
 import com.noenv.wiremongo.mapping.insert.InsertWithOptions;
 import com.noenv.wiremongo.mapping.remove.RemoveDocument;
@@ -141,6 +138,8 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
           return new ListIndexes(json);
         case "createIndex":
           return new CreateIndex(json);
+        case "createIndexes":
+          return new CreateIndexes(json);
         case "createIndexWithOptions":
           return new CreateIndexWithOptions(json);
         case "runCommand":

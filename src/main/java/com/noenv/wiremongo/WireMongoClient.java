@@ -15,10 +15,7 @@ import com.noenv.wiremongo.command.distinct.DistinctBatchWithQueryCommand;
 import com.noenv.wiremongo.command.distinct.DistinctCommand;
 import com.noenv.wiremongo.command.distinct.DistinctWithQueryCommand;
 import com.noenv.wiremongo.command.find.*;
-import com.noenv.wiremongo.command.index.CreateIndexBaseCommand;
-import com.noenv.wiremongo.command.index.CreateIndexWithOptionsCommand;
-import com.noenv.wiremongo.command.index.DropIndexCommand;
-import com.noenv.wiremongo.command.index.ListIndexesCommand;
+import com.noenv.wiremongo.command.index.*;
 import com.noenv.wiremongo.command.insert.InsertBaseCommand;
 import com.noenv.wiremongo.command.insert.InsertWithOptionsCommand;
 import com.noenv.wiremongo.command.remove.RemoveDocumentBaseCommand;
@@ -404,8 +401,8 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
-  public Future<Void> createIndexes(String s, List<IndexModel> list) {
-    throw new UnsupportedOperationException("not implemented");
+  public Future<Void> createIndexes(String collection, List<IndexModel> indexModels) {
+    return call(new CreateIndexesCommand(collection, indexModels));
   }
 
   @Override

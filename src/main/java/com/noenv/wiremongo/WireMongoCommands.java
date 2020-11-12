@@ -16,10 +16,7 @@ import com.noenv.wiremongo.mapping.distinct.DistinctBatch;
 import com.noenv.wiremongo.mapping.distinct.DistinctBatchWithQuery;
 import com.noenv.wiremongo.mapping.distinct.DistinctWithQuery;
 import com.noenv.wiremongo.mapping.find.*;
-import com.noenv.wiremongo.mapping.index.CreateIndex;
-import com.noenv.wiremongo.mapping.index.CreateIndexWithOptions;
-import com.noenv.wiremongo.mapping.index.DropIndex;
-import com.noenv.wiremongo.mapping.index.ListIndexes;
+import com.noenv.wiremongo.mapping.index.*;
 import com.noenv.wiremongo.mapping.insert.Insert;
 import com.noenv.wiremongo.mapping.insert.InsertWithOptions;
 import com.noenv.wiremongo.mapping.remove.RemoveDocument;
@@ -113,6 +110,10 @@ public interface WireMongoCommands {
 
   default DropCollection dropCollection() {
     return addMapping(new DropCollection());
+  }
+
+  default CreateIndexes createIndexes() {
+    return addMapping(new CreateIndexes());
   }
 
   default CreateIndex createIndex() {

@@ -1,0 +1,19 @@
+{
+  "method": "createIndexes",
+  "collection": {
+    "equalTo": "createindexes"
+  },
+  "indexModels": {
+    "equalTo": [
+      {
+        "key": {
+          "foo": 1
+        },
+        "options": {
+          "name": "testCreateIndexesFile"
+        }
+      }
+    ]
+  },
+  "response": null
+}

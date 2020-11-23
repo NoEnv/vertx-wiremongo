@@ -5,7 +5,7 @@
 
   <groupId>com.noenv</groupId>
   <artifactId>vertx-wiremongo</artifactId>
-  <version>4.0.0.CR1</version>
+  <version>4.0.0.CR2</version>
 
   <parent>
     <groupId>io.vertx</groupId>
@@ -18,7 +18,7 @@
   <url>http://github.com/NoEnv/vertx-wiremongo</url>
 
   <properties>
-    <stack.version>4.0.0.CR1</stack.version>
+    <stack.version>4.0.0.CR2</stack.version>
   </properties>
 
   <dependencyManagement>

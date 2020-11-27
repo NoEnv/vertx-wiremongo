@@ -86,4 +86,30 @@ public class ValidForTest extends TestBase {
       .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess()));
   }
 
+  @Test
+  public void validForShouldNotOnlyCheckMethod(TestContext ctx) {
+    mock.findOne().validFor(1).inCollection("foobar").withQuery(new JsonObject().put("a", "1"))
+      .stub(() -> {
+        mock.findOne().validFor(1).inCollection("foobar").withQuery(new JsonObject().put("a", "1"))
+          .stub(() -> {
+            mock.findOne().validFor(1).inCollection("foobar").withQuery(new JsonObject().put("a", "1"))
+              .stub(() -> new JsonObject().put("a", "3"));
+            return new JsonObject().put("a", "2");
+          });
+        return new JsonObject().put("a", "1");
+      });
+
+    mock.findOne().inCollection("somethingelse").withQuery(new JsonObject().put("some", "thing")).returns(new JsonObject().put("found", "something"));
+
+    db.rxFindOne("somethingelse", new JsonObject().put("some", "thing"), new JsonObject())
+      .doOnSuccess(r -> ctx.assertEquals("something", r.getString("found")))
+      .flatMap(r -> db.rxFindOne("foobar", new JsonObject().put("a", "1"), new JsonObject()))
+      .doOnSuccess(r -> ctx.assertEquals("1", r.getString("a")))
+      .flatMap(r -> db.rxFindOne("foobar", new JsonObject().put("a", "1"), new JsonObject()))
+      .doOnSuccess(r -> ctx.assertEquals("2", r.getString("a")))
+      .flatMap(r -> db.rxFindOne("foobar", new JsonObject().put("a", "1"), new JsonObject()))
+      .doOnSuccess(r -> ctx.assertEquals("3", r.getString("a")))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
 }

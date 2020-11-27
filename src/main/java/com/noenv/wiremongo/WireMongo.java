@@ -11,17 +11,14 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.core.streams.ReadStream;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class WireMongo implements WireMongoCommands {
 
   private static final Logger logger = LoggerFactory.getLogger(WireMongo.class);
 
   private Vertx vertx;
-  private final List<Mapping<?, ? extends Command, ?>> mappings = Collections.synchronizedList(new ArrayList<>());
+  private final Map<Mapping<?, ? extends Command, ?>, Integer> mappings = Collections.synchronizedMap(new LinkedHashMap<>());
   private final WireMongoClient client;
   private int priorityCounter = 1;
 
@@ -70,13 +67,13 @@ public class WireMongo implements WireMongoCommands {
     if (mapping.priority() == 0) {
       mapping.priority(priorityCounter++);
     }
-    mappings.add(mapping);
+    mappings.put(mapping, 0);
     return mapping;
   }
 
   @Override
   public <T extends Mapping<?, ?, ?>> boolean removeMapping(T mapping) {
-    return mappings.remove(mapping);
+    return mappings.remove(mapping) != null;
   }
 
   <T, U extends Command> Future<T> call(U request) {
@@ -107,10 +104,15 @@ public class WireMongo implements WireMongoCommands {
   private <T, U extends Command> Mapping<T, U, ?> findMapping(U request) {
     synchronized (mappings) {
       //noinspection unchecked
-      return (Mapping<T, U, ?>) mappings.stream()
+      return (Mapping<T, U, ?>) mappings.keySet().stream()
         .filter(m -> {
           try {
-            return m.matches(request);
+            if (m.matches(request)) {
+              int matchCount = mappings.get(m);
+              mappings.put(m, ++matchCount);
+              return m.validFor() <= 0 || matchCount <= m.validFor();
+            }
+            return false;
           } catch (Throwable ex) {
             logger.error("error evaluating mapping", ex);
             return false;

@@ -15,7 +15,6 @@ public abstract class MappingBase<T, U extends Command, C extends MappingBase<T,
   private final LinkedList<StubBase<T, U>> stubs = new LinkedList<>();
   private int priority;
   private int times;
-  private int matchCount;
   private Verification verification;
 
   public MappingBase(String method) {
@@ -47,6 +46,11 @@ public abstract class MappingBase<T, U extends Command, C extends MappingBase<T,
   }
 
   @Override
+  public int validFor() {
+    return this.times;
+  }
+
+  @Override
   public T invoke(U command) throws Throwable {
     StubBase<T, U> s = stubs.size() > 1 ? stubs.pop() : stubs.peek();
     if (verification != null) {
@@ -64,8 +68,7 @@ public abstract class MappingBase<T, U extends Command, C extends MappingBase<T,
 
   @Override
   public boolean matches(Command c) {
-    boolean matchesResult = Objects.equals(method(), c.method());
-    return (times <= 0 || !matchesResult || ++matchCount <= times) && matchesResult;
+    return Objects.equals(method(), c.method());
   }
 
   @Override

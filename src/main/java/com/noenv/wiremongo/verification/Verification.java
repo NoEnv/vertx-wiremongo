@@ -32,12 +32,13 @@ public class Verification {
     };
 
     this.assertion = () -> {
-      if (actualRuns.get() > times) {
+      if (actualRuns.get() != times) {
         this.failed = true;
         this.failure = String.format(
-          "expected '%s' to run exactly %d time(s), but it ran more often",
+          "expected '%s' to run exactly %d time(s), but it ran %d times",
           label,
-          times
+          times,
+          actualRuns.get()
         );
       }
     };

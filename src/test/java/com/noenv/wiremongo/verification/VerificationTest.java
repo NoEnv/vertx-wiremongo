@@ -112,7 +112,7 @@ public class VerificationTest extends TestBase {
   public void verify_RunExactlyOnce_shall_fail_ifRunTwice(TestContext ctx) {
 
     thrown.expect(AssertionError.class);
-    thrown.expectMessage("expected 'find one and update in some-collection' to run exactly 1 time(s), but it ran more often");
+    thrown.expectMessage("expected 'find one and update in some-collection' to run exactly 1 time(s), but it ran 2 times");
 
     mock
       .findOneAndUpdate()
@@ -149,7 +149,7 @@ public class VerificationTest extends TestBase {
   public void verify_RunExactly3Times_shall_fail_ifRun4Times(TestContext ctx) {
 
     thrown.expect(AssertionError.class);
-    thrown.expectMessage("expected 'find one and update in some-collection' to run exactly 3 time(s), but it ran more often");
+    thrown.expectMessage("expected 'find one and update in some-collection' to run exactly 3 time(s), but it ran 4 times");
 
     mock
       .findOneAndUpdate()
@@ -178,6 +178,43 @@ public class VerificationTest extends TestBase {
             new JsonObject()
           )
           .ignoreElement(),
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement(),
+        db
+          .rxFindOneAndUpdate(
+            "some-collection",
+            new JsonObject(),
+            new JsonObject()
+          )
+          .ignoreElement()
+      )
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void verify_RunExactly3Times_shall_fail_ifRun2Times(TestContext ctx) {
+
+    thrown.expect(AssertionError.class);
+    thrown.expectMessage("expected 'find one and update in some-collection' to run exactly 3 time(s), but it ran 2 times");
+
+    mock
+      .findOneAndUpdate()
+      .inCollection("some-collection")
+      .verify(
+        verifier
+          .checkIf("find one and update in some-collection")
+          .isRunExactly(3)
+      )
+      .returns(null);
+
+
+    Completable
+      .mergeArray(
         db
           .rxFindOneAndUpdate(
             "some-collection",

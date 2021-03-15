@@ -7,14 +7,11 @@ import io.vertx.ext.mongo.IndexOptions;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 
-@Ignore
-// won't work until https://github.com/vert-x3/vertx-mongo-client/pull/237 and https://github.com/vert-x3/vertx-mongo-client/pull/238
 @RunWith(VertxUnitRunner.class)
 public class CreateIndexesTest extends TestBase {
 

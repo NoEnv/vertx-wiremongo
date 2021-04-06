@@ -1,5 +1,7 @@
 package com.noenv.wiremongo.matching;
 
+import com.noenv.wiremongo.matching.compare.GenericComparator;
+import com.noenv.wiremongo.matching.compare.JsonObjectComparator;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
@@ -59,7 +61,7 @@ public class JsonMatcher<T> implements Matcher<T> {
 
   private boolean matchInternal(JsonObject a, JsonObject b) {
     if (!ignoreExtraElements) {
-      return Objects.equals(a, b);
+      return new JsonObjectComparator(ignoreArrayOrder).compare(a, b) == 0;
     }
     return a.getMap().keySet().stream().allMatch(k -> matchInternal(a.getValue(k), b.getValue(k)));
   }
@@ -69,8 +71,10 @@ public class JsonMatcher<T> implements Matcher<T> {
       return false;
     }
 
-    Function<JsonArray, List<?>> toList = s -> (ignoreArrayOrder ? s.stream().sorted() : s.stream())
-      .collect(Collectors.toList());
+    Function<JsonArray, List<?>> toList = s -> (ignoreArrayOrder
+      ? s.stream().sorted(new GenericComparator(true))
+      : s.stream()
+    ).collect(Collectors.toList());
 
     List<?> al = toList.apply(a);
     List<?> bl = toList.apply(b);

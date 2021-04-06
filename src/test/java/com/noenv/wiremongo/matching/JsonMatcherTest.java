@@ -92,6 +92,68 @@ public class JsonMatcherTest {
       true, true);
   }
 
+  @Test
+  public void testIgnoreArrayOrderOnJsonArrayWithNestedJsonObject(TestContext ctx) {
+    JsonArray a = new JsonArray().add(new JsonObject().put("foo", "bar")).add(new JsonObject().put("bar", "foo"));
+    JsonArray b = new JsonArray().add(new JsonObject().put("bar", "foo")).add(new JsonObject().put("foo", "bar"));
+
+    assrt(ctx, true, a, b, false, true);
+    assrt(ctx, false, a, b);
+  }
+
+  @Test
+  public void testIgnoreArrayOrderOnJsonArrayWithNestedJsonObjectAndNestedJsonArray(TestContext ctx) {
+    JsonArray a = new JsonArray()
+      .add(
+        new JsonObject()
+          .put("foo", "bar")
+          .put("some-list", new JsonArray("[1,2,3,4]"))
+      ).add(new JsonObject().put("bar", "foo"));
+    JsonArray b = new JsonArray()
+      .add(new JsonObject().put("bar", "foo"))
+      .add(
+        new JsonObject()
+          .put("some-list", new JsonArray("[4,1,3,2]"))
+          .put("foo", "bar")
+      );
+
+    assrt(ctx, true, a, b, false, true);
+    assrt(ctx, false, a, b);
+  }
+
+  @Test
+  public void testIgnoreArrayOrderOnJsonObjectWithNestedJsonArray(TestContext ctx) {
+    JsonObject a = new JsonObject()
+      .put("foo", "bar")
+      .put("some-list", new JsonArray("[1,2,3,4]"));
+    JsonObject b = new JsonObject()
+      .put("foo", "bar")
+      .put("some-list", new JsonArray("[4,1,3,2]"));
+
+    assrt(ctx, true, a, b, false, true);
+    assrt(ctx, false, a, b);
+  }
+
+  @Test
+  public void testIgnoreArrayOrderOnJsonObjectWithNestedJsonArrayAndNestedJsonObject(TestContext ctx) {
+    JsonObject a = new JsonObject()
+      .put("foo", "bar")
+      .put("some-list",
+        new JsonArray()
+          .add(new JsonObject().put("fnord", "dronf"))
+          .add(new JsonObject().put("jibber", "jabber"))
+      );
+    JsonObject b = new JsonObject()
+      .put("some-list",
+        new JsonArray()
+          .add(new JsonObject().put("jibber", "jabber"))
+          .add(new JsonObject().put("fnord", "dronf"))
+      ).put("foo", "bar");
+
+    assrt(ctx, true, a, b, false, true);
+    assrt(ctx, false, a, b);
+  }
+
   private static void assrt(TestContext ctx, boolean expected, Object a, Object b) {
     assrt(ctx, expected, a, b, false);
   }

@@ -1,14 +1,10 @@
 package com.noenv.wiremongo.matching;
 
-import com.noenv.wiremongo.matching.compare.GenericComparator;
-import com.noenv.wiremongo.matching.compare.JsonObjectComparator;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class JsonMatcher<T> implements Matcher<T> {
@@ -33,6 +29,84 @@ public class JsonMatcher<T> implements Matcher<T> {
     this.toJson = toJson;
     this.ignoreExtraElements = ignoreExtraElements;
     this.ignoreArrayOrder = ignoreArrayOrder;
+  }
+
+  public static JsonMatcher<JsonObject> equalToJson(JsonObject value) {
+    return equalToJson(value, false);
+  }
+
+  public static JsonMatcher<JsonObject> equalToJson(JsonObject value, boolean ignoreExtraElements) {
+    return equalToJson(value, ignoreExtraElements, false);
+  }
+
+  public static JsonMatcher<JsonObject> equalToJson(JsonObject value, boolean ignoreExtraElements, boolean ignoreArrayOrder) {
+    return equalToJson(value, i -> i, ignoreExtraElements, ignoreArrayOrder);
+  }
+
+  public static <T> JsonMatcher<T> equalToJson(JsonObject value, Function<T, Object> toJson) {
+    return equalToJson(value, toJson, false);
+  }
+
+  // JsonObject overloads
+
+  public static <T> JsonMatcher<T> equalToJson(JsonObject value, Function<T, Object> toJson, boolean ignoreExtraElements) {
+    return equalToJson(value, toJson, ignoreExtraElements, false);
+  }
+
+  public static <T> JsonMatcher<T> equalToJson(JsonObject value, Function<T, Object> toJson,
+                                               boolean ignoreExtraElements, boolean ignoreArrayOrder) {
+    return new JsonMatcher<>(value, toJson, ignoreExtraElements, ignoreArrayOrder);
+  }
+
+  public static Matcher<JsonObject> notEqualToJson(JsonObject value) {
+    return notEqualToJson(value, false);
+  }
+
+  public static Matcher<JsonObject> notEqualToJson(JsonObject value, boolean ignoreExtraElements) {
+    return notEqualToJson(value, ignoreExtraElements, false);
+  }
+
+  public static Matcher<JsonObject> notEqualToJson(JsonObject value, boolean ignoreExtraElements, boolean ignoreArrayOrder) {
+    return o -> !equalToJson(value, ignoreExtraElements, ignoreArrayOrder).matches(o);
+  }
+
+  public static JsonMatcher<JsonArray> equalToJson(JsonArray value) {
+    return equalToJson(value, false);
+  }
+
+  public static JsonMatcher<JsonArray> equalToJson(JsonArray value, boolean ignoreExtraElements) {
+    return equalToJson(value, ignoreExtraElements, false);
+  }
+
+  public static JsonMatcher<JsonArray> equalToJson(JsonArray value, boolean ignoreExtraElements, boolean ignoreArrayOrder) {
+    return equalToJson(value, i -> i, ignoreExtraElements, ignoreArrayOrder);
+  }
+
+  public static <T> JsonMatcher<T> equalToJson(JsonArray value, Function<T, Object> toJson) {
+    return equalToJson(value, toJson, false);
+  }
+
+  // JsonArray overloads
+
+  public static <T> JsonMatcher<T> equalToJson(JsonArray value, Function<T, Object> toJson, boolean ignoreExtraElements) {
+    return equalToJson(value, toJson, ignoreExtraElements, false);
+  }
+
+  public static <T> JsonMatcher<T> equalToJson(JsonArray value, Function<T, Object> toJson,
+                                               boolean ignoreExtraElements, boolean ignoreArrayOrder) {
+    return new JsonMatcher<>(value, toJson, ignoreExtraElements, ignoreArrayOrder);
+  }
+
+  public static Matcher<JsonArray> notEqualToJson(JsonArray value) {
+    return notEqualToJson(value, false);
+  }
+
+  public static Matcher<JsonArray> notEqualToJson(JsonArray value, boolean ignoreExtraElements) {
+    return notEqualToJson(value, ignoreExtraElements, false);
+  }
+
+  public static Matcher<JsonArray> notEqualToJson(JsonArray value, boolean ignoreExtraElements, boolean ignoreArrayOrder) {
+    return o -> !equalToJson(value, ignoreExtraElements, ignoreArrayOrder).matches(o);
   }
 
   @Override
@@ -60,104 +134,19 @@ public class JsonMatcher<T> implements Matcher<T> {
   }
 
   private boolean matchInternal(JsonObject a, JsonObject b) {
-    if (!ignoreExtraElements) {
-      return new JsonObjectComparator(ignoreArrayOrder).compare(a, b) == 0;
+    if (!ignoreExtraElements && (a.size() != b.size())) {
+      return false;
     }
-    return a.getMap().keySet().stream().allMatch(k -> matchInternal(a.getValue(k), b.getValue(k)));
+    return a.stream().allMatch(e -> matchInternal(e.getValue(), b.getValue(e.getKey())));
   }
 
   private boolean matchInternal(JsonArray a, JsonArray b) {
-    if(a.size() != b.size()) {
+    if ((!ignoreExtraElements && a.size() != b.size()) || (ignoreExtraElements && a.size() > b.size())) {
       return false;
     }
-
-    Function<JsonArray, List<?>> toList = s -> (ignoreArrayOrder
-      ? s.stream().sorted(new GenericComparator(true))
-      : s.stream()
-    ).collect(Collectors.toList());
-
-    List<?> al = toList.apply(a);
-    List<?> bl = toList.apply(b);
-
-    return IntStream.range(0, a.size())
-      .allMatch(i -> matchInternal(al.get(i), bl.get(i)));
-  }
-
-  // JsonObject overloads
-
-  public static JsonMatcher<JsonObject> equalToJson(JsonObject value) {
-    return equalToJson(value, false);
-  }
-
-  public static JsonMatcher<JsonObject> equalToJson(JsonObject value, boolean ignoreExtraElements) {
-    return equalToJson(value, ignoreExtraElements, false);
-  }
-
-  public static JsonMatcher<JsonObject> equalToJson(JsonObject value, boolean ignoreExtraElements, boolean ignoreArrayOrder) {
-    return equalToJson(value, i -> i, ignoreExtraElements, ignoreArrayOrder);
-  }
-
-  public static <T> JsonMatcher<T> equalToJson(JsonObject value, Function<T, Object> toJson) {
-    return equalToJson(value, toJson, false);
-  }
-
-  public static <T> JsonMatcher<T> equalToJson(JsonObject value, Function<T, Object> toJson, boolean ignoreExtraElements) {
-    return equalToJson(value, toJson, ignoreExtraElements, false);
-  }
-
-  public static <T> JsonMatcher<T> equalToJson(JsonObject value, Function<T, Object> toJson,
-                                               boolean ignoreExtraElements, boolean ignoreArrayOrder) {
-    return new JsonMatcher<>(value, toJson, ignoreExtraElements, ignoreArrayOrder);
-  }
-
-  public static Matcher<JsonObject> notEqualToJson(JsonObject value) {
-    return notEqualToJson(value, false);
-  }
-
-  public static Matcher<JsonObject> notEqualToJson(JsonObject value, boolean ignoreExtraElements) {
-    return notEqualToJson(value, ignoreExtraElements, false);
-  }
-
-  public static Matcher<JsonObject> notEqualToJson(JsonObject value, boolean ignoreExtraElements, boolean ignoreArrayOrder) {
-    return o -> !equalToJson(value, ignoreExtraElements, ignoreArrayOrder).matches(o);
-  }
-
-  // JsonArray overloads
-
-  public static JsonMatcher<JsonArray> equalToJson(JsonArray value) {
-    return equalToJson(value, false);
-  }
-
-  public static JsonMatcher<JsonArray> equalToJson(JsonArray value, boolean ignoreExtraElements) {
-    return equalToJson(value, ignoreExtraElements, false);
-  }
-
-  public static JsonMatcher<JsonArray> equalToJson(JsonArray value, boolean ignoreExtraElements, boolean ignoreArrayOrder) {
-    return equalToJson(value, i -> i, ignoreExtraElements, ignoreArrayOrder);
-  }
-
-  public static <T> JsonMatcher<T> equalToJson(JsonArray value, Function<T, Object> toJson) {
-    return equalToJson(value, toJson, false);
-  }
-
-  public static <T> JsonMatcher<T> equalToJson(JsonArray value, Function<T, Object> toJson, boolean ignoreExtraElements) {
-    return equalToJson(value, toJson, ignoreExtraElements, false);
-  }
-
-  public static <T> JsonMatcher<T> equalToJson(JsonArray value, Function<T, Object> toJson,
-                                               boolean ignoreExtraElements, boolean ignoreArrayOrder) {
-    return new JsonMatcher<>(value, toJson, ignoreExtraElements, ignoreArrayOrder);
-  }
-
-  public static Matcher<JsonArray> notEqualToJson(JsonArray value) {
-    return notEqualToJson(value, false);
-  }
-
-  public static Matcher<JsonArray> notEqualToJson(JsonArray value, boolean ignoreExtraElements) {
-    return notEqualToJson(value, ignoreExtraElements, false);
-  }
-
-  public static Matcher<JsonArray> notEqualToJson(JsonArray value, boolean ignoreExtraElements, boolean ignoreArrayOrder) {
-    return o -> !equalToJson(value, ignoreExtraElements, ignoreArrayOrder).matches(o);
+    if (ignoreArrayOrder) {
+      return a.stream().allMatch(av -> b.stream().anyMatch(bv -> matchInternal(av, bv)));
+    }
+    return IntStream.range(0, a.size()).allMatch(i -> matchInternal(a.getValue(i), b.getValue(i)));
   }
 }

@@ -1,22 +1,18 @@
 package com.noenv.wiremongo.verification;
 
 import com.noenv.wiremongo.TestBase;
-import io.reactivex.Completable;
+import io.reactivex.rxjava3.core.Completable;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.reactivex.CompletableHelper;
-import io.vertx.reactivex.MaybeHelper;
+import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.junit.runners.model.MultipleFailureException;
-
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.equalTo;
 
 @RunWith(VertxUnitRunner.class)
 public class VerificationTest extends TestBase {

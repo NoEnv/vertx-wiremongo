@@ -2,13 +2,13 @@ package com.noenv.wiremongo.mapping.aggregate;
 
 import com.noenv.wiremongo.MemoryStream;
 import com.noenv.wiremongo.TestBase;
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.reactivex.CompletableHelper;
+import io.vertx.rxjava3.CompletableHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

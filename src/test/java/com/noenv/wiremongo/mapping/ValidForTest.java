@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.reactivex.MaybeHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

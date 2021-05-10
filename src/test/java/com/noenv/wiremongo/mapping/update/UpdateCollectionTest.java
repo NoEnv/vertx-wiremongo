@@ -7,7 +7,7 @@ import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.reactivex.CompletableHelper;
+import io.vertx.rxjava3.CompletableHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

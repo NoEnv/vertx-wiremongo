@@ -7,8 +7,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.ext.mongo.MongoClient;
+import io.vertx.rxjava3.core.Vertx;
+import io.vertx.rxjava3.ext.mongo.MongoClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +20,13 @@ public class WireMongoTest {
   private JsonObject config = new JsonObject()
     .put("class", WireMongoClient.class.getName());
   private MongoClient db;
-  private com.noenv.reactivex.wiremongo.WireMongo mock;
+  private com.noenv.rxjava3.wiremongo.WireMongo mock;
 
   @Before
   public void setUp() {
     Vertx vertx = Vertx.vertx();
-    db = com.noenv.reactivex.wiremongo.WireMongoClient.createShared(vertx, config, null);
-    mock = new com.noenv.reactivex.wiremongo.WireMongo(vertx);
+    db = com.noenv.rxjava3.wiremongo.WireMongoClient.createShared(vertx, config, null);
+    mock = new com.noenv.rxjava3.wiremongo.WireMongo(vertx);
   }
 
   @After

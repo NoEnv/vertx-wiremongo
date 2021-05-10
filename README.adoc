@@ -5,7 +5,7 @@ image:https://badgen.net/maven/v/maven-central/com.noenv/vertx-wiremongo["Maven 
 = Vert.x-Wiremongo
 :toc: left
 
-Wiremongo is an alternative implementation of the Vert.x `MongoClient` interface that can be used to mock mongo calls. It is most useful for unit testing mongo database code and is more lightweight than https://github.com/vert-x3/vertx-embedded-mongo-db[vertx-embedded-mongo-db] because it doesn't run an entire mongo instance.
+Wiremongo is an alternative implementation of the Vert.x `MongoClient` interface that can be used to mock mongo calls. It is most useful for unit testing mongo database code and is more lightweight than running a mongodb instance.
 
 == Quickstart
 

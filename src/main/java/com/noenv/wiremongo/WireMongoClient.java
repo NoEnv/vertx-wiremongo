@@ -1,5 +1,6 @@
 package com.noenv.wiremongo;
 
+import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.CountCommand;
 import com.noenv.wiremongo.command.RunCommandCommand;
@@ -504,6 +505,11 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public Future<MongoGridFsClient> createGridFsBucketService(String s) {
+    throw new UnsupportedOperationException("not implemented");
+  }
+
+  @Override
+  public ReadStream<ChangeStreamDocument<JsonObject>> watch(String s, JsonArray jsonArray, boolean b, int i) {
     throw new UnsupportedOperationException("not implemented");
   }
 

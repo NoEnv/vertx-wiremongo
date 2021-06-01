@@ -107,13 +107,12 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-rx-java3</artifactId>
-      <version>${stack.version}</version> <!-- FIXME remove once it is in BOM -->
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-rx-java3-gen</artifactId>
-      <version>${stack.version}</version> <!-- FIXME remove once it is in BOM -->
+      <version>${stack.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>

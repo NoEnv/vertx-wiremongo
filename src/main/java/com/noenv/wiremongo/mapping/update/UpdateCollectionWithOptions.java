@@ -10,7 +10,7 @@ import io.vertx.ext.mongo.UpdateOptions;
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class UpdateCollectionWithOptions extends UpdateCollectionBase<UpdateCollectionWithOptionsCommand, UpdateCollectionWithOptions> {
+public class UpdateCollectionWithOptions<T> extends UpdateCollectionBase<T, UpdateCollectionWithOptionsCommand<T>, UpdateCollectionWithOptions<T>> {
 
   private Matcher<UpdateOptions> options;
 
@@ -36,15 +36,15 @@ public class UpdateCollectionWithOptions extends UpdateCollectionBase<UpdateColl
     if (!(cmd instanceof UpdateCollectionWithOptionsCommand)) {
       return false;
     }
-    UpdateCollectionWithOptionsCommand c = (UpdateCollectionWithOptionsCommand) cmd;
+    UpdateCollectionWithOptionsCommand<T> c = (UpdateCollectionWithOptionsCommand<T>) cmd;
     return options == null || options.matches(c.getOptions());
   }
 
-  public UpdateCollectionWithOptions withOptions(UpdateOptions options) {
+  public UpdateCollectionWithOptions<T> withOptions(UpdateOptions options) {
     return withOptions(equalTo(options));
   }
 
-  public UpdateCollectionWithOptions withOptions(Matcher<UpdateOptions> options) {
+  public UpdateCollectionWithOptions<T> withOptions(Matcher<UpdateOptions> options) {
     this.options = options;
     return self();
   }

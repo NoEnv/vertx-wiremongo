@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public abstract class UpdateCollectionBase<U extends UpdateCollectionBaseCommand, C extends UpdateCollectionBase<U, C>> extends WithUpdate<MongoClientUpdateResult, U, C> {
+public abstract class UpdateCollectionBase<V, U extends UpdateCollectionBaseCommand<V>, C extends UpdateCollectionBase<V, U, C>> extends WithUpdate<V, MongoClientUpdateResult, U, C> {
 
   public UpdateCollectionBase() {
     this("updateCollection");

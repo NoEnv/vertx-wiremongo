@@ -1,0 +1,25 @@
+{
+  "method": "updateCollection",
+  "collection": {
+    "equalTo": "updatecollection"
+  },
+  "query": {
+    "equalTo": {
+      "test": "testUpdateCollectionAggregationPipelineFile"
+    }
+  },
+  "update": {
+    "equalTo": [
+      {
+        "foo": "bar"
+      }
+    ]
+  },
+  "response": {
+    "doc_matched": 42,
+    "doc_modified": 11,
+    "upserted_id": {
+      "field1": "value1"
+    }
+  }
+}

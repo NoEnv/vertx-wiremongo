@@ -118,7 +118,18 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public Future<MongoClientUpdateResult> updateCollection(String collection, JsonObject query, JsonObject update) {
-    return call(new UpdateCollectionBaseCommand(collection, query, update));
+    return call(new UpdateCollectionBaseCommand<>(collection, query, update));
+  }
+
+  @Override
+  public MongoClient updateCollection(String collection, JsonObject query, JsonArray update, Handler<AsyncResult<MongoClientUpdateResult>> handler) {
+    updateCollection(collection, query, update).onComplete(handler);
+    return this;
+  }
+
+  @Override
+  public Future<MongoClientUpdateResult> updateCollection(String collection, JsonObject query, JsonArray update) {
+    return call(new UpdateCollectionBaseCommand<>(collection, query, update));
   }
 
   @Override
@@ -129,7 +140,18 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public Future<MongoClientUpdateResult> updateCollectionWithOptions(String collection, JsonObject query, JsonObject update, UpdateOptions options) {
-    return call(new UpdateCollectionWithOptionsCommand(collection, query, update, options));
+    return call(new UpdateCollectionWithOptionsCommand<>(collection, query, update, options));
+  }
+
+  @Override
+  public MongoClient updateCollectionWithOptions(String collection, JsonObject query, JsonArray update, UpdateOptions updateOptions, Handler<AsyncResult<MongoClientUpdateResult>> handler) {
+    updateCollectionWithOptions(collection, query, update, updateOptions).onComplete(handler);
+    return this;
+  }
+
+  @Override
+  public Future<MongoClientUpdateResult> updateCollectionWithOptions(String collection, JsonObject query, JsonArray update, UpdateOptions updateOptions) {
+    return call(new UpdateCollectionWithOptionsCommand<>(collection, query, update, updateOptions));
   }
 
   @Override

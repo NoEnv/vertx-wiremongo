@@ -3,16 +3,16 @@ package com.noenv.wiremongo.command.update;
 import com.noenv.wiremongo.command.WithQueryCommand;
 import io.vertx.core.json.JsonObject;
 
-public abstract class WithUpdateCommand extends WithQueryCommand {
+public abstract class WithUpdateCommand<T> extends WithQueryCommand {
 
-  private final JsonObject update;
+  private final T update;
 
-  public WithUpdateCommand(String method, String collection, JsonObject query, JsonObject update) {
+  public WithUpdateCommand(String method, String collection, JsonObject query, T update) {
     super(method, collection, query);
     this.update = update;
   }
 
-  public JsonObject getUpdate() {
+  public T getUpdate() {
     return update;
   }
 

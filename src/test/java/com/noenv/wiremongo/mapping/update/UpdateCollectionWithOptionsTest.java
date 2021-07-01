@@ -125,4 +125,40 @@ public class UpdateCollectionWithOptionsTest extends TestBase {
       .ignoreElements()
       .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
+
+  @Test
+  public void testUpdateCollectionWithOptionsAggregationPipeline(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.updateCollectionWithOptionsAggregationPipeline()
+      .inCollection("updatecollectionwithoptions")
+      .withQuery(new JsonObject().put("test", "testUpdateCollectionWithOptions"))
+      .withUpdate(new JsonArray().add(new JsonObject().put("foo", "bar")))
+      .withOptions(equalToJson(new JsonObject().put("upsert", true), UpdateOptions::toJson))
+      .returns(new MongoClientUpdateResult(22, null, 24));
+
+    db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
+      new JsonObject().put("test", "testUpdateCollectionWithOptions"),
+      new JsonArray().add(new JsonObject().put("foo", "bar")),
+      new UpdateOptions().setUpsert(true))
+      .subscribe(r -> {
+        ctx.assertEquals(22L, r.getDocMatched());
+        ctx.assertEquals(24L, r.getDocModified());
+        async.complete();
+      }, ctx::fail);
+  }
+
+  @Test
+  public void testUpdateCollectionWithOptionsAggregationPipelineFile(TestContext ctx) {
+    Async async = ctx.async();
+    db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
+      new JsonObject().put("test", "testUpdateCollectionWithOptionsAggregationPipelineFile"),
+      new JsonArray().add(new JsonObject().put("foo", "bar")),
+      new UpdateOptions().setMulti(true))
+      .subscribe(r -> {
+        ctx.assertEquals(46L, r.getDocMatched());
+        ctx.assertEquals(17L, r.getDocModified());
+        async.complete();
+      }, ctx::fail);
+  }
 }

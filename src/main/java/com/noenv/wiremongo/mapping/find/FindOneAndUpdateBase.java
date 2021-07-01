@@ -5,7 +5,7 @@ import com.noenv.wiremongo.mapping.update.WithUpdate;
 import io.vertx.core.json.JsonObject;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public abstract class FindOneAndUpdateBase<U extends FindOneAndUpdateBaseCommand, C extends FindOneAndUpdateBase<U, C>> extends WithUpdate<JsonObject, U, C> {
+public abstract class FindOneAndUpdateBase<U extends FindOneAndUpdateBaseCommand, C extends FindOneAndUpdateBase<U, C>> extends WithUpdate<JsonObject, JsonObject, U, C> {
 
   public FindOneAndUpdateBase() {
     this("findOneAndUpdate");

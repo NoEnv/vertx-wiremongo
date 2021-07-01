@@ -29,6 +29,8 @@ import com.noenv.wiremongo.mapping.save.Save;
 import com.noenv.wiremongo.mapping.save.SaveWithOptions;
 import com.noenv.wiremongo.mapping.update.UpdateCollection;
 import com.noenv.wiremongo.mapping.update.UpdateCollectionWithOptions;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 public interface WireMongoCommands {
 
@@ -52,12 +54,20 @@ public interface WireMongoCommands {
     return addMapping(new SaveWithOptions());
   }
 
-  default UpdateCollection updateCollection() {
-    return addMapping(new UpdateCollection());
+  default UpdateCollection<JsonObject> updateCollection() {
+    return addMapping(new UpdateCollection<>());
   }
 
-  default UpdateCollectionWithOptions updateCollectionWithOptions() {
-    return addMapping(new UpdateCollectionWithOptions());
+  default UpdateCollection<JsonArray> updateCollectionAggregationPipeline() {
+    return addMapping(new UpdateCollection<>());
+  }
+
+  default UpdateCollectionWithOptions<JsonObject> updateCollectionWithOptions() {
+    return addMapping(new UpdateCollectionWithOptions<>());
+  }
+
+  default UpdateCollectionWithOptions<JsonArray> updateCollectionWithOptionsAggregationPipeline() {
+    return addMapping(new UpdateCollectionWithOptions<>());
   }
 
   default Find find() {

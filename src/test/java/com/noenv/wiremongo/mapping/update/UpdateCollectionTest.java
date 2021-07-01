@@ -105,4 +105,35 @@ public class UpdateCollectionTest extends TestBase {
       .ignoreElements()
       .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
+
+  @Test
+  public void testUpdateCollectionAggregationPipeline(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.updateCollectionAggregationPipeline()
+      .inCollection("updatecollection")
+      .withQuery(new JsonObject().put("test", "testUpdateCollection"))
+      .withUpdate(new JsonArray().add(new JsonObject().put("foo", "bar")))
+      .returns(new MongoClientUpdateResult(37, null, 21));
+
+    db.rxUpdateCollection("updatecollection", new JsonObject().put("test", "testUpdateCollection"), new JsonArray().add(new JsonObject().put("foo", "bar")))
+      .subscribe(r -> {
+        ctx.assertEquals(37L, r.getDocMatched());
+        ctx.assertEquals(21L, r.getDocModified());
+        async.complete();
+      }, ctx::fail);
+  }
+
+  @Test
+  public void testUpdateCollectionAggregationPipelineFile(TestContext ctx) {
+    Async async = ctx.async();
+    db.rxUpdateCollection("updatecollection",
+      new JsonObject().put("test", "testUpdateCollectionAggregationPipelineFile"),
+      new JsonArray().add(new JsonObject().put("foo", "bar")))
+      .subscribe(r -> {
+        ctx.assertEquals(42L, r.getDocMatched());
+        ctx.assertEquals(11L, r.getDocModified());
+        async.complete();
+      }, ctx::fail);
+  }
 }

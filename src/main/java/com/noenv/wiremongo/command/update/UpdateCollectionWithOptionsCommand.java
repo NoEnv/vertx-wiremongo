@@ -4,11 +4,11 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.UpdateOptions;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
-public class UpdateCollectionWithOptionsCommand extends UpdateCollectionBaseCommand {
+public class UpdateCollectionWithOptionsCommand<T> extends UpdateCollectionBaseCommand<T> {
 
   private final UpdateOptions options;
 
-  public UpdateCollectionWithOptionsCommand(String collection, JsonObject query, JsonObject update, UpdateOptions options) {
+  public UpdateCollectionWithOptionsCommand(String collection, JsonObject query, T update, UpdateOptions options) {
     super("updateCollectionWithOptions", collection, query, update);
     this.options = options;
   }

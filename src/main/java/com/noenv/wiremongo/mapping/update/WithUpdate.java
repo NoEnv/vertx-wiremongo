@@ -1,10 +1,18 @@
 package com.noenv.wiremongo.mapping.update;
 
+import com.mongodb.MongoCommandException;
+import com.mongodb.ServerAddress;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.update.WithUpdateCommand;
 import com.noenv.wiremongo.mapping.WithQuery;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
+import org.bson.BsonDocument;
+import org.bson.BsonElement;
+import org.bson.BsonInt32;
+import org.bson.BsonString;
+
+import java.util.Arrays;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
@@ -40,5 +48,17 @@ public abstract class WithUpdate<V, T, U extends WithUpdateCommand<V>, C extends
   public C withUpdate(Matcher<V> update) {
     this.update = update;
     return self();
+  }
+
+  @Override
+  public C returnsDuplicateKeyError() {
+    BsonDocument bsonDocument = new BsonDocument(
+      Arrays.asList(
+        new BsonElement("code", new BsonInt32(11000)),
+        new BsonElement("codeName", new BsonString("DuplicateKey")),
+        new BsonElement("errmsg", new BsonString("E11000 duplicate key error"))
+      )
+    );
+    return returnsError(new MongoCommandException(bsonDocument, new ServerAddress()));
   }
 }

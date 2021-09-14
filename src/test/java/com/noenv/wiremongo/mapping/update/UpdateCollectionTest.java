@@ -1,5 +1,6 @@
 package com.noenv.wiremongo.mapping.update;
 
+import com.mongodb.MongoCommandException;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -135,5 +136,27 @@ public class UpdateCollectionTest extends TestBase {
         ctx.assertEquals(11L, r.getDocModified());
         async.complete();
       }, ctx::fail);
+  }
+
+  @Test
+  public void testUpdateCollectionDuplicateKeyError(TestContext ctx) {
+    mock.updateCollection()
+      .inCollection("updatecollection")
+      .withQuery(new JsonObject().put("test", "testUpdateCollection"))
+      .withUpdate(new JsonObject().put("foo", "bar"))
+      .returnsDuplicateKeyError();
+
+    db.rxUpdateCollection("updatecollection",
+        new JsonObject().put("test", "testUpdateCollection"),
+        new JsonObject().put("foo", "bar"))
+      .doOnError(cause -> {
+        ctx.assertTrue(cause instanceof MongoCommandException);
+        final MongoCommandException actual = (MongoCommandException) cause;
+        ctx.assertEquals("E11000 duplicate key error", actual.getErrorMessage());
+        ctx.assertEquals(11000, actual.getErrorCode());
+        ctx.assertEquals("DuplicateKey", actual.getErrorCodeName());
+      })
+      .ignoreElement()
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertFailure()));
   }
 }

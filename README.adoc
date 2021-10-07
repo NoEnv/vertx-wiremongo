@@ -18,7 +18,7 @@ To use Vert.x Wiremongo, add the following dependency:
 <dependency>
   <groupId>com.noenv</groupId>
   <artifactId>vertx-wiremongo</artifactId>
-  <version>4.1.4</version>
+  <version>4.1.5</version>
 </dependency>
 ----
 
@@ -26,7 +26,7 @@ To use Vert.x Wiremongo, add the following dependency:
 
 [source,groovy,subs="+attributes"]
 ----
-compile 'com.noenv:vertx-wiremongo:4.1.4'
+compile 'com.noenv:vertx-wiremongo:4.1.5'
 ----
 
 Imagine you have a mongodb to keep track of your fruit. In your application you have a class that uses `io.vertx.ext.mongo.MongoClient` for the database operations:

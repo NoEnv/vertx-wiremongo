@@ -3,6 +3,7 @@ package com.noenv.wiremongo.mapping.index;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.index.CreateIndexesCommand;
 import com.noenv.wiremongo.mapping.collection.WithCollection;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -50,7 +51,8 @@ public class CreateIndexes extends WithCollection<Void, CreateIndexesCommand, Cr
   }
 
   public CreateIndexes withIndexModels(List<IndexModel> indexModels) {
-    return withIndexModels(equalTo(indexModels));
+    JsonArray array = new JsonArray(indexModels.stream().map(IndexModel::toJson).collect(Collectors.toList()));
+    return withIndexModels(JsonMatcher.equalToJson(array,l -> new JsonArray(l.stream().map(IndexModel::toJson).collect(Collectors.toList()))));
   }
 
   public CreateIndexes withIndexModels(Matcher<List<IndexModel>> indexModels) {

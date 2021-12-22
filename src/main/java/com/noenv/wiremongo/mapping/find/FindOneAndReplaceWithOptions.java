@@ -2,8 +2,10 @@ package com.noenv.wiremongo.mapping.find;
 
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.find.FindOneAndReplaceWithOptionsCommand;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.CreateCollectionOptions;
 import io.vertx.ext.mongo.FindOptions;
 import io.vertx.ext.mongo.UpdateOptions;
 
@@ -39,7 +41,7 @@ public class FindOneAndReplaceWithOptions extends FindOneAndReplaceBase<FindOneA
   }
 
   public FindOneAndReplaceWithOptions withFindOptions(FindOptions findOptions) {
-    return withFindOptions(equalTo(findOptions));
+    return withFindOptions(JsonMatcher.equalToJson(findOptions.toJson(), FindOptions::toJson));
   }
 
   public FindOneAndReplaceWithOptions withFindOptions(Matcher<FindOptions> findOptions) {
@@ -48,7 +50,7 @@ public class FindOneAndReplaceWithOptions extends FindOneAndReplaceBase<FindOneA
   }
 
   public FindOneAndReplaceWithOptions withUpdateOptions(UpdateOptions updateOptions) {
-    return withUpdateOptions(equalTo(updateOptions));
+    return withUpdateOptions(JsonMatcher.equalToJson(updateOptions.toJson(), UpdateOptions::toJson));
   }
 
   public FindOneAndReplaceWithOptions withUpdateOptions(Matcher<UpdateOptions> updateOptions) {

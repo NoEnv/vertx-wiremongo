@@ -2,15 +2,17 @@ package com.noenv.wiremongo.mapping.collection;
 
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.collection.CreateCollectionWithOptionsCommand;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.CreateCollectionOptions;
+import io.vertx.ext.mongo.DistinctOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 public class CreateCollectionWithOptions extends WithCollection<Void, CreateCollectionWithOptionsCommand, CreateCollectionWithOptions> {
 
-  Matcher<CreateCollectionOptions> options;
+  private Matcher<CreateCollectionOptions> options;
 
   public CreateCollectionWithOptions() {
     super("createCollectionWithOptions");
@@ -39,7 +41,7 @@ public class CreateCollectionWithOptions extends WithCollection<Void, CreateColl
   }
 
   public CreateCollectionWithOptions withOptions(CreateCollectionOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(), CreateCollectionOptions::toJson));
   }
 
   public CreateCollectionWithOptions withOptions(Matcher<CreateCollectionOptions> options) {

@@ -2,6 +2,7 @@ package com.noenv.wiremongo.mapping.update;
 
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.update.UpdateCollectionWithOptionsCommand;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
@@ -41,7 +42,7 @@ public class UpdateCollectionWithOptions<T> extends UpdateCollectionBase<T, Upda
   }
 
   public UpdateCollectionWithOptions<T> withOptions(UpdateOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(), UpdateOptions::toJson));
   }
 
   public UpdateCollectionWithOptions<T> withOptions(Matcher<UpdateOptions> options) {

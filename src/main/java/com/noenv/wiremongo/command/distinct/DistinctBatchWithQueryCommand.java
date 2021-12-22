@@ -24,7 +24,7 @@ public class DistinctBatchWithQueryCommand extends DistinctBatchBaseCommand {
   }
 
   public DistinctBatchWithQueryCommand(String collection, String fieldName, String resultClassname, JsonObject query, int batchSize, DistinctOptions options) {
-    super(collection, "distinctBatchWithQuery", fieldName, resultClassname, options);
+    super("distinctBatchWithQuery", collection, fieldName, resultClassname, options);
     this.query = query;
     this.batchSize = batchSize;
     this.options = options;

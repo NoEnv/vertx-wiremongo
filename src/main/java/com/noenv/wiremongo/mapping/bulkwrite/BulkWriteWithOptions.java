@@ -2,9 +2,11 @@ package com.noenv.wiremongo.mapping.bulkwrite;
 
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.bulkwrite.BulkWriteWithOptionsCommand;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.BulkWriteOptions;
+import io.vertx.ext.mongo.CreateCollectionOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
@@ -34,7 +36,7 @@ public class BulkWriteWithOptions extends BulkWriteBase<BulkWriteWithOptionsComm
   }
 
   public BulkWriteWithOptions withOptions(BulkWriteOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(), BulkWriteOptions::toJson));
   }
 
   public BulkWriteWithOptions withOptions(Matcher<BulkWriteOptions> options) {

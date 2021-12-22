@@ -27,5 +27,6 @@ public abstract class TestBase {
   @Before
   public void setUp() {
     db = mock.getClient();
+
   }
 }

@@ -2,8 +2,10 @@ package com.noenv.wiremongo.mapping.index;
 
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.index.CreateIndexWithOptionsCommand;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.CreateCollectionOptions;
 import io.vertx.ext.mongo.IndexOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
@@ -34,7 +36,7 @@ public class CreateIndexWithOptions extends CreateIndexBase<CreateIndexWithOptio
   }
 
   public CreateIndexWithOptions withOptions(IndexOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(), IndexOptions::toJson));
   }
 
   public CreateIndexWithOptions withOptions(Matcher<IndexOptions> options) {

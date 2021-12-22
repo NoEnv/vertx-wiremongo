@@ -2,9 +2,11 @@ package com.noenv.wiremongo.mapping.aggregate;
 
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.aggregate.AggregateWithOptionsCommand;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.AggregateOptions;
+import io.vertx.ext.mongo.CreateCollectionOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
@@ -35,7 +37,7 @@ public class AggregateWithOptions extends AggregateBase<AggregateWithOptionsComm
   }
 
   public AggregateWithOptions withOptions(AggregateOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(), AggregateOptions::toJson));
   }
 
   public AggregateWithOptions withOptions(Matcher<AggregateOptions> options) {

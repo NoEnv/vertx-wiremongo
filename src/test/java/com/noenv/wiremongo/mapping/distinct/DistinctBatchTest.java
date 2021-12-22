@@ -119,16 +119,32 @@ public class DistinctBatchTest extends TestBase {
   public void testDistinctBatchWithOptions(TestContext ctx) {
     Async async = ctx.async();
     mock.distinctBatch()
-      .inCollection("distinctBatch")
+      .inCollection("testDistinctBatchWithOptions")
       .withFieldName("testDistinctBatch")
       .withResultClassname("io.vertx.core.json.JsonObject")
       .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
       .returns(MemoryStream.of(new JsonObject().put("x", "y")));
-    db.distinctBatch("distinctBatch", "testDistinctBatch", "io.vertx.core.json.JsonObject", new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
+    db.distinctBatch("testDistinctBatchWithOptions", "testDistinctBatch", "io.vertx.core.json.JsonObject", new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
       .handler(r -> {
         ctx.assertEquals("y", r.getString("x"));
         async.complete();
       }).exceptionHandler(ctx::fail);
+  }
+
+  @Test
+  public void testDistinctBatchWithOptionsNoMatch(TestContext ctx) {
+    Async async = ctx.async();
+    mock.distinctBatch()
+      .inCollection("testDistinctBatchWithOptionsNoMatch")
+      .withFieldName("testDistinctBatch")
+      .withResultClassname("io.vertx.core.json.JsonObject")
+      .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-wy")))
+      .returns(MemoryStream.of(new JsonObject().put("x", "y")));
+    db.distinctBatch("testDistinctBatchWithOptionsNoMatch", "testDistinctBatch", "io.vertx.core.json.JsonObject", new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
+      .handler(r -> {
+        ctx.fail("should fail");
+      }).exceptionHandler(e -> async.complete());
 
   }
+
 }

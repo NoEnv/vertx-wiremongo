@@ -512,7 +512,6 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient distinctWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, Handler<AsyncResult<JsonArray>> handler, DistinctOptions distinctOptions) {
-    // TODO: implement test
     distinctWithQuery(collection, fieldName, resultClassname, query, distinctOptions).onComplete(handler);
     return this;
   }
@@ -524,7 +523,6 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public Future<JsonArray> distinctWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, DistinctOptions distinctOptions) {
-    // TODO: implement test
     return call(new DistinctWithQueryCommand(collection, fieldName, resultClassname, query, distinctOptions));
   }
 
@@ -535,7 +533,6 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public ReadStream<JsonObject> distinctBatch(String collection, String fieldName, String resultClassname, DistinctOptions distinctOptions) {
-    // TODO: test needed
     return callStream(new DistinctBatchBaseCommand(collection, fieldName, resultClassname, distinctOptions));
   }
 
@@ -546,7 +543,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public ReadStream<JsonObject> distinctBatchWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, DistinctOptions options) {
-    return callStream(new DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query, options)); //TODO test needed
+    return callStream(new DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query, options));
   }
 
   @Override
@@ -556,7 +553,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public ReadStream<JsonObject> distinctBatchWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, int batchSize, DistinctOptions options) {
-    return callStream(new DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query, batchSize, options)); //TODO test needed
+    return callStream(new DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query, batchSize, options));
   }
 
   @Override

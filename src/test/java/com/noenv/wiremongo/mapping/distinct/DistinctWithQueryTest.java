@@ -123,4 +123,25 @@ public class DistinctWithQueryTest extends TestBase {
     );
   }
 
+  @Test
+  public void testDistinctWithQueryWithOptionsNoMatch(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.distinctWithQuery()
+      .inCollection("distinctWithQuery")
+      .withFieldName("testDistinctWithQuery")
+      .withQuery(new JsonObject().put("foo", "bar"))
+      .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-wy")))
+      .returns(new JsonArray().add("A").add("B"));
+
+    db.distinctWithQuery("distinctWithQuery", "testDistinctWithQuery",
+      null, new JsonObject().put("foo", "bar"), result -> {
+        if (result.failed()) {
+          async.complete();
+        } else {
+          ctx.fail("should fail");
+        }
+      }, new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way"))
+    );
+  }
 }

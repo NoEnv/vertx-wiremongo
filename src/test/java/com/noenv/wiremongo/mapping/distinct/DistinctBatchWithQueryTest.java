@@ -122,17 +122,35 @@ public class DistinctBatchWithQueryTest extends TestBase {
   public void testDistinctBatchWithQueryWithOptions(TestContext ctx) {
     Async async = ctx.async();
     mock.distinctBatchWithQuery()
-      .inCollection("distinctBatchWithQuery")
+      .inCollection("testDistinctBatchWithQueryWithOptions")
       .withFieldName("testDistinctBatchWithQuery")
       .withQuery(new JsonObject().put("foo", "bar"))
       .withResultClassname("io.vertx.core.json.JsonObject")
       .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
       .returns(MemoryStream.of(new JsonObject().put("x", "y")));
-    db.distinctBatchWithQuery("distinctBatchWithQuery", "testDistinctBatchWithQuery",
+    db.distinctBatchWithQuery("testDistinctBatchWithQueryWithOptions", "testDistinctBatchWithQuery",
         "io.vertx.core.json.JsonObject", new JsonObject().put("foo", "bar"), new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
       .handler(r -> {
         ctx.assertEquals("y", r.getString("x"));
         async.complete();
       }).exceptionHandler(ctx::fail);
   }
+
+  @Test
+  public void testDistinctBatchWithQueryWithOptionsNoMatch(TestContext ctx) {
+    Async async = ctx.async();
+    mock.distinctBatchWithQuery()
+      .inCollection("testDistinctBatchWithQueryWithOptionsNoMatch")
+      .withFieldName("testDistinctBatchWithQuery")
+      .withQuery(new JsonObject().put("foo", "bar"))
+      .withResultClassname("io.vertx.core.json.JsonObject")
+      .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-wy")))
+      .returns(MemoryStream.of(new JsonObject().put("x", "y")));
+    db.distinctBatchWithQuery("testDistinctBatchWithQueryWithOptionsNoMatch", "testDistinctBatchWithQuery",
+        "io.vertx.core.json.JsonObject", new JsonObject().put("foo", "bar"), new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
+      .handler(r -> {
+        ctx.fail("should fail");
+      }).exceptionHandler(e -> async.complete());
+  }
+
 }

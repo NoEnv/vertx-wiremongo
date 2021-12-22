@@ -10,11 +10,11 @@ public class DistinctBatchBaseCommand extends WithStreamCommand {
   private final DistinctOptions options;
 
   public DistinctBatchBaseCommand(String collection, String fieldName, String resultClassname) {
-    this("distinctBatch", collection, fieldName, resultClassname,null);
+    this("distinctBatch", collection, fieldName, resultClassname, null);
   }
 
   public DistinctBatchBaseCommand(String collection, String fieldName, String resultClassname, DistinctOptions options) {
-    this("distinctBatch", collection, fieldName, resultClassname,null);
+    this("distinctBatch", collection, fieldName, resultClassname, options);
   }
 
   protected DistinctBatchBaseCommand(String method, String collection, String fieldName, String resultClassname, DistinctOptions options) {

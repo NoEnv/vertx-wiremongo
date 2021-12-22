@@ -2,6 +2,7 @@ package com.noenv.wiremongo.mapping.replace;
 
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.replace.ReplaceDocumentsWithOptionsCommand;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.UpdateOptions;
@@ -35,7 +36,7 @@ public class ReplaceDocumentsWithOptions extends ReplaceDocumentsBase<ReplaceDoc
   }
 
   public ReplaceDocumentsWithOptions withOptions(UpdateOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(), UpdateOptions::toJson));
   }
 
   public ReplaceDocumentsWithOptions withOptions(Matcher<UpdateOptions> options) {

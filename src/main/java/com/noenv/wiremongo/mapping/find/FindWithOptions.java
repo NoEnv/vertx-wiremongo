@@ -2,8 +2,10 @@ package com.noenv.wiremongo.mapping.find;
 
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.find.FindWithOptionsCommand;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.CreateCollectionOptions;
 import io.vertx.ext.mongo.FindOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
@@ -35,7 +37,7 @@ public class FindWithOptions extends FindBase<FindWithOptionsCommand, FindWithOp
   }
 
   public FindWithOptions withOptions(FindOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(), FindOptions::toJson));
   }
 
   public FindWithOptions withOptions(Matcher<FindOptions> options) {

@@ -2,6 +2,7 @@ package com.noenv.wiremongo.mapping.index;
 
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.CollationOptions;
 import io.vertx.ext.mongo.IndexOptions;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -46,4 +47,37 @@ public class CreateIndexWithOptionsTest extends TestBase {
         async.complete();
       });
   }
+
+
+  @Test
+  public void testCreateIndexWithCollation(TestContext ctx) {
+    Async async = ctx.async();
+    mock.createIndexWithOptions()
+      .inCollection("createindexwithoptions")
+      .withOptions(new IndexOptions().background(false).unique(true).sparse(false).setCollation(new CollationOptions().setLocale("no-way")))
+      .withKey(new JsonObject().put("test", "testCreateIndexWithOptions"))
+      .returns(null);
+
+    db.rxCreateIndexWithOptions("createindexwithoptions",
+        new JsonObject().put("test", "testCreateIndexWithOptions"),
+        new IndexOptions().background(false).unique(true).sparse(false).setCollation(new CollationOptions().setLocale("no-way")))
+      .subscribe(async::complete, ctx::fail);
+  }
+
+  @Test
+  public void testCreateIndexWithCollationNoMatch(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.createIndexWithOptions()
+      .inCollection("createindexwithoptions")
+      .withOptions(new IndexOptions().background(false).unique(true).sparse(false).setCollation(new CollationOptions().setLocale("no-wy")))
+      .withKey(new JsonObject().put("test", "testCreateIndexWithOptions"))
+      .returns(null);
+
+    db.rxCreateIndexWithOptions("createindexwithoptions",
+        new JsonObject().put("test", "testCreateIndexWithOptions"),
+        new IndexOptions().background(false).unique(true).sparse(false).setCollation(new CollationOptions().setLocale("no-way")))
+      .subscribe(() -> ctx.fail("should not match"), e -> async.complete());
+  }
+
 }

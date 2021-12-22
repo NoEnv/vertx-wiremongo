@@ -2,9 +2,11 @@ package com.noenv.wiremongo.mapping;
 
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.CountWithOptionsCommand;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.CountOptions;
+import io.vertx.ext.mongo.CreateCollectionOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
@@ -39,7 +41,7 @@ public class CountWithOptions extends WithQuery<Long, CountWithOptionsCommand, C
   }
 
   public CountWithOptions withOptions(CountOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(), CountOptions::toJson));
   }
 
   public CountWithOptions withOptions(Matcher<CountOptions> options) {

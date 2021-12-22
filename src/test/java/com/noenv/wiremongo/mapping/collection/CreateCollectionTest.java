@@ -4,6 +4,7 @@ import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.CollationOptions;
 import io.vertx.ext.mongo.CreateCollectionOptions;
+import io.vertx.ext.mongo.DistinctOptions;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -73,5 +74,31 @@ public class CreateCollectionTest extends TestBase {
       ctx.assertEquals("intentional", ex.getMessage());
       async.complete();
     });
+  }
+
+  @Test
+  public void testCreateCollectionWithOptionsMatch(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.createCollectionWithOptions()
+      .inCollection("testCreateCollectionWithOptionsMatch")
+      .withOptions(new CreateCollectionOptions().setCollation(new CollationOptions().setLocale("no-way")))
+      .returns(null);
+
+    db.rxCreateCollectionWithOptions("testCreateCollectionWithOptionsMatch", new CreateCollectionOptions().setCollation(new CollationOptions().setLocale("no-way")))
+      .subscribe(async::complete, ctx::fail);
+  }
+
+  @Test
+  public void testCreateCollectionWithOptionsNoMatch(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.createCollectionWithOptions()
+      .inCollection("testCreateCollectionWithOptionsNoMatch")
+      .withOptions(new CreateCollectionOptions().setCollation(new CollationOptions().setLocale("no-wy")))
+      .returns(null);
+
+    db.rxCreateCollectionWithOptions("testCreateCollectionWithOptionsNoMatch", new CreateCollectionOptions().setCollation(new CollationOptions().setLocale("no-way")))
+      .subscribe(() -> ctx.fail("should fail"), e -> async.complete());
   }
 }

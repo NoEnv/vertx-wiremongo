@@ -97,12 +97,12 @@ public class DistinctTest extends TestBase {
     Async async = ctx.async();
 
     mock.distinct()
-      .inCollection("distinct")
+      .inCollection("testDistinctWithOptions")
       .withFieldName("testDistinct")
       .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
       .returns(new JsonArray().add("A").add("B"));
 
-    db.distinct("distinct", "testDistinct", null, result -> {
+    db.distinct("testDistinctWithOptions", "testDistinct", null, result -> {
       if(result.failed()) {
         ctx.fail(result.cause());
       } else {
@@ -111,6 +111,25 @@ public class DistinctTest extends TestBase {
         ctx.assertEquals("A", r.getString(0));
         ctx.assertEquals("B", r.getString(1));
         async.complete();
+      }
+    }, new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")));
+  }
+
+  @Test
+  public void testDistinctWithOptionsNoMatch(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.distinct()
+      .inCollection("testDistinctWithOptionsNoMatch")
+      .withFieldName("testDistinct")
+      .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-wy")))
+      .returns(new JsonArray().add("A").add("B"));
+
+    db.distinct("testDistinctWithOptionsNoMatch", "testDistinct", null, result -> {
+      if(result.failed()) {
+        async.complete();
+      } else {
+        ctx.fail("should fail");
       }
     }, new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")));
   }

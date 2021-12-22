@@ -116,7 +116,6 @@ public interface WireMongoCommands {
     return addMapping(new CreateCollection());
   }
 
-  // TODO: test
   default CreateCollectionWithOptions createCollectionWithOptions() {
     return addMapping(new CreateCollectionWithOptions());
   }

@@ -3,6 +3,7 @@ package com.noenv.wiremongo.mapping.distinct;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.distinct.DistinctWithQueryCommand;
 import com.noenv.wiremongo.mapping.WithQuery;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -70,7 +71,7 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQueryCom
   }
 
   public DistinctWithQuery withOptions(DistinctOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(),DistinctOptions::toJson));
   }
 
   public DistinctWithQuery withOptions(Matcher<DistinctOptions> options) {

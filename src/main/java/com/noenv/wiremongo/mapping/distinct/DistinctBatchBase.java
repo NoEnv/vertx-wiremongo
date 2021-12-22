@@ -3,6 +3,7 @@ package com.noenv.wiremongo.mapping.distinct;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.distinct.DistinctBatchBaseCommand;
 import com.noenv.wiremongo.mapping.stream.WithStream;
+import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.DistinctOptions;
@@ -60,7 +61,7 @@ public abstract class DistinctBatchBase<U extends DistinctBatchBaseCommand, C ex
   }
 
   public C withOptions(DistinctOptions options) {
-    return withOptions(equalTo(options));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(),DistinctOptions::toJson));
   }
 
   public C withOptions(Matcher<DistinctOptions> options) {

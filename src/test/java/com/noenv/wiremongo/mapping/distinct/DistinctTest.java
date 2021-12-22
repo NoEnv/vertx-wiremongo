@@ -3,6 +3,8 @@ package com.noenv.wiremongo.mapping.distinct;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.CollationOptions;
+import io.vertx.ext.mongo.DistinctOptions;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -88,5 +90,28 @@ public class DistinctTest extends TestBase {
       .repeat(2)
       .ignoreElements()
       .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void testDistinctWithOptions(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.distinct()
+      .inCollection("distinct")
+      .withFieldName("testDistinct")
+      .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
+      .returns(new JsonArray().add("A").add("B"));
+
+    db.distinct("distinct", "testDistinct", null, result -> {
+      if(result.failed()) {
+        ctx.fail(result.cause());
+      } else {
+        JsonArray r = result.result();
+        ctx.assertEquals(2, r.size());
+        ctx.assertEquals("A", r.getString(0));
+        ctx.assertEquals("B", r.getString(1));
+        async.complete();
+      }
+    }, new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")));
   }
 }

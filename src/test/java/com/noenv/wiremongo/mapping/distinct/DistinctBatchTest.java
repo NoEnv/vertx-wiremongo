@@ -5,6 +5,8 @@ import com.noenv.wiremongo.TestBase;
 import io.reactivex.rxjava3.core.Flowable;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.CollationOptions;
+import io.vertx.ext.mongo.DistinctOptions;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -111,5 +113,22 @@ public class DistinctBatchTest extends TestBase {
       })
       .ignoreElements()
       .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
+
+  @Test
+  public void testDistinctBatchWithOptions(TestContext ctx) {
+    Async async = ctx.async();
+    mock.distinctBatch()
+      .inCollection("distinctBatch")
+      .withFieldName("testDistinctBatch")
+      .withResultClassname("io.vertx.core.json.JsonObject")
+      .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
+      .returns(MemoryStream.of(new JsonObject().put("x", "y")));
+    db.distinctBatch("distinctBatch", "testDistinctBatch", "io.vertx.core.json.JsonObject", new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
+      .handler(r -> {
+        ctx.assertEquals("y", r.getString("x"));
+        async.complete();
+      }).exceptionHandler(ctx::fail);
+
   }
 }

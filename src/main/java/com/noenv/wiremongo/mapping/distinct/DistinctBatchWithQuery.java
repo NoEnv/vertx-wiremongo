@@ -37,8 +37,7 @@ public class DistinctBatchWithQuery extends DistinctBatchBase<DistinctBatchWithQ
     }
     DistinctBatchWithQueryCommand c = (DistinctBatchWithQueryCommand) cmd;
     return (query == null || query.matches(c.getQuery()))
-      && (batchSize == null || batchSize.matches(c.getBatchSize()))
-      && (options == null || options.matches(c.getOptions()));
+      && (batchSize == null || batchSize.matches(c.getBatchSize()));
   }
 
   public DistinctBatchWithQuery withQuery(JsonObject query) {

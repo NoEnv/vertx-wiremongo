@@ -490,7 +490,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public MongoClient distinct(String collection, String fieldName, String resultClassname, Handler<AsyncResult<JsonArray>> handler, DistinctOptions distinctOptions) {
-    distinct(collection, fieldName, resultClassname).onComplete(handler);
+    distinct(collection, fieldName, resultClassname, distinctOptions).onComplete(handler);
     return this;
   }
 
@@ -513,7 +513,7 @@ public class WireMongoClient implements MongoClient {
   @Override
   public MongoClient distinctWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, Handler<AsyncResult<JsonArray>> handler, DistinctOptions distinctOptions) {
     // TODO: implement test
-    distinctWithQuery(collection,fieldName,resultClassname,query,distinctOptions).onComplete(handler);
+    distinctWithQuery(collection, fieldName, resultClassname, query, distinctOptions).onComplete(handler);
     return this;
   }
 

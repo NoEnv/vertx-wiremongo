@@ -5,12 +5,14 @@ import com.noenv.wiremongo.command.distinct.DistinctBatchBaseCommand;
 import com.noenv.wiremongo.mapping.stream.WithStream;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.DistinctOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public abstract class DistinctBatchBase<U extends DistinctBatchBaseCommand, C extends DistinctBatchBase<U, C>> extends WithStream<U, C> {
 
+  private Matcher<DistinctOptions> options;
   private Matcher<String> fieldName;
   private Matcher<String> resultClassname;
 
@@ -22,6 +24,7 @@ public abstract class DistinctBatchBase<U extends DistinctBatchBaseCommand, C ex
     super(json);
     fieldName = Matcher.create(json.getJsonObject("fieldName"));
     resultClassname = Matcher.create(json.getJsonObject("resultClassname"));
+    this.options = Matcher.create(json.getJsonObject("options"), j -> new DistinctOptions((JsonObject) j), DistinctOptions::toJson);
   }
 
   @Override
@@ -34,7 +37,8 @@ public abstract class DistinctBatchBase<U extends DistinctBatchBaseCommand, C ex
     }
     DistinctBatchBaseCommand c = (DistinctBatchBaseCommand) cmd;
     return (fieldName == null || fieldName.matches(c.getFieldName()))
-      && (resultClassname == null || resultClassname.matches(c.getResultClassname()));
+      && (resultClassname == null || resultClassname.matches(c.getResultClassname()))
+      && (options == null || options.matches(c.getOptions()));
   }
 
   public C withFieldName(String fieldName) {
@@ -52,6 +56,15 @@ public abstract class DistinctBatchBase<U extends DistinctBatchBaseCommand, C ex
 
   public C withResultClassname(Matcher<String> resultClassname) {
     this.resultClassname = resultClassname;
+    return self();
+  }
+
+  public C withOptions(DistinctOptions options) {
+    return withOptions(equalTo(options));
+  }
+
+  public C withOptions(Matcher<DistinctOptions> options) {
+    this.options = options;
     return self();
   }
 }

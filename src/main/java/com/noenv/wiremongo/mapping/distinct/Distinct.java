@@ -6,11 +6,13 @@ import com.noenv.wiremongo.mapping.collection.WithCollection;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.DistinctOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 public class Distinct extends WithCollection<JsonArray, DistinctCommand, Distinct> {
 
+  private Matcher<DistinctOptions> options;
   private Matcher<String> fieldName;
   private Matcher<String> resultClassname;
 
@@ -22,6 +24,7 @@ public class Distinct extends WithCollection<JsonArray, DistinctCommand, Distinc
     super(json);
     fieldName = Matcher.create(json.getJsonObject("fieldName"));
     resultClassname = Matcher.create(json.getJsonObject("resultClassname"));
+    this.options = Matcher.create(json.getJsonObject("options"), j -> new DistinctOptions((JsonObject) j), DistinctOptions::toJson);
   }
 
   @Override
@@ -44,7 +47,8 @@ public class Distinct extends WithCollection<JsonArray, DistinctCommand, Distinc
     }
     DistinctCommand c = (DistinctCommand) cmd;
     return (fieldName == null || fieldName.matches(c.getFieldName()))
-      && (resultClassname == null || resultClassname.matches(c.getResultClassname()));
+      && (resultClassname == null || resultClassname.matches(c.getResultClassname()))
+      && (options == null || options.matches(c.getOptions()));
   }
 
   public Distinct withFieldName(String fieldName) {

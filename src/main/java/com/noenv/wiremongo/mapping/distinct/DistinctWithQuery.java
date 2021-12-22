@@ -6,6 +6,7 @@ import com.noenv.wiremongo.mapping.WithQuery;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.DistinctOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
@@ -13,6 +14,7 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQueryCom
 
   private Matcher<String> fieldName;
   private Matcher<String> resultClassname;
+  private Matcher<DistinctOptions> options;
 
   public DistinctWithQuery() {
     super("distinctWithQuery");
@@ -22,6 +24,7 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQueryCom
     super(json);
     fieldName = Matcher.create(json.getJsonObject("fieldName"));
     resultClassname = Matcher.create(json.getJsonObject("resultClassname"));
+    options = Matcher.create(json.getJsonObject("options"), j -> new DistinctOptions((JsonObject) j), DistinctOptions::toJson);
   }
 
   @Override
@@ -44,7 +47,8 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQueryCom
     }
     DistinctWithQueryCommand c = (DistinctWithQueryCommand) cmd;
     return (fieldName == null || fieldName.matches(c.getFieldName()))
-      && (resultClassname == null || resultClassname.matches(c.getResultClassname()));
+      && (resultClassname == null || resultClassname.matches(c.getResultClassname()))
+      && (options == null || options.matches(c.getOptions()));
   }
 
   public DistinctWithQuery withFieldName(String fieldName) {
@@ -62,6 +66,15 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQueryCom
 
   public DistinctWithQuery withResultClassname(Matcher<String> resultClassname) {
     this.resultClassname = resultClassname;
+    return self();
+  }
+
+  public DistinctWithQuery withOptions(DistinctOptions options) {
+    return withOptions(equalTo(options));
+  }
+
+  public DistinctWithQuery withOptions(Matcher<DistinctOptions> options) {
+    this.options = options;
     return self();
   }
 }

@@ -12,15 +12,15 @@ import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public abstract class DistinctBatchBase<U extends DistinctBatchBaseCommand, C extends DistinctBatchBase<U, C>> extends WithStream<U, C> {
 
-  private Matcher<DistinctOptions> options;
-  private Matcher<String> fieldName;
-  private Matcher<String> resultClassname;
+  protected Matcher<DistinctOptions> options;
+  protected Matcher<String> fieldName;
+  protected Matcher<String> resultClassname;
 
-  public DistinctBatchBase(String method) {
+  protected DistinctBatchBase(String method) {
     super(method);
   }
 
-  public DistinctBatchBase(JsonObject json) {
+  protected DistinctBatchBase(JsonObject json) {
     super(json);
     fieldName = Matcher.create(json.getJsonObject("fieldName"));
     resultClassname = Matcher.create(json.getJsonObject("resultClassname"));

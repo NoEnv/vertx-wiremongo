@@ -36,6 +36,16 @@ public class CreateIndexesTest extends TestBase {
   }
 
   @Test
+  public void testCreateIndexesFileError(TestContext ctx) {
+    Async async = ctx.async();
+    db.rxCreateIndex("createindexes", new JsonObject().put("test", "testCreateIndexesFileError"))
+      .subscribe(ctx::fail, ex -> {
+        ctx.assertEquals("intentional", ex.getMessage());
+        async.complete();
+      });
+  }
+
+  @Test
   public void testCreateIndexFileError(TestContext ctx) {
     Async async = ctx.async();
     db.rxCreateIndex("createindex", new JsonObject().put("test", "testCreateIndexFileError"))

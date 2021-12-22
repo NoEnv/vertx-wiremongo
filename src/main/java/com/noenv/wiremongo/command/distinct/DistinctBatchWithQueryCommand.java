@@ -9,6 +9,7 @@ public class DistinctBatchWithQueryCommand extends DistinctBatchBaseCommand {
 
   private final JsonObject query;
   private final int batchSize;
+  private final DistinctOptions options;
 
   public DistinctBatchWithQueryCommand(String collection, String fieldName, String resultClassname, JsonObject query) {
     this(collection, fieldName, resultClassname, query, DEFAULT_BATCH_SIZE);
@@ -26,6 +27,7 @@ public class DistinctBatchWithQueryCommand extends DistinctBatchBaseCommand {
     super(collection, "distinctBatchWithQuery", fieldName, resultClassname, options);
     this.query = query;
     this.batchSize = batchSize;
+    this.options = options;
   }
 
   public JsonObject getQuery() {
@@ -38,6 +40,6 @@ public class DistinctBatchWithQueryCommand extends DistinctBatchBaseCommand {
 
   @Override
   public String toString() {
-    return super.toString() + ", query: " + (query != null ? query.encode() : "null");
+    return super.toString() + ", query: " + (query != null ? query.encode() : "null") + ", option: " + (options != null ? options.toJson().encode() : "null");
   }
 }

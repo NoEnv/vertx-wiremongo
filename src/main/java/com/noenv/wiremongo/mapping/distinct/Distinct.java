@@ -24,7 +24,7 @@ public class Distinct extends WithCollection<JsonArray, DistinctCommand, Distinc
     super(json);
     fieldName = Matcher.create(json.getJsonObject("fieldName"));
     resultClassname = Matcher.create(json.getJsonObject("resultClassname"));
-    this.options = Matcher.create(json.getJsonObject("options"), j -> new DistinctOptions((JsonObject) j), DistinctOptions::toJson);
+    options = Matcher.create(json.getJsonObject("options"), j -> new DistinctOptions((JsonObject) j), DistinctOptions::toJson);
   }
 
   @Override
@@ -66,6 +66,15 @@ public class Distinct extends WithCollection<JsonArray, DistinctCommand, Distinc
 
   public Distinct withResultClassname(Matcher<String> resultClassname) {
     this.resultClassname = resultClassname;
+    return self();
+  }
+
+  public Distinct withOptions(DistinctOptions options) {
+    return withOptions(equalTo(options));
+  }
+
+  public Distinct withOptions(Matcher<DistinctOptions> options) {
+    this.options = options;
     return self();
   }
 }

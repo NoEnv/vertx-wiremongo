@@ -51,10 +51,7 @@ public class CreateCollectionTest extends TestBase {
   @Test
   public void testCreateCollectionWithOptionsFile(TestContext ctx) {
     Async async = ctx.async();
-    // TODO: remove setAlternate after vertx 4.3.0 release
-    db.rxCreateCollectionWithOptions("createcollectionwithoptionsfile",
-      new CreateCollectionOptions().setCollation(new CollationOptions().setAlternate(null))
-    )
+    db.rxCreateCollectionWithOptions("createcollectionwithoptionsfile", new CreateCollectionOptions())
     .subscribe(async::complete, ctx::fail);
   }
 
@@ -71,10 +68,7 @@ public class CreateCollectionTest extends TestBase {
   @Test
   public void testCreateCollectionWithOptionsFileError(TestContext ctx) {
     Async async = ctx.async();
-    // TODO: remove setAlternate after vertx 4.3.0 release
-    db.rxCreateCollectionWithOptions("createcollectionwithoptionfileserror",
-        new CreateCollectionOptions().setCollation(new CollationOptions().setAlternate(null))
-    )
+    db.rxCreateCollectionWithOptions("createcollectionwithoptionsfileerror", new CreateCollectionOptions())
     .subscribe(ctx::fail, ex -> {
       ctx.assertEquals("intentional", ex.getMessage());
       async.complete();

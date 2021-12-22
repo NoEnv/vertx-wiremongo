@@ -3,18 +3,17 @@ package com.noenv.wiremongo;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.CountCommand;
+import com.noenv.wiremongo.command.CountWithOptionsCommand;
 import com.noenv.wiremongo.command.RunCommandCommand;
 import com.noenv.wiremongo.command.aggregate.AggregateBaseCommand;
 import com.noenv.wiremongo.command.aggregate.AggregateWithOptionsCommand;
 import com.noenv.wiremongo.command.bulkwrite.BulkWriteBaseCommand;
 import com.noenv.wiremongo.command.bulkwrite.BulkWriteWithOptionsCommand;
 import com.noenv.wiremongo.command.collection.CreateCollectionCommand;
+import com.noenv.wiremongo.command.collection.CreateCollectionWithOptionsCommand;
 import com.noenv.wiremongo.command.collection.DropCollectionCommand;
 import com.noenv.wiremongo.command.collection.GetCollectionsCommand;
-import com.noenv.wiremongo.command.distinct.DistinctBatchBaseCommand;
-import com.noenv.wiremongo.command.distinct.DistinctBatchWithQueryCommand;
-import com.noenv.wiremongo.command.distinct.DistinctCommand;
-import com.noenv.wiremongo.command.distinct.DistinctWithQueryCommand;
+import com.noenv.wiremongo.command.distinct.*;
 import com.noenv.wiremongo.command.find.*;
 import com.noenv.wiremongo.command.index.*;
 import com.noenv.wiremongo.command.insert.InsertBaseCommand;
@@ -319,6 +318,17 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
+  public MongoClient countWithOptions(String collection, JsonObject query, CountOptions countOptions, Handler<AsyncResult<Long>> handler) {
+    countWithOptions(collection, query, countOptions).onComplete(handler);
+    return this;
+  }
+
+  @Override
+  public Future<Long> countWithOptions(String collection, JsonObject query, CountOptions countOptions) {
+    return call(new CountWithOptionsCommand(collection, query, countOptions));
+  }
+
+  @Override
   public MongoClient removeDocuments(String collection, JsonObject query, Handler<AsyncResult<MongoClientDeleteResult>> handler) {
     removeDocuments(collection, query).onComplete(handler);
     return this;
@@ -369,8 +379,19 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
+  public MongoClient createCollectionWithOptions(String collection, CreateCollectionOptions createCollectionOptions, Handler<AsyncResult<Void>> handler) {
+    createCollectionWithOptions(collection, createCollectionOptions).onComplete(handler);
+    return this;
+  }
+
+  @Override
   public Future<Void> createCollection(String collection) {
     return call(new CreateCollectionCommand(collection));
+  }
+
+  @Override
+  public Future<Void> createCollectionWithOptions(String collection, CreateCollectionOptions createCollectionOptions) {
+    return call(new CreateCollectionWithOptionsCommand(collection, createCollectionOptions));
   }
 
   @Override
@@ -468,8 +489,19 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
+  public MongoClient distinct(String collection, String fieldName, String resultClassname, Handler<AsyncResult<JsonArray>> handler, DistinctOptions distinctOptions) {
+    distinct(collection, fieldName, resultClassname).onComplete(handler);
+    return this;
+  }
+
+  @Override
   public Future<JsonArray> distinct(String collection, String fieldName, String resultClassname) {
     return call(new DistinctCommand(collection, fieldName, resultClassname));
+  }
+
+  @Override
+  public Future<JsonArray> distinct(String collection, String fieldName, String resultClassname, DistinctOptions distinctOptions) {
+    return call(new DistinctWithOptionsCommand(collection, fieldName, resultClassname, distinctOptions));
   }
 
   @Override
@@ -479,8 +511,20 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
+  public MongoClient distinctWithQuery(String s, String s1, String s2, JsonObject jsonObject, Handler<AsyncResult<JsonArray>> handler, DistinctOptions distinctOptions) {
+    // TODO: implement me
+    return null;
+  }
+
+  @Override
   public Future<JsonArray> distinctWithQuery(String collection, String fieldName, String resultClassname, JsonObject query) {
     return call(new DistinctWithQueryCommand(collection, fieldName, resultClassname, query));
+  }
+
+  @Override
+  public Future<JsonArray> distinctWithQuery(String s, String s1, String s2, JsonObject jsonObject, DistinctOptions distinctOptions) {
+    // TODO: implement me
+    return null;
   }
 
   @Override
@@ -489,13 +533,31 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
+  public ReadStream<JsonObject> distinctBatch(String s, String s1, String s2, DistinctOptions distinctOptions) {
+    // TODO: implement me
+    return null;
+  }
+
+  @Override
   public ReadStream<JsonObject> distinctBatchWithQuery(String collection, String fieldName, String resultClassname, JsonObject query) {
     return callStream(new DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query));
   }
 
   @Override
+  public ReadStream<JsonObject> distinctBatchWithQuery(String s, String s1, String s2, JsonObject jsonObject, DistinctOptions distinctOptions) {
+    // TODO: implement me
+    return null;
+  }
+
+  @Override
   public ReadStream<JsonObject> distinctBatchWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, int batchSize) {
     return callStream(new DistinctBatchWithQueryCommand(collection, fieldName, resultClassname, query, batchSize));
+  }
+
+  @Override
+  public ReadStream<JsonObject> distinctBatchWithQuery(String s, String s1, String s2, JsonObject jsonObject, int i, DistinctOptions distinctOptions) {
+    // TODO: implement me
+    return null;
   }
 
   @Override

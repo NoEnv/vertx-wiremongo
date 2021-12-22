@@ -1,14 +1,12 @@
 package com.noenv.wiremongo;
 
-import com.noenv.wiremongo.mapping.Count;
-import com.noenv.wiremongo.mapping.Mapping;
-import com.noenv.wiremongo.mapping.MatchAll;
-import com.noenv.wiremongo.mapping.RunCommand;
+import com.noenv.wiremongo.mapping.*;
 import com.noenv.wiremongo.mapping.aggregate.Aggregate;
 import com.noenv.wiremongo.mapping.aggregate.AggregateWithOptions;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWrite;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteWithOptions;
 import com.noenv.wiremongo.mapping.collection.CreateCollection;
+import com.noenv.wiremongo.mapping.collection.CreateCollectionWithOptions;
 import com.noenv.wiremongo.mapping.collection.DropCollection;
 import com.noenv.wiremongo.mapping.collection.GetCollections;
 import com.noenv.wiremongo.mapping.distinct.Distinct;
@@ -118,6 +116,11 @@ public interface WireMongoCommands {
     return addMapping(new CreateCollection());
   }
 
+  // TODO: test
+  default CreateCollectionWithOptions createCollectionWithOptions() {
+    return addMapping(new CreateCollectionWithOptions());
+  }
+
   default DropCollection dropCollection() {
     return addMapping(new DropCollection());
   }
@@ -140,6 +143,10 @@ public interface WireMongoCommands {
 
   default Count count() {
     return addMapping(new Count());
+  }
+
+  default CountWithOptions countWithOptions() {
+    return addMapping(new CountWithOptions());
   }
 
   default ListIndexes listIndexes() {

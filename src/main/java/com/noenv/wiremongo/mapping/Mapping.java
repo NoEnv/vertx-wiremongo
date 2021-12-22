@@ -9,6 +9,7 @@ import com.noenv.wiremongo.mapping.aggregate.AggregateWithOptions;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWrite;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteWithOptions;
 import com.noenv.wiremongo.mapping.collection.CreateCollection;
+import com.noenv.wiremongo.mapping.collection.CreateCollectionWithOptions;
 import com.noenv.wiremongo.mapping.collection.DropCollection;
 import com.noenv.wiremongo.mapping.collection.GetCollections;
 import com.noenv.wiremongo.mapping.distinct.Distinct;
@@ -132,6 +133,8 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
           return new FindOneAndUpdateWithOptions(json);
         case "createCollection":
           return new CreateCollection(json);
+        case "createCollectionWithOptions":
+          return new CreateCollectionWithOptions(json);
         case "dropCollection":
           return new DropCollection(json);
         case "listIndexes":
@@ -146,6 +149,8 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
           return new RunCommand(json);
         case "count":
           return new Count(json);
+        case "countWithOptions":
+          return new CountWithOptions(json);
         case "bulkWrite":
           return new BulkWrite(json);
         case "bulkWriteWithOptions":

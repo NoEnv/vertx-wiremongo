@@ -8,9 +8,6 @@
       {
         "key": {
           "foo": 1
-        },
-        "options": {
-          "name": "testCreateIndexesFileError"
         }
       }
     ]

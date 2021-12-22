@@ -1,6 +1,9 @@
 package com.noenv.wiremongo.command.distinct;
 
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.DistinctOptions;
+
+import static io.vertx.ext.mongo.FindOptions.DEFAULT_BATCH_SIZE;
 
 public class DistinctBatchWithQueryCommand extends DistinctBatchBaseCommand {
 
@@ -8,11 +11,19 @@ public class DistinctBatchWithQueryCommand extends DistinctBatchBaseCommand {
   private final int batchSize;
 
   public DistinctBatchWithQueryCommand(String collection, String fieldName, String resultClassname, JsonObject query) {
-    this(collection, fieldName, resultClassname, query, 20);
+    this(collection, fieldName, resultClassname, query, DEFAULT_BATCH_SIZE);
   }
 
   public DistinctBatchWithQueryCommand(String collection, String fieldName, String resultClassname, JsonObject query, int batchSize) {
-    super(collection, "distinctBatchWithQuery", fieldName, resultClassname);
+    this(collection, fieldName, resultClassname, query, batchSize, null);
+  }
+
+  public DistinctBatchWithQueryCommand(String collection, String fieldName, String resultClassname, JsonObject query, DistinctOptions options) {
+    this(collection, fieldName, resultClassname, query, DEFAULT_BATCH_SIZE, options);
+  }
+
+  public DistinctBatchWithQueryCommand(String collection, String fieldName, String resultClassname, JsonObject query, int batchSize, DistinctOptions options) {
+    super(collection, "distinctBatchWithQuery", fieldName, resultClassname, options);
     this.query = query;
     this.batchSize = batchSize;
   }

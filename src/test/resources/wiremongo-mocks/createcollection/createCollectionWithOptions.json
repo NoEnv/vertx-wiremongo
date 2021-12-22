@@ -1,0 +1,32 @@
+{
+  "method": "createCollectionWithOptions",
+  "collection": {
+    "equalTo": "createcollectionwithoptionsfile"
+  },
+  "options": {
+    "equalTo": {
+      "capped": false,
+      "collation": {
+        "alternate": null,
+        "backwards": false,
+        "caseFirst": "off",
+        "caseLevel": false,
+        "locale": "en_US",
+        "maxVariable": "punct",
+        "normalization": false,
+        "numericOrdering": false,
+        "strength": 3
+      },
+      "indexOptionDefaults": {},
+      "maxDocuments": 0,
+      "sizeInBytes": 0,
+      "storageEngineOptions": {},
+      "validationOptions": {
+        "validationAction": "ERROR",
+        "validationLevel": "STRICT",
+        "validator": {}
+      }
+    }
+  },
+  "response": null
+}

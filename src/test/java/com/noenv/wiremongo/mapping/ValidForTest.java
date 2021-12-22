@@ -2,7 +2,6 @@ package com.noenv.wiremongo.mapping;
 
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.MaybeHelper;
@@ -20,8 +19,6 @@ public class ValidForTest extends TestBase {
 
   @Test
   public void testFindOneMultipleTimesWithoutTimes(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.findOne()
       .inCollection("findone")
       .withQuery(new JsonObject().put("test", "testFindOne"))
@@ -31,16 +28,11 @@ public class ValidForTest extends TestBase {
     db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1))
       .flatMap(x -> db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1)))
       .flatMap(x -> db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1)))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> ctx.assertEquals("value1", r.getString("field1")))));
   }
 
   @Test
   public void testFindOneTimes(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.findOne()
       .inCollection("findone")
       .withQuery(new JsonObject().put("test", "testFindOne"))
@@ -51,10 +43,7 @@ public class ValidForTest extends TestBase {
     db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1))
       .flatMap(x -> db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1)))
       .flatMap(x -> db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1)))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> ctx.assertEquals("value1", r.getString("field1")))));
   }
 
   @Test
@@ -69,6 +58,7 @@ public class ValidForTest extends TestBase {
     db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1))
       .flatMap(x -> db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1)))
       .flatMap(x -> db.rxFindOne("findone", new JsonObject().put("test", "testFindOne"), new JsonObject().put("field1", 1)))
+      .doOnError(assertNoMappingFoundError(ctx))
       .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 

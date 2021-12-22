@@ -3,10 +3,10 @@ package com.noenv.wiremongo.mapping.find;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,38 +15,30 @@ public class FindOneAndDeleteTest extends TestBase {
 
   @Test
   public void testFindOneAndDelete(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.findOneAndDelete()
       .inCollection("findOneAndDelete")
       .withQuery(new JsonObject().put("test", "testFindOneAndDelete"))
       .returns(new JsonObject().put("field1", "value1"));
 
     db.rxFindOneAndDelete("findOneAndDelete", new JsonObject().put("test", "testFindOneAndDelete"))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndDeleteFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndDelete("findOneAndDelete", new JsonObject().put("test", "testFindOneAndDeleteFile"))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndDeleteFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndDelete("findOneAndDelete", new JsonObject().put("test", "testFindOneAndDeleteFileError"))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test

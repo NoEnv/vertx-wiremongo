@@ -2,10 +2,10 @@ package com.noenv.wiremongo.mapping.collection;
 
 import com.noenv.wiremongo.TestBase;
 import com.noenv.wiremongo.mapping.Mapping;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.SingleHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -18,30 +18,24 @@ public class GetCollectionsTest extends TestBase {
 
   @Test
   public void testGetCollections(TestContext ctx) {
-    Async async = ctx.async();
     Mapping<?, ?, ?> m = mock.getCollections()
       .returns(Arrays.asList("collection1", "collection2"));
 
     db.rxGetCollections()
-      .subscribe(s -> {
-        ctx.assertEquals(Arrays.asList("collection1", "collection2"), s);
-        mock.removeMapping(m);
-        async.complete();
-      }, ctx::fail);
+    .subscribe(SingleHelper.toObserver(ctx.asyncAssertSuccess(s -> {
+      ctx.assertEquals(Arrays.asList("collection1", "collection2"), s);
+      mock.removeMapping(m);
+    })));
   }
 
   @Test
   public void testGetCollectionError(TestContext ctx) {
-    Async async = ctx.async();
     Mapping<?, ?, ?> m = mock.getCollections()
       .returnsError(new Exception("intentional"));
 
     db.rxGetCollections()
-      .subscribe(s -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        mock.removeMapping(m);
-        async.complete();
-      });
+    .doOnError(assertIntentionalError(ctx, "intentional"))
+    .subscribe(SingleHelper.toObserver(ctx.asyncAssertFailure(ex -> mock.removeMapping(m))));
   }
 
   @Test

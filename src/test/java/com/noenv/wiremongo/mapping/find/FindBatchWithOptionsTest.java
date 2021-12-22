@@ -5,6 +5,7 @@ import com.noenv.wiremongo.TestBase;
 import io.reactivex.rxjava3.core.Flowable;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.CollationOptions;
 import io.vertx.ext.mongo.FindOptions;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -23,14 +24,16 @@ public class FindBatchWithOptionsTest extends TestBase {
     mock.findBatchWithOptions()
       .inCollection("findbatchwithoptions")
       .withQuery(new JsonObject().put("test", "testFindBatchWithOptions"))
-      .withOptions(new FindOptions().setLimit(17))
+      .withOptions(new FindOptions().setLimit(17).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1)))
       .returns(MemoryStream.of(new JsonObject().put("field1", "value1")));
 
-    db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptions"), new FindOptions().setLimit(17))
+    db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptions"),
+        new FindOptions().setLimit(17).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1))
+      )
       .handler(r -> {
         ctx.assertEquals("value1", r.getString("field1"));
         async.complete();
-      });
+      }).exceptionHandler(ctx::fail);
   }
 
   @Test
@@ -44,10 +47,8 @@ public class FindBatchWithOptionsTest extends TestBase {
       .returnsError(new Exception("intentional"));
 
     db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptionsError"), new FindOptions().setLimit(19))
-      .exceptionHandler(ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
   }
 
   @Test
@@ -57,23 +58,20 @@ public class FindBatchWithOptionsTest extends TestBase {
       .handler(r -> {
         ctx.assertEquals("value1", r.getString("field1"));
         async.countDown();
-      });
+      }).exceptionHandler(ctx::fail);
   }
 
   @Test
   public void testFindBatchWithOptionsFileError(TestContext ctx) {
     Async async = ctx.async();
     db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptionsFileError"), new FindOptions().setSkip(27))
-      .exceptionHandler(ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testFindBatchWithOptionsReturnedObjectNotModified(TestContext ctx) {
-    final Async async = ctx.async(1 * 2);
+    final Async async = ctx.async(2);
     final JsonObject given = new JsonObject()
       .put("field1", "value1")
       .put("field2", "value2")
@@ -94,9 +92,9 @@ public class FindBatchWithOptionsTest extends TestBase {
       .returns(MemoryStream.of(given));
 
     Flowable.mergeArray(
-      db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptions"), new FindOptions().setLimit(17)).toFlowable(),
-      db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptions"), new FindOptions().setLimit(17)).toFlowable()
-    )
+        db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptions"), new FindOptions().setLimit(17)).toFlowable(),
+        db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptions"), new FindOptions().setLimit(17)).toFlowable()
+      )
       .doOnNext(actual -> async.countDown())
       .doOnNext(actual -> ctx.assertEquals(expected, actual))
       .doOnNext(actual -> {
@@ -114,15 +112,14 @@ public class FindBatchWithOptionsTest extends TestBase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testFindBatchWithOptionsFileReturnedObjectNotModified(TestContext ctx) {
     final Async async = ctx.async(3 * 2);
     final JsonObject expected = new JsonObject().put("field1", "value1");
 
     Flowable.mergeArray(
-      db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptionsFile"), new FindOptions().setSkip(21)).toFlowable(),
-      db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptionsFile"), new FindOptions().setSkip(21)).toFlowable()
-    )
+        db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptionsFile"), new FindOptions().setSkip(21)).toFlowable(),
+        db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptionsFile"), new FindOptions().setSkip(21)).toFlowable()
+      )
       .doOnNext(actual -> async.countDown())
       .doOnNext(actual -> ctx.assertEquals(expected, actual))
       .doOnNext(actual -> {

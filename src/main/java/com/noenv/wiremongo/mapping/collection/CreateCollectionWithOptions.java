@@ -6,9 +6,6 @@ import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.CreateCollectionOptions;
-import io.vertx.ext.mongo.DistinctOptions;
-
-import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 public class CreateCollectionWithOptions extends WithCollection<Void, CreateCollectionWithOptionsCommand, CreateCollectionWithOptions> {
 

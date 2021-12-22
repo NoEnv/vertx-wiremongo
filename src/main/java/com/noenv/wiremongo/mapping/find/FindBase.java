@@ -10,15 +10,15 @@ import java.util.stream.Collectors;
 
 public abstract class FindBase<U extends FindBaseCommand, C extends FindBase<U, C>> extends WithQuery<List<JsonObject>, U, C> {
 
-  public FindBase() {
+  protected FindBase() {
     this("find");
   }
 
-  public FindBase(String method) {
+  protected FindBase(String method) {
     super(method);
   }
 
-  public FindBase(JsonObject json) {
+  protected FindBase(JsonObject json) {
     super(json);
   }
 
@@ -30,7 +30,7 @@ public abstract class FindBase<U extends FindBaseCommand, C extends FindBase<U, 
   @Override
   protected List<JsonObject> parseResponse(Object jsonValue) {
     return ((JsonArray) jsonValue).stream()
-      .map(o -> (JsonObject) o)
+      .map(JsonObject.class::cast)
       .collect(Collectors.toList());
   }
 }

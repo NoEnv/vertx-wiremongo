@@ -3,11 +3,12 @@ package com.noenv.wiremongo.mapping.find;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.CollationOptions;
 import io.vertx.ext.mongo.FindOptions;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -16,45 +17,39 @@ public class FindOneAndDeleteWithOptionsTest extends TestBase {
 
   @Test
   public void testFindOneAndDeleteWithOptions(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.findOneAndDeleteWithOptions()
       .inCollection("findOneAndDeleteWithOptions")
       .withQuery(new JsonObject().put("test", "testFindOneAndDeleteWithOptions"))
-      .withOptions(new FindOptions().setSkip(5).setLimit(21))
+      .withOptions(new FindOptions().setSkip(5).setLimit(21).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1)))
       .returns(new JsonObject().put("field1", "value1"));
 
     db.rxFindOneAndDeleteWithOptions("findOneAndDeleteWithOptions",
-      new JsonObject().put("test", "testFindOneAndDeleteWithOptions"),
-      new FindOptions().setSkip(5).setLimit(21))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+        new JsonObject().put("test", "testFindOneAndDeleteWithOptions"),
+        new FindOptions().setSkip(5).setLimit(21).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1))
+      )
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndDeleteWithOptionsFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndDeleteWithOptions("findOneAndDeleteWithOptions",
-      new JsonObject().put("test", "testFindOneAndDeleteWithOptionsFile"),
-      new FindOptions().setBatchSize(13).setSort(new JsonObject().put("field1", -1)))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+        new JsonObject().put("test", "testFindOneAndDeleteWithOptionsFile"),
+        new FindOptions().setBatchSize(13).setSort(new JsonObject().put("field1", -1))
+      )
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndDeleteWithOptionsFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndDeleteWithOptions("findOneAndDeleteWithOptions",
-      new JsonObject().put("test", "testFindOneAndDeleteWithOptionsFileError"),
-      new FindOptions().setFields(new JsonObject().put("fieldx", 1).put("fieldy", 1)).setLimit(42))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+        new JsonObject().put("test", "testFindOneAndDeleteWithOptionsFileError"),
+        new FindOptions().setFields(new JsonObject().put("fieldx", 1).put("fieldy", 1)).setLimit(42))
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
@@ -79,8 +74,8 @@ public class FindOneAndDeleteWithOptionsTest extends TestBase {
       .returns(given);
 
     db.rxFindOneAndDeleteWithOptions("findOneAndDeleteWithOptions",
-      new JsonObject().put("test", "testFindOneAndDeleteWithOptions"),
-      new FindOptions().setSkip(5).setLimit(21))
+        new JsonObject().put("test", "testFindOneAndDeleteWithOptions"),
+        new FindOptions().setSkip(5).setLimit(21))
       .doOnSuccess(actual -> ctx.assertEquals(expected, actual))
       .doOnSuccess(actual -> {
         actual.put("field1", "replace");
@@ -102,8 +97,8 @@ public class FindOneAndDeleteWithOptionsTest extends TestBase {
     final JsonObject expected = new JsonObject().put("field1", "value1");
 
     db.rxFindOneAndDeleteWithOptions("findOneAndDeleteWithOptions",
-      new JsonObject().put("test", "testFindOneAndDeleteWithOptionsFile"),
-      new FindOptions().setBatchSize(13).setSort(new JsonObject().put("field1", -1)))
+        new JsonObject().put("test", "testFindOneAndDeleteWithOptionsFile"),
+        new FindOptions().setBatchSize(13).setSort(new JsonObject().put("field1", -1)))
       .doOnSuccess(actual -> ctx.assertEquals(expected, actual))
       .doOnSuccess(actual -> {
         actual.put("field1", "replace");

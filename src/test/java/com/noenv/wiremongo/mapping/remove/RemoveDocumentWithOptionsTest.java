@@ -4,23 +4,17 @@ import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientDeleteResult;
 import io.vertx.ext.mongo.WriteOption;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.time.Instant;
-
-import static com.noenv.wiremongo.matching.JsonMatcher.equalToJson;
 
 @RunWith(VertxUnitRunner.class)
 public class RemoveDocumentWithOptionsTest extends TestBase {
 
   @Test
   public void testRemoveDocumentWithOptions(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.removeDocumentWithOptions()
       .inCollection("removeDocumentWithOptions")
       .withQuery(new JsonObject().put("test", "testRemoveDocumentWithOptions"))
@@ -29,31 +23,35 @@ public class RemoveDocumentWithOptionsTest extends TestBase {
 
     db.rxRemoveDocumentWithOptions("removeDocumentWithOptions", new JsonObject()
       .put("test", "testRemoveDocumentWithOptions"), WriteOption.MAJORITY)
-      .subscribe(r -> {
-        ctx.assertEquals(1L, r.getRemovedCount());
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> ctx.assertEquals(1L, r.getRemovedCount()))));
   }
 
   @Test
   public void testRemoveDocumentWithOptionsFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxRemoveDocumentWithOptions("removeDocumentWithOptions", new JsonObject()
       .put("test", "testRemoveDocumentWithOptionsFile"), WriteOption.REPLICA_ACKNOWLEDGED)
-      .subscribe(r -> {
-        ctx.assertEquals(2L, r.getRemovedCount());
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> ctx.assertEquals(2L, r.getRemovedCount()))));
+  }
+
+  @Test
+  public void testRemoveDocumentWithOptionsError(TestContext ctx) {
+    mock.removeDocumentWithOptions()
+      .inCollection("removeDocumentWithOptions")
+      .withQuery(new JsonObject().put("test", "testRemoveDocumentWithOptionsError"))
+      .withOptions(WriteOption.FSYNCED)
+      .returnsError(new Exception("intentional"));
+
+    db.rxRemoveDocumentWithOptions("removeDocumentWithOptions", new JsonObject()
+        .put("test", "testRemoveDocumentWithOptionsError"), WriteOption.FSYNCED)
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
   public void testRemoveDocumentWithOptionsFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxRemoveDocumentWithOptions("removeDocumentWithOptions", new JsonObject()
       .put("test", "testRemoveDocumentWithOptionsFileError"), WriteOption.UNACKNOWLEDGED)
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 }

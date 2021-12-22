@@ -5,10 +5,10 @@ import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.*;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,8 +21,6 @@ public class BulkWriteWithOptionsTest extends TestBase {
 
   @Test
   public void testBulkWriteWithOptions(TestContext ctx) {
-    Async async = ctx.async();
-
     BulkOperation operationWithCollation = BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"));
     operationWithCollation.setCollation(new CollationOptions().setLocale("de_AT").setStrength(3));
 
@@ -36,39 +34,31 @@ public class BulkWriteWithOptionsTest extends TestBase {
       .returns(new MongoClientBulkWriteResult(0, 24, 0, 0, null));
 
     db.rxBulkWriteWithOptions("bulkwritewithoptions",
-      Arrays.asList(
-        BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions")),
-        operationWithCollation
-      ),
-      new BulkWriteOptions().setOrdered(false))
-      .subscribe(r -> {
-        ctx.assertEquals(24L, r.getMatchedCount());
-        async.complete();
-      }, ctx::fail);
+        Arrays.asList(
+          BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions")),
+          operationWithCollation
+        ),
+        new BulkWriteOptions().setOrdered(false))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> ctx.assertEquals(24L, r.getMatchedCount()))));
   }
 
   @Test
   public void testBulkWriteWithOptionsFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxBulkWriteWithOptions("bulkwritewithoptions",
-      Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptionsFile"))),
-      new BulkWriteOptions().setWriteOption(WriteOption.ACKNOWLEDGED))
-      .subscribe(r -> {
-        ctx.assertEquals(71L, r.getModifiedCount());
-        async.complete();
-      }, ctx::fail);
+      Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptionsFile"))),
+      new BulkWriteOptions().setWriteOption(WriteOption.ACKNOWLEDGED)
+    )
+    .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> ctx.assertEquals(71L, r.getModifiedCount()))));
   }
 
   @Test
   public void testBulkWriteWithOptionsFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxBulkWriteWithOptions("bulkwritewithoptions",
-      Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptionsFileError"))),
-      new BulkWriteOptions().setWriteOption(WriteOption.JOURNALED))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+        Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptionsFileError"))),
+        new BulkWriteOptions().setWriteOption(WriteOption.JOURNALED)
+      )
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
@@ -90,11 +80,11 @@ public class BulkWriteWithOptionsTest extends TestBase {
 
     mock.bulkWriteWithOptions()
       .inCollection("bulkwritewithoptions")
-      .withOperations(Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))))
+      .withOperations(Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))))
       .withOptions(new BulkWriteOptions().setOrdered(false))
       .returns(given);
 
-    db.rxBulkWriteWithOptions("bulkwritewithoptions", Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))), new BulkWriteOptions().setOrdered(false))
+    db.rxBulkWriteWithOptions("bulkwritewithoptions", Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))), new BulkWriteOptions().setOrdered(false))
       .doOnSuccess(actual -> ctx.assertEquals(expected.toJson(), actual.toJson()))
       .doOnSuccess(actual -> {
         actual.getUpserts().get(0).put("field1", "replace");
@@ -115,7 +105,7 @@ public class BulkWriteWithOptionsTest extends TestBase {
   public void testBulkWriteWithOptionsFileReturnedObjectNotModified(TestContext ctx) {
     final MongoClientBulkWriteResult expected = new MongoClientBulkWriteResult(0, 0, 0, 71, new ArrayList<>(Collections.singletonList(new JsonObject().put("field1", "value1"))));
 
-    db.rxBulkWriteWithOptions("bulkwritewithoptions", Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptionsFile"))), new BulkWriteOptions().setWriteOption(WriteOption.ACKNOWLEDGED))
+    db.rxBulkWriteWithOptions("bulkwritewithoptions", Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptionsFile"))), new BulkWriteOptions().setWriteOption(WriteOption.ACKNOWLEDGED))
       .doOnSuccess(actual -> ctx.assertEquals(expected.toJson(), actual.toJson()))
       .doOnSuccess(actual -> {
         actual.getUpserts().get(0).put("field1", "replace");
@@ -130,17 +120,15 @@ public class BulkWriteWithOptionsTest extends TestBase {
   public void testBulkWriteWithOptionsDuplicateKeyError(TestContext ctx) {
     mock.bulkWriteWithOptions()
       .inCollection("bulkwritewithoptions")
-      .withOperations(Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))))
+      .withOperations(Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))))
       .withOptions(new BulkWriteOptions().setOrdered(false))
       .returnsDuplicateKeyError();
 
-    db.rxBulkWriteWithOptions("bulkwritewithoptions", Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))), new BulkWriteOptions().setOrdered(false))
-      .doOnError(cause -> {
-        ctx.assertTrue(cause instanceof MongoBulkWriteException);
-        final MongoBulkWriteException actual = (MongoBulkWriteException) cause;
-        ctx.assertEquals(1, actual.getWriteErrors().size());
-        ctx.assertEquals(11000, actual.getWriteErrors().get(0).getCode());
-      })
+    db.rxBulkWriteWithOptions("bulkwritewithoptions", Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))), new BulkWriteOptions().setOrdered(false))
+      .doOnError(assertMongoException(ctx, MongoBulkWriteException.class, bulkWriteException -> {
+        ctx.assertEquals(1, bulkWriteException.getWriteErrors().size());
+        ctx.assertEquals(11000, bulkWriteException.getWriteErrors().get(0).getCode());
+      }))
       .ignoreElement()
       .subscribe(CompletableHelper.toObserver(ctx.asyncAssertFailure()));
   }
@@ -149,17 +137,15 @@ public class BulkWriteWithOptionsTest extends TestBase {
   public void testBulkWriteWithOptionsOtherError(TestContext ctx) {
     mock.bulkWriteWithOptions()
       .inCollection("bulkwritewithoptions")
-      .withOperations(Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))))
+      .withOperations(Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))))
       .withOptions(new BulkWriteOptions().setOrdered(false))
       .returnsOtherBulkWriteError();
 
-    db.rxBulkWriteWithOptions("bulkwritewithoptions", Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))), new BulkWriteOptions().setOrdered(false))
-      .doOnError(cause -> {
-        ctx.assertTrue(cause instanceof MongoBulkWriteException);
-        final MongoBulkWriteException actual = (MongoBulkWriteException) cause;
-        ctx.assertEquals(1, actual.getWriteErrors().size());
-        ctx.assertEquals(22000, actual.getWriteErrors().get(0).getCode());
-      })
+    db.rxBulkWriteWithOptions("bulkwritewithoptions", Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))), new BulkWriteOptions().setOrdered(false))
+      .doOnError(assertMongoException(ctx, MongoBulkWriteException.class, bulkWriteException -> {
+        ctx.assertEquals(1, bulkWriteException.getWriteErrors().size());
+        ctx.assertEquals(22000, bulkWriteException.getWriteErrors().get(0).getCode());
+      }))
       .ignoreElement()
       .subscribe(CompletableHelper.toObserver(ctx.asyncAssertFailure()));
   }

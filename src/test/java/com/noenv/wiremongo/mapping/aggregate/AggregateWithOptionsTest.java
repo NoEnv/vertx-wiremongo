@@ -27,8 +27,8 @@ public class AggregateWithOptionsTest extends TestBase {
       .returns(MemoryStream.of(new JsonObject().put("x", "y")));
 
     db.aggregateWithOptions("aggregateWithOptions",
-      new JsonArray().add(new JsonObject().put("$match", new JsonObject().put("id", "myId"))),
-      new AggregateOptions().setAllowDiskUse(true).setMaxTime(2345))
+        new JsonArray().add(new JsonObject().put("$match", new JsonObject().put("id", "myId"))),
+        new AggregateOptions().setAllowDiskUse(true).setMaxTime(2345))
       .handler(r -> {
         ctx.assertEquals("y", r.getString("x"));
         async.complete();
@@ -39,30 +39,45 @@ public class AggregateWithOptionsTest extends TestBase {
   public void testAggregateWithOptionsFile(TestContext ctx) {
     Async async = ctx.async(3);
     db.aggregateWithOptions("aggregateWithOptions",
-      new JsonArray().add(new JsonObject().put("test", "testAggregateWithOptionsFile")),
-      new AggregateOptions().setAllowDiskUse(false).setMaxTime(345))
+        new JsonArray().add(new JsonObject().put("test", "testAggregateWithOptionsFile")),
+        new AggregateOptions().setAllowDiskUse(false).setMaxTime(345))
       .handler(r -> {
         ctx.assertEquals("value1", r.getString("field1"));
         async.countDown();
-      });
+      }).exceptionHandler(ctx::fail);
+  }
+
+  @Test
+  public void testAggregateWithOptionsError(TestContext ctx) {
+    Async async = ctx.async();
+
+    mock.aggregateWithOptions()
+      .inCollection("aggregateWithOptionsError")
+      .withPipeline(new JsonArray().add(new JsonObject().put("$match", new JsonObject().put("id", "myId"))))
+      .withOptions(new AggregateOptions().setAllowDiskUse(false).setMaxTime(2345))
+      .returnsError(new Exception("intentional"));
+
+    db.aggregateWithOptions("aggregateWithOptionsError",
+        new JsonArray().add(new JsonObject().put("$match", new JsonObject().put("id", "myId"))),
+        new AggregateOptions().setAllowDiskUse(false).setMaxTime(2345)
+      )
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
   }
 
   @Test
   public void testAggregateWithOptionsFileError(TestContext ctx) {
     Async async = ctx.async();
     db.aggregateWithOptions("aggregateWithOptions",
-      new JsonArray().add(new JsonObject().put("test", "testAggregateWithOptionsFileError")),
-      new AggregateOptions().setAllowDiskUse(false).setMaxTime(234))
-      .exceptionHandler(ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+        new JsonArray().add(new JsonObject().put("test", "testAggregateWithOptionsFileError")),
+        new AggregateOptions().setAllowDiskUse(false).setMaxTime(234))
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testAggregateWithOptionsReturnedObjectNotModified(TestContext ctx) {
-    final Async async = ctx.async(1 * 2);
+    final Async async = ctx.async(2);
     final JsonObject given = new JsonObject()
       .put("field1", "value1")
       .put("field2", "value2")
@@ -83,9 +98,9 @@ public class AggregateWithOptionsTest extends TestBase {
       .returns(MemoryStream.of(given));
 
     Flowable.mergeArray(
-      db.aggregateWithOptions("aggregateWithOptions", new JsonArray().add(new JsonObject().put("$match", new JsonObject().put("id", "myId"))), new AggregateOptions().setAllowDiskUse(true).setMaxTime(2345)).toFlowable(),
-      db.aggregateWithOptions("aggregateWithOptions", new JsonArray().add(new JsonObject().put("$match", new JsonObject().put("id", "myId"))), new AggregateOptions().setAllowDiskUse(true).setMaxTime(2345)).toFlowable()
-    )
+        db.aggregateWithOptions("aggregateWithOptions", new JsonArray().add(new JsonObject().put("$match", new JsonObject().put("id", "myId"))), new AggregateOptions().setAllowDiskUse(true).setMaxTime(2345)).toFlowable(),
+        db.aggregateWithOptions("aggregateWithOptions", new JsonArray().add(new JsonObject().put("$match", new JsonObject().put("id", "myId"))), new AggregateOptions().setAllowDiskUse(true).setMaxTime(2345)).toFlowable()
+      )
       .doOnNext(actual -> async.countDown())
       .doOnNext(actual -> ctx.assertEquals(expected, actual))
       .doOnNext(actual -> {
@@ -103,15 +118,14 @@ public class AggregateWithOptionsTest extends TestBase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testAggregateWithOptionsFileReturnedObjectNotModified(TestContext ctx) {
     final Async async = ctx.async(3 * 2);
     final JsonObject expected = new JsonObject().put("field1", "value1");
 
     Flowable.mergeArray(
-      db.aggregateWithOptions("aggregateWithOptions", new JsonArray().add(new JsonObject().put("test", "testAggregateWithOptionsFile")), new AggregateOptions().setAllowDiskUse(false).setMaxTime(345)).toFlowable(),
-      db.aggregateWithOptions("aggregateWithOptions", new JsonArray().add(new JsonObject().put("test", "testAggregateWithOptionsFile")), new AggregateOptions().setAllowDiskUse(false).setMaxTime(345)).toFlowable()
-    )
+        db.aggregateWithOptions("aggregateWithOptions", new JsonArray().add(new JsonObject().put("test", "testAggregateWithOptionsFile")), new AggregateOptions().setAllowDiskUse(false).setMaxTime(345)).toFlowable(),
+        db.aggregateWithOptions("aggregateWithOptions", new JsonArray().add(new JsonObject().put("test", "testAggregateWithOptionsFile")), new AggregateOptions().setAllowDiskUse(false).setMaxTime(345)).toFlowable()
+      )
       .doOnNext(actual -> async.countDown())
       .doOnNext(actual -> ctx.assertEquals(expected, actual))
       .doOnNext(actual -> {

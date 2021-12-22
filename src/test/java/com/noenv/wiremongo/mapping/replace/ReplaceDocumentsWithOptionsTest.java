@@ -10,6 +10,7 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -18,8 +19,6 @@ public class ReplaceDocumentsWithOptionsTest extends TestBase {
 
   @Test
   public void testReplaceDocumentsWithOptions(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.replaceDocumentsWithOptions()
       .inCollection("replaceDocumentsWithOptions")
       .withQuery(new JsonObject().put("test", "testReplaceDocumentsWithOptions"))
@@ -28,38 +27,59 @@ public class ReplaceDocumentsWithOptionsTest extends TestBase {
       .returns(new MongoClientUpdateResult(17, null, 24));
 
     db.rxReplaceDocumentsWithOptions("replaceDocumentsWithOptions",
-      new JsonObject().put("test", "testReplaceDocumentsWithOptions"),
-      new JsonObject().put("foo", "bar"), new UpdateOptions(true, false))
-      .subscribe(r -> {
+        new JsonObject().put("test", "testReplaceDocumentsWithOptions"),
+        new JsonObject().put("foo", "bar"), new UpdateOptions(true, false))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> {
         ctx.assertEquals(17L, r.getDocMatched());
         ctx.assertEquals(24L, r.getDocModified());
-        async.complete();
-      }, ctx::fail);
+      })));
   }
 
   @Test
   public void testReplaceDocumentsWithOptionsFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxReplaceDocumentsWithOptions("replaceDocumentsWithOptions",
-      new JsonObject().put("test", "testReplaceDocumentsWithOptionsFile"),
-      new JsonObject().put("foo", "bar"), new UpdateOptions(false, true))
-      .subscribe(r -> {
+        new JsonObject().put("test", "testReplaceDocumentsWithOptionsFile"),
+        new JsonObject().put("foo", "bar"), new UpdateOptions(false, true))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> {
         ctx.assertEquals(21L, r.getDocMatched());
         ctx.assertEquals(56L, r.getDocModified());
-        async.complete();
-      }, ctx::fail);
+      })));
   }
 
   @Test
+  public void testReplaceDocumentsWithOptionsError(TestContext ctx) {
+    mock.replaceDocumentsWithOptions()
+      .inCollection("replaceDocumentsWithOptionsError")
+      .withQuery(new JsonObject().put("test", "testReplaceDocumentsWithOptionsError"))
+      .withReplace(new JsonObject().put("foo", "bar"))
+      .withOptions(new UpdateOptions(true, false))
+      .returnsError(new Exception("intentional"));
+
+    db.rxReplaceDocumentsWithOptions("replaceDocumentsWithOptionsError",
+        new JsonObject().put("test", "testReplaceDocumentsWithOptionsError"),
+        new JsonObject().put("foo", "bar"), new UpdateOptions(true, false))
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
+  }
+
+
+  @Test
   public void testReplaceDocumentsWithOptionsFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxReplaceDocumentsWithOptions("replaceDocumentsWithOptions",
-      new JsonObject().put("test", "testReplaceDocumentsWithOptionsFileError"),
-      new JsonObject().put("foo", "bar"), new UpdateOptions().setWriteOption(WriteOption.MAJORITY))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+        new JsonObject().put("test", "testReplaceDocumentsWithOptionsFileError"),
+        new JsonObject().put("foo", "bar"), new UpdateOptions().setWriteOption(WriteOption.MAJORITY))
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
+  }
+
+  @Test
+  public void testReplaceDocumentsWithOptionsNoMatch(TestContext ctx) {
+    Async async = ctx.async();
+    db.rxReplaceDocumentsWithOptions("replaceDocumentsWithOptionsNoMatch",
+        new JsonObject().put("test", "testReplaceDocumentsWithOptionsNoMatch"),
+        new JsonObject().put("foo", "bar"), new UpdateOptions().setWriteOption(WriteOption.MAJORITY))
+      .doOnError(assertNoMappingFoundError(ctx, async))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test

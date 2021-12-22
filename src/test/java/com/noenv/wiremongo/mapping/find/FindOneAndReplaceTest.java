@@ -3,10 +3,10 @@ package com.noenv.wiremongo.mapping.find;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,8 +15,6 @@ public class FindOneAndReplaceTest extends TestBase {
 
   @Test
   public void testFindOneAndReplace(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.findOneAndReplace()
       .inCollection("findoneandreplace")
       .withQuery(new JsonObject().put("test", "testFindOneAndReplace"))
@@ -24,30 +22,24 @@ public class FindOneAndReplaceTest extends TestBase {
       .returns(new JsonObject().put("field1", "value1"));
 
     db.rxFindOneAndReplace("findoneandreplace", new JsonObject().put("test", "testFindOneAndReplace"), new JsonObject().put("foo", "bar"))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndReplaceFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndReplace("findoneandreplace", new JsonObject().put("test", "testFindOneAndReplaceFile"), new JsonObject().put("foo", "bar"))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndReplaceFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndReplace("findoneandreplace", new JsonObject().put("test", "testFindOneAndReplaceFileError"), new JsonObject().put("foo", "bar"))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test

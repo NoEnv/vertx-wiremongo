@@ -1,0 +1,22 @@
+{
+  "method": "distinctBatch",
+  "collection": {
+    "equalTo": "testDistinctBatchWithOptionsFileError"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctBatchWithOptionsFileError"
+  },
+  "resultClassname": {
+    "equalTo": "io.vertx.core.json.JsonObject"
+  },
+  "options": {
+    "equalTo": {
+      "collation": {
+        "locale": "de_AT"
+      }
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

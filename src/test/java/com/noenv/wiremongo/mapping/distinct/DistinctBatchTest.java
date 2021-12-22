@@ -39,23 +39,20 @@ public class DistinctBatchTest extends TestBase {
       .handler(r -> {
         ctx.assertEquals("value1", r.getString("field1"));
         async.countDown();
-      });
+      }).exceptionHandler(ctx::fail);
   }
 
   @Test
   public void testDistinctBatchFileError(TestContext ctx) {
     Async async = ctx.async();
     db.distinctBatch("distinctBatch", "testDistinctBatchFileError", "io.vertx.core.json.JsonObject")
-      .exceptionHandler(ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testDistinctBatchReturnedObjectNotModified(TestContext ctx) {
-    final Async async = ctx.async(1 * 2);
+    final Async async = ctx.async(2);
     final JsonObject given = new JsonObject()
       .put("field1", "value1")
       .put("field2", "value2")
@@ -96,7 +93,6 @@ public class DistinctBatchTest extends TestBase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testDistinctBatchFileReturnedObjectNotModified(TestContext ctx) {
     final Async async = ctx.async(3 * 2);
     final JsonObject expected = new JsonObject().put("field1", "value1");
@@ -120,11 +116,11 @@ public class DistinctBatchTest extends TestBase {
     Async async = ctx.async();
     mock.distinctBatch()
       .inCollection("testDistinctBatchWithOptions")
-      .withFieldName("testDistinctBatch")
+      .withFieldName("testDistinctBatchWithOptions")
       .withResultClassname("io.vertx.core.json.JsonObject")
       .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
       .returns(MemoryStream.of(new JsonObject().put("x", "y")));
-    db.distinctBatch("testDistinctBatchWithOptions", "testDistinctBatch", "io.vertx.core.json.JsonObject", new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
+    db.distinctBatch("testDistinctBatchWithOptions", "testDistinctBatchWithOptions", "io.vertx.core.json.JsonObject", new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
       .handler(r -> {
         ctx.assertEquals("y", r.getString("x"));
         async.complete();
@@ -132,8 +128,50 @@ public class DistinctBatchTest extends TestBase {
   }
 
   @Test
-  public void testDistinctBatchWithOptionsNoMatch(TestContext ctx) {
+  public void testDistinctBatchWithOptionsFile(TestContext ctx) {
+    Async async = ctx.async(2);
+    db.distinctBatch("testDistinctBatchWithOptions", "testDistinctBatchWithOptionsFile", "io.vertx.core.json.JsonObject", new DistinctOptions().setCollation(new CollationOptions().setLocale("de_AT")))
+      .handler(r -> {
+        switch(async.count()) {
+          case 2:
+            ctx.assertEquals("value1", r.getString("field1"));
+            break;
+          case 1:
+            ctx.assertEquals("value2", r.getString("field2"));
+            break;
+          default:
+            ctx.fail("unexpected stream");
+            break;
+        }
+        async.countDown();
+      }).exceptionHandler(ctx::fail);
+  }
+
+  @Test
+  public void testDistinctBatchWithOptionsError(TestContext ctx) {
     Async async = ctx.async();
+    mock.distinctBatch()
+      .inCollection("testDistinctBatchWithOptionsError")
+      .withFieldName("testDistinctBatchWithOptionsError")
+      .withResultClassname("io.vertx.core.json.JsonObject")
+      .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("de_AT")))
+      .returnsError(new Exception("intentional"));
+    db.distinctBatch("testDistinctBatchWithOptionsError", "testDistinctBatchWithOptionsError", "io.vertx.core.json.JsonObject",
+        new DistinctOptions().setCollation(new CollationOptions().setLocale("de_AT")))
+      .handler(r -> ctx.fail("should not succeed"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
+  }
+
+  @Test
+  public void testDistinctBatchWithOptionsFileError(TestContext ctx) {
+    Async async = ctx.async();
+    db.distinctBatch("testDistinctBatchWithOptionsFileError", "testDistinctBatchWithOptionsFileError", "io.vertx.core.json.JsonObject", new DistinctOptions().setCollation(new CollationOptions().setLocale("de_AT")))
+      .handler(r -> ctx.fail("should not succeed"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
+  }
+
+  @Test
+  public void testDistinctBatchWithOptionsNoMatch(TestContext ctx) {
     mock.distinctBatch()
       .inCollection("testDistinctBatchWithOptionsNoMatch")
       .withFieldName("testDistinctBatch")
@@ -141,9 +179,8 @@ public class DistinctBatchTest extends TestBase {
       .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-wy")))
       .returns(MemoryStream.of(new JsonObject().put("x", "y")));
     db.distinctBatch("testDistinctBatchWithOptionsNoMatch", "testDistinctBatch", "io.vertx.core.json.JsonObject", new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
-      .handler(r -> {
-        ctx.fail("should fail");
-      }).exceptionHandler(e -> async.complete());
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(handleNoMappingFoundError(ctx));
 
   }
 

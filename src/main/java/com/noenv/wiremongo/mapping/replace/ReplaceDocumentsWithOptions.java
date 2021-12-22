@@ -7,8 +7,6 @@ import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.UpdateOptions;
 
-import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
-
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class ReplaceDocumentsWithOptions extends ReplaceDocumentsBase<ReplaceDocumentsWithOptionsCommand, ReplaceDocumentsWithOptions> {
 

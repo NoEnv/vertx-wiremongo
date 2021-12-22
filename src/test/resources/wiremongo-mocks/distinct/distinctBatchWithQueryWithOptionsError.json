@@ -1,0 +1,28 @@
+{
+  "method": "distinctBatchWithQuery",
+  "collection": {
+    "equalTo": "testDistinctBatchWithQueryWithOptionsError"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctBatchWithQueryWithOptionsFileError"
+  },
+  "resultClassname": {
+    "equalTo": "io.vertx.core.json.JsonObject"
+  },
+
+  "query": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "collation": {
+        "locale": "de_AT"
+      }
+    }
+  },
+  "error": {
+      "message": "intentional"
+    }
+}

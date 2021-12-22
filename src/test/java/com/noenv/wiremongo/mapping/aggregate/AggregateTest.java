@@ -41,10 +41,8 @@ public class AggregateTest extends TestBase {
       .returnsError(new Exception("intentional"));
 
     db.aggregate("aggregate", new JsonArray().add(new JsonObject().put("$match",new JsonObject().put("id","myIdError"))))
-      .exceptionHandler(ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
   }
 
   @Test
@@ -54,23 +52,21 @@ public class AggregateTest extends TestBase {
       .handler(r -> {
         ctx.assertEquals("value1", r.getString("field1"));
         async.countDown();
-      });
+      }).exceptionHandler(ctx::fail);
   }
 
   @Test
+  @SuppressWarnings("java:S2699")
   public void testAggregateFileError(TestContext ctx) {
     Async async = ctx.async();
     db.aggregate("aggregate", new JsonArray().add(new JsonObject().put("test", "testAggregateFileError")))
-      .exceptionHandler(ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testAggregateReturnedObjectNotModified(TestContext ctx) {
-    final Async async = ctx.async(1 * 2);
+    final Async async = ctx.async(2);
     final JsonObject given = new JsonObject()
       .put("field1", "value1")
       .put("field2", "value2")
@@ -110,7 +106,6 @@ public class AggregateTest extends TestBase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testAggregateFileReturnedObjectNotModified(TestContext ctx) {
     final Async async = ctx.async(3 * 2);
     final JsonObject expected = new JsonObject().put("field1", "value1");

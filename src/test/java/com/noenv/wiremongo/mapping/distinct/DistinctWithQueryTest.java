@@ -5,10 +5,10 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.CollationOptions;
 import io.vertx.ext.mongo.DistinctOptions;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.SingleHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,47 +17,42 @@ public class DistinctWithQueryTest extends TestBase {
 
   @Test
   public void testDistinctWithQuery(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.distinctWithQuery()
       .inCollection("distinctWithQuery")
       .withFieldName("testDistinctWithQuery")
       .withQuery(new JsonObject().put("foo", "bar"))
       .returns(new JsonArray().add("A").add("B"));
 
-    db.rxDistinctWithQuery("distinctWithQuery", "testDistinctWithQuery",
-        null, new JsonObject().put("foo", "bar"))
-      .subscribe(r -> {
+    db.rxDistinctWithQuery(
+      "distinctWithQuery",
+        "testDistinctWithQuery",
+        null,
+        new JsonObject().put("foo", "bar")
+      )
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertSuccess(r -> {
         ctx.assertEquals(2, r.size());
         ctx.assertEquals("A", r.getString(0));
         ctx.assertEquals("B", r.getString(1));
-        async.complete();
-      }, ctx::fail);
+      })));
   }
 
   @Test
   public void testDistinctWithQueryFile(TestContext ctx) {
-    Async async = ctx.async();
-    db.rxDistinctWithQuery("distinctWithQuery", "testDistinctWithQueryFile",
+    db.distinctWithQuery("distinctWithQuery", "testDistinctWithQueryFile",
         "java.lang.String", new JsonObject().put("foo", "bar"))
-      .subscribe(r -> {
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertSuccess(r -> {
         ctx.assertEquals(3, r.size());
         ctx.assertEquals("A", r.getString(0));
         ctx.assertEquals("B", r.getString(1));
-        ctx.assertEquals("C", r.getString(2));
-        async.complete();
-      }, ctx::fail);
+      })));
   }
 
   @Test
   public void testDistinctWithQueryFileError(TestContext ctx) {
-    Async async = ctx.async();
-    db.rxDistinctWithQuery("distinctWithQuery", "testDistinctWithQueryFileError",
+    db.distinctWithQuery("distinctWithQuery", "testDistinctWithQueryFileError",
         "java.lang.Integer", new JsonObject().put("foo", "bar"))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
@@ -99,49 +94,69 @@ public class DistinctWithQueryTest extends TestBase {
 
   @Test
   public void testDistinctWithQueryWithOptions(TestContext ctx) {
-    Async async = ctx.async();
 
     mock.distinctWithQuery()
-      .inCollection("distinctWithQuery")
-      .withFieldName("testDistinctWithQuery")
+      .inCollection("distinctWithQueryWithOptions")
+      .withFieldName("testDistinctWithQueryWithOptions")
       .withQuery(new JsonObject().put("foo", "bar"))
       .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
       .returns(new JsonArray().add("A").add("B"));
 
-    db.distinctWithQuery("distinctWithQuery", "testDistinctWithQuery",
-      null, new JsonObject().put("foo", "bar"), result -> {
-        if (result.failed()) {
-          ctx.fail(result.cause());
-        } else {
-          JsonArray r = result.result();
+    db.distinctWithQuery("distinctWithQueryWithOptions",
+      "testDistinctWithQueryWithOptions",
+      null,
+      new JsonObject().put("foo", "bar"),
+      new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way"))
+    ).subscribe(SingleHelper.toObserver(ctx.asyncAssertSuccess(r -> {
           ctx.assertEquals(2, r.size());
           ctx.assertEquals("A", r.getString(0));
           ctx.assertEquals("B", r.getString(1));
-          async.complete();
-        }
-      }, new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way"))
+      }))
+    );
+  }
+
+  @Test
+  public void testDistinctWithQueryWithOptionsFile(TestContext ctx) {
+
+    db.distinctWithQuery("distinctWithQueryWithOptions",
+      "testDistinctWithQueryWithOptionsFile",
+      "java.lang.String",
+      new JsonObject().put("foo", "bar"),
+      new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way"))
+    ).subscribe(SingleHelper.toObserver(ctx.asyncAssertSuccess(r -> {
+        ctx.assertEquals(3, r.size());
+        ctx.assertEquals("A", r.getString(0));
+        ctx.assertEquals("B", r.getString(1));
+        ctx.assertEquals("C", r.getString(2));
+      }))
+    );
+  }
+
+  @Test
+  public void testDistinctWithQueryWithOptionsFileError(TestContext ctx) {
+    db.distinctWithQuery("distinctWithQueryWithOptions",
+      "testDistinctWithQueryWithOptionsFileError",
+      "java.lang.String",
+      new JsonObject().put("foo", "bar"),
+      new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way"))
+    )
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertFailure())
     );
   }
 
   @Test
   public void testDistinctWithQueryWithOptionsNoMatch(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.distinctWithQuery()
-      .inCollection("distinctWithQuery")
-      .withFieldName("testDistinctWithQuery")
+      .inCollection("distinctWithQueryNoMatch")
+      .withFieldName("testDistinctWithQueryNoMatch")
       .withQuery(new JsonObject().put("foo", "bar"))
-      .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("no-wy")))
-      .returns(new JsonArray().add("A").add("B"));
+      .withOptions(new DistinctOptions().setCollation(new CollationOptions().setLocale("DIFFERENT")))
+      .returns(new JsonArray());
 
-    db.distinctWithQuery("distinctWithQuery", "testDistinctWithQuery",
-      null, new JsonObject().put("foo", "bar"), result -> {
-        if (result.failed()) {
-          async.complete();
-        } else {
-          ctx.fail("should fail");
-        }
-      }, new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way"))
-    );
+    db.distinctWithQuery("distinctWithQueryNoMatch", "testDistinctWithQueryNoMatch",
+      null, new JsonObject().put("foo", "bar"), new DistinctOptions().setCollation(new CollationOptions().setLocale("no-way")))
+      .doOnError(assertNoMappingFoundError(ctx))
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertFailure()));
   }
 }

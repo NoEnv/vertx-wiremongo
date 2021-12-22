@@ -1,0 +1,15 @@
+{
+  "method": "distinct",
+  "collection": {
+    "equalTo": "testDistinctWithOptionsNoMatchFile"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctWithOptionsFile"
+  },
+  "options": {
+    "equalTo": {
+      "collation": {}
+    }
+  },
+  "response": []
+}

@@ -6,10 +6,10 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.ext.mongo.UpdateOptions;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,8 +20,6 @@ public class UpdateCollectionWithOptionsTest extends TestBase {
 
   @Test
   public void testUpdateCollectionWithOptions(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.updateCollectionWithOptions()
       .inCollection("updatecollectionwithoptions")
       .withQuery(new JsonObject().put("test", "testUpdateCollectionWithOptions"))
@@ -30,41 +28,54 @@ public class UpdateCollectionWithOptionsTest extends TestBase {
       .returns(new MongoClientUpdateResult(22, null, 24));
 
     db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
-      new JsonObject().put("test", "testUpdateCollectionWithOptions"),
-      new JsonObject().put("foo", "bar"),
-      new UpdateOptions().setUpsert(true))
-      .subscribe(r -> {
+        new JsonObject().put("test", "testUpdateCollectionWithOptions"),
+        new JsonObject().put("foo", "bar"),
+        new UpdateOptions().setUpsert(true))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> {
         ctx.assertEquals(22L, r.getDocMatched());
         ctx.assertEquals(24L, r.getDocModified());
-        async.complete();
-      }, ctx::fail);
+      })));
   }
 
   @Test
   public void testUpdateCollectionWithOptionsFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
-      new JsonObject().put("test", "testUpdateCollectionWithOptionsFile"),
-      new JsonObject().put("foo", "bar"),
-      new UpdateOptions().setMulti(true))
-      .subscribe(r -> {
+        new JsonObject().put("test", "testUpdateCollectionWithOptionsFile"),
+        new JsonObject().put("foo", "bar"),
+        new UpdateOptions().setMulti(true))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> {
         ctx.assertEquals(46L, r.getDocMatched());
         ctx.assertEquals(17L, r.getDocModified());
-        async.complete();
-      }, ctx::fail);
+      })));
+  }
+
+  @Test
+  public void testUpdateCollectionWithOptionsError(TestContext ctx) {
+    mock.updateCollectionWithOptions()
+      .inCollection("updatecollectionwithoptions")
+      .withQuery(new JsonObject().put("test", "testUpdateCollectionWithOptionsError"))
+      .withUpdate(equalToJson(new JsonObject().put("foo", "bar")))
+      .withOptions(equalToJson(new JsonObject().put("upsert", true), UpdateOptions::toJson))
+        .returnsError(new Exception("intentional"));
+
+    db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
+        new JsonObject().put("test", "testUpdateCollectionWithOptionsError"),
+        new JsonObject().put("foo", "bar"),
+        new UpdateOptions().setUpsert(true)
+      )
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
   public void testUpdateCollectionWithOptionsFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
-      new JsonObject().put("test", "testUpdateCollectionWithOptionsFileError"),
-      new JsonObject().put("foo", "bar"),
-      new UpdateOptions().setMulti(true))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+        new JsonObject().put("test", "testUpdateCollectionWithOptionsFileError"),
+        new JsonObject().put("foo", "bar"),
+        new UpdateOptions().setMulti(true)
+      )
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
@@ -90,9 +101,9 @@ public class UpdateCollectionWithOptionsTest extends TestBase {
       .returns(given);
 
     db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
-      new JsonObject().put("test", "testUpdateCollectionWithOptions"),
-      new JsonObject().put("foo", "bar"),
-      new UpdateOptions().setUpsert(true))
+        new JsonObject().put("test", "testUpdateCollectionWithOptions"),
+        new JsonObject().put("foo", "bar"),
+        new UpdateOptions().setUpsert(true))
       .doOnSuccess(actual -> ctx.assertEquals(expected.toJson(), actual.toJson()))
       .doOnSuccess(actual -> {
         actual.getDocUpsertedId().put("field1", "replace");
@@ -114,9 +125,9 @@ public class UpdateCollectionWithOptionsTest extends TestBase {
     final MongoClientUpdateResult expected = new MongoClientUpdateResult(46, new JsonObject().put("field1", "value1"), 17);
 
     db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
-      new JsonObject().put("test", "testUpdateCollectionWithOptionsFile"),
-      new JsonObject().put("foo", "bar"),
-      new UpdateOptions().setMulti(true))
+        new JsonObject().put("test", "testUpdateCollectionWithOptionsFile"),
+        new JsonObject().put("foo", "bar"),
+        new UpdateOptions().setMulti(true))
       .doOnSuccess(actual -> ctx.assertEquals(expected.toJson(), actual.toJson()))
       .doOnSuccess(actual -> {
         actual.getDocUpsertedId().put("field1", "replace");
@@ -129,8 +140,6 @@ public class UpdateCollectionWithOptionsTest extends TestBase {
 
   @Test
   public void testUpdateCollectionWithOptionsAggregationPipeline(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.updateCollectionWithOptionsAggregationPipeline()
       .inCollection("updatecollectionwithoptions")
       .withQuery(new JsonObject().put("test", "testUpdateCollectionWithOptions"))
@@ -139,28 +148,27 @@ public class UpdateCollectionWithOptionsTest extends TestBase {
       .returns(new MongoClientUpdateResult(22, null, 24));
 
     db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
-      new JsonObject().put("test", "testUpdateCollectionWithOptions"),
-      new JsonArray().add(new JsonObject().put("foo", "bar")),
-      new UpdateOptions().setUpsert(true))
-      .subscribe(r -> {
+        new JsonObject().put("test", "testUpdateCollectionWithOptions"),
+        new JsonArray().add(new JsonObject().put("foo", "bar")),
+        new UpdateOptions().setUpsert(true)
+      )
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> {
         ctx.assertEquals(22L, r.getDocMatched());
         ctx.assertEquals(24L, r.getDocModified());
-        async.complete();
-      }, ctx::fail);
+      })));
   }
 
   @Test
   public void testUpdateCollectionWithOptionsAggregationPipelineFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
       new JsonObject().put("test", "testUpdateCollectionWithOptionsAggregationPipelineFile"),
       new JsonArray().add(new JsonObject().put("foo", "bar")),
-      new UpdateOptions().setMulti(true))
-      .subscribe(r -> {
+      new UpdateOptions().setMulti(true)
+    )
+    .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> {
         ctx.assertEquals(46L, r.getDocMatched());
         ctx.assertEquals(17L, r.getDocModified());
-        async.complete();
-      }, ctx::fail);
+      })));
   }
 
   @Test
@@ -176,13 +184,11 @@ public class UpdateCollectionWithOptionsTest extends TestBase {
         new JsonObject().put("foo", "bar"),
         new UpdateOptions().setMulti(true)
       )
-      .doOnError(cause -> {
-        ctx.assertTrue(cause instanceof MongoCommandException);
-        final MongoCommandException actual = (MongoCommandException) cause;
-        ctx.assertEquals("E11000 duplicate key error", actual.getErrorMessage());
-        ctx.assertEquals(11000, actual.getErrorCode());
-        ctx.assertEquals("DuplicateKey", actual.getErrorCodeName());
-      })
+      .doOnError(assertMongoException(ctx, MongoCommandException.class, mce -> {
+        ctx.assertEquals("E11000 duplicate key error", mce.getErrorMessage());
+        ctx.assertEquals(11000, mce.getErrorCode());
+        ctx.assertEquals("DuplicateKey", mce.getErrorCodeName());
+      }))
       .ignoreElement()
       .subscribe(CompletableHelper.toObserver(ctx.asyncAssertFailure()));
   }

@@ -5,12 +5,13 @@
   },
   "key": {
     "equalTo": {
-      "test": "testCreateIndexWithOptionsFile"
+      "test": "testCreateIndexWithOptionsAndCollationFile"
     }
   },
   "options": {
     "equalTo": {
-      "name": "testIndex"
+      "name": "testIndex",
+      "collation": {}
     }
   },
   "response": null

@@ -13,7 +13,8 @@
       "background": false,
       "unique": false,
       "sparse": false,
-      "name": "testIndex"
+      "name": "testIndex",
+      "collation": {}
     }
   },
   "response": null

@@ -4,10 +4,7 @@ import com.mongodb.MongoBulkWriteException;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.mongo.BulkOperation;
-import io.vertx.ext.mongo.BulkWriteOptions;
-import io.vertx.ext.mongo.MongoClientBulkWriteResult;
-import io.vertx.ext.mongo.WriteOption;
+import io.vertx.ext.mongo.*;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -26,14 +23,23 @@ public class BulkWriteWithOptionsTest extends TestBase {
   public void testBulkWriteWithOptions(TestContext ctx) {
     Async async = ctx.async();
 
+    BulkOperation operationWithCollation = BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"));
+    operationWithCollation.setCollation(new CollationOptions().setLocale("de_AT").setStrength(3));
+
     mock.bulkWriteWithOptions()
       .inCollection("bulkwritewithoptions")
-      .withOperations(Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))))
+      .withOperations(Arrays.asList(
+        BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions")),
+        operationWithCollation
+      ))
       .withOptions(new BulkWriteOptions().setOrdered(false))
       .returns(new MongoClientBulkWriteResult(0, 24, 0, 0, null));
 
     db.rxBulkWriteWithOptions("bulkwritewithoptions",
-      Arrays.asList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"))),
+      Arrays.asList(
+        BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions")),
+        operationWithCollation
+      ),
       new BulkWriteOptions().setOrdered(false))
       .subscribe(r -> {
         ctx.assertEquals(24L, r.getMatchedCount());

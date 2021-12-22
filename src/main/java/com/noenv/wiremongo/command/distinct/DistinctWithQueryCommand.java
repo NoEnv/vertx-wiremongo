@@ -35,6 +35,6 @@ public class DistinctWithQueryCommand extends WithQueryCommand {
 
   @Override
   public String toString() {
-    return super.toString() + ", fieldName: " + fieldName + ", resultClassname: " + resultClassname;
+    return super.toString() + ", fieldName: " + fieldName + ", resultClassname: " + resultClassname + ", options: " + (options != null ? options.toJson().encode() : "null");
   }
 }

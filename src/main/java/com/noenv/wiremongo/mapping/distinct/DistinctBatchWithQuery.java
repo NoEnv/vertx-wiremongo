@@ -4,7 +4,6 @@ import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.distinct.DistinctBatchWithQueryCommand;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.mongo.DistinctOptions;
 
 import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
@@ -38,7 +37,8 @@ public class DistinctBatchWithQuery extends DistinctBatchBase<DistinctBatchWithQ
     }
     DistinctBatchWithQueryCommand c = (DistinctBatchWithQueryCommand) cmd;
     return (query == null || query.matches(c.getQuery()))
-      && (batchSize == null || batchSize.matches(c.getBatchSize()));
+      && (batchSize == null || batchSize.matches(c.getBatchSize()))
+      && (options == null || options.matches(c.getOptions()));
   }
 
   public DistinctBatchWithQuery withQuery(JsonObject query) {
@@ -49,5 +49,4 @@ public class DistinctBatchWithQuery extends DistinctBatchBase<DistinctBatchWithQ
     this.query = query;
     return self();
   }
-
 }

@@ -48,4 +48,13 @@ public class DistinctBatchWithQuery extends DistinctBatchBase<DistinctBatchWithQ
     this.query = query;
     return self();
   }
+
+  public DistinctBatchWithQuery withBatchSize(Integer batchSize) {
+    return withBatchSize(equalTo(batchSize));
+  }
+
+  public DistinctBatchWithQuery withBatchSize(Matcher<Integer> batchSize) {
+    this.batchSize = batchSize;
+    return self();
+  }
 }

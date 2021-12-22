@@ -11,19 +11,7 @@
   "options": {
     "equalTo": {
       "collation": {
-        "alternate": null,
-        "backwards": false,
-        "caseFirst": "off",
-        "caseLevel": false,
-        "locale": "de_AT",
-        "maxVariable": "punct",
-        "normalization": false,
-        "numericOrdering": false,
-        "strength": 3
-      },
-      "limit": 0,
-      "maxTime": 0,
-      "skip": 0
+      }
     }
   },
   "response": 26

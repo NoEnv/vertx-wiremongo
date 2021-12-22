@@ -12,8 +12,6 @@ import io.vertx.ext.mongo.IndexModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
-
 public class CreateIndexes extends WithCollection<Void, CreateIndexesCommand, CreateIndexes> {
 
   private Matcher<List<IndexModel>> indexModels;

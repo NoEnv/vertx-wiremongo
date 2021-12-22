@@ -4,56 +4,60 @@ import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.SingleHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 @RunWith(VertxUnitRunner.class)
 public class FindWithOptionsTest extends TestBase {
 
   @Test
   public void testFindWithOptions(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.findWithOptions()
       .inCollection("findwithoptions")
       .withQuery(new JsonObject().put("test", "testFindWithOptions"))
       .withOptions(new FindOptions().setLimit(42))
-      .returns(Arrays.asList(new JsonObject().put("field1", "value1")));
+      .returns(Collections.singletonList(new JsonObject().put("field1", "value1")));
 
     db.rxFindWithOptions("findwithoptions", new JsonObject().put("test", "testFindWithOptions"), new FindOptions().setLimit(42))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.get(0).getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.get(0).getString("field1"))
+      )));
+  }
+
+  @Test
+  public void testFindWithOptionsError(TestContext ctx) {
+
+    mock.findWithOptions()
+      .inCollection("findwithoptions")
+      .withQuery(new JsonObject().put("test", "testFindWithOptionsError"))
+      .withOptions(new FindOptions().setLimit(42))
+      .returnsError(new Exception("intentional"));
+
+    db.rxFindWithOptions("findwithoptions", new JsonObject().put("test", "testFindWithOptionsFileError"), new FindOptions().setSkip(42))
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
   public void testFindWithOptionsFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindWithOptions("findwithoptions", new JsonObject().put("test", "testFindWithOptionsFile"), new FindOptions().setSkip(42))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.get(0).getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.get(0).getString("field1"))
+      )));
   }
 
   @Test
   public void testFindWithOptionsFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindWithOptions("findwithoptions", new JsonObject().put("test", "testFindWithOptionsFileError"), new FindOptions().setSkip(42))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test

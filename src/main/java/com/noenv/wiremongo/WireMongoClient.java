@@ -45,6 +45,7 @@ import java.util.List;
 
 public class WireMongoClient implements MongoClient {
 
+  public static final String NOT_IMPLEMENTED = "not implemented";
   private static WireMongoClient instance;
   private WireMongo wireMongo;
 
@@ -492,7 +493,7 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
-  public MongoClient distinct(String collection, String fieldName, String resultClassname, Handler<AsyncResult<JsonArray>> handler, DistinctOptions distinctOptions) {
+  public MongoClient distinct(String collection, String fieldName, String resultClassname, DistinctOptions distinctOptions, Handler<AsyncResult<JsonArray>> handler) {
     distinct(collection, fieldName, resultClassname, distinctOptions).onComplete(handler);
     return this;
   }
@@ -514,7 +515,7 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
-  public MongoClient distinctWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, Handler<AsyncResult<JsonArray>> handler, DistinctOptions distinctOptions) {
+  public MongoClient distinctWithQuery(String collection, String fieldName, String resultClassname, JsonObject query, DistinctOptions distinctOptions, Handler<AsyncResult<JsonArray>> handler) {
     distinctWithQuery(collection, fieldName, resultClassname, query, distinctOptions).onComplete(handler);
     return this;
   }
@@ -577,7 +578,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public Future<MongoGridFsClient> createDefaultGridFsBucketService() {
-    throw new UnsupportedOperationException("not implemented");
+    throw new UnsupportedOperationException(NOT_IMPLEMENTED);
   }
 
   @Override
@@ -588,12 +589,12 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public Future<MongoGridFsClient> createGridFsBucketService(String s) {
-    throw new UnsupportedOperationException("not implemented");
+    throw new UnsupportedOperationException(NOT_IMPLEMENTED);
   }
 
   @Override
   public ReadStream<ChangeStreamDocument<JsonObject>> watch(String s, JsonArray jsonArray, boolean b, int i) {
-    throw new UnsupportedOperationException("not implemented");
+    throw new UnsupportedOperationException(NOT_IMPLEMENTED);
   }
 
   @Override

@@ -6,9 +6,6 @@ import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.BulkWriteOptions;
-import io.vertx.ext.mongo.CreateCollectionOptions;
-
-import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 public class BulkWriteWithOptions extends BulkWriteBase<BulkWriteWithOptionsCommand, BulkWriteWithOptions> {
 

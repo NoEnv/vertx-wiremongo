@@ -28,7 +28,7 @@ public class FindBatchTest extends TestBase {
       .handler(r -> {
         ctx.assertEquals("value1", r.getString("field1"));
         async.complete();
-      });
+      }).exceptionHandler(ctx::fail);
   }
 
   @Test
@@ -41,10 +41,8 @@ public class FindBatchTest extends TestBase {
       .returnsError(new Exception("intentional"));
 
     db.findBatch("findbatch", new JsonObject().put("test", "testFindBatchError"))
-      .exceptionHandler(ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
   }
 
   @Test
@@ -54,23 +52,20 @@ public class FindBatchTest extends TestBase {
       .handler(r -> {
         ctx.assertEquals("value1", r.getString("field1"));
         async.countDown();
-      });
+      }).exceptionHandler(ctx::fail);
   }
 
   @Test
   public void testFindBatchFileError(TestContext ctx) {
     Async async = ctx.async();
     db.findBatch("findbatch", new JsonObject().put("test", "testFindBatchFileError"))
-      .exceptionHandler(ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .handler(r -> ctx.fail("should fail"))
+      .exceptionHandler(assertHandleIntentionalError(ctx, "intentional", async));
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testFindBatchReturnedObjectNotModified(TestContext ctx) {
-    final Async async = ctx.async(1 * 2);
+    final Async async = ctx.async(2);
     final JsonObject given = new JsonObject()
       .put("field1", "value1")
       .put("field2", "value2")
@@ -90,9 +85,9 @@ public class FindBatchTest extends TestBase {
       .returns(MemoryStream.of(given));
 
     Flowable.mergeArray(
-      db.findBatch("findbatch", new JsonObject().put("test", "testFindBatch")).toFlowable(),
-      db.findBatch("findbatch", new JsonObject().put("test", "testFindBatch")).toFlowable()
-    )
+        db.findBatch("findbatch", new JsonObject().put("test", "testFindBatch")).toFlowable(),
+        db.findBatch("findbatch", new JsonObject().put("test", "testFindBatch")).toFlowable()
+      )
       .doOnNext(actual -> async.countDown())
       .doOnNext(actual -> ctx.assertEquals(expected, actual))
       .doOnNext(actual -> {
@@ -110,15 +105,14 @@ public class FindBatchTest extends TestBase {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testFindBatchFileReturnedObjectNotModified(TestContext ctx) {
     final Async async = ctx.async(3 * 2);
     final JsonObject expected = new JsonObject().put("field1", "value1");
 
     Flowable.mergeArray(
-      db.findBatch("findbatch", new JsonObject().put("test", "testFindBatchFile")).toFlowable(),
-      db.findBatch("findbatch", new JsonObject().put("test", "testFindBatchFile")).toFlowable()
-    )
+        db.findBatch("findbatch", new JsonObject().put("test", "testFindBatchFile")).toFlowable(),
+        db.findBatch("findbatch", new JsonObject().put("test", "testFindBatchFile")).toFlowable()
+      )
       .doOnNext(actual -> async.countDown())
       .doOnNext(actual -> ctx.assertEquals(expected, actual))
       .doOnNext(actual -> {

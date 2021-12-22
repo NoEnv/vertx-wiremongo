@@ -6,10 +6,7 @@ import com.noenv.wiremongo.command.find.FindBatchWithOptionsCommand;
 import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.mongo.CreateCollectionOptions;
 import io.vertx.ext.mongo.FindOptions;
-
-import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")

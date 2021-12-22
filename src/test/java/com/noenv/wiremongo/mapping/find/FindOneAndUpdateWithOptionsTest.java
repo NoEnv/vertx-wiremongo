@@ -3,30 +3,26 @@ package com.noenv.wiremongo.mapping.find;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.CollationOptions;
 import io.vertx.ext.mongo.FindOptions;
 import io.vertx.ext.mongo.UpdateOptions;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 @RunWith(VertxUnitRunner.class)
 public class FindOneAndUpdateWithOptionsTest extends TestBase {
 
   @Test
   public void testFindOneAndUpdateWithOptions(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.findOneAndUpdateWithOptions()
       .inCollection("findoneandupdatewithoptions")
       .withQuery(new JsonObject().put("test", "testFindOneAndUpdateWithOptions"))
       .withFindOptions(new FindOptions().setSkip(42))
-      .withUpdateOptions(new UpdateOptions().setReturningNewDocument(true))
+      .withUpdateOptions(new UpdateOptions().setReturningNewDocument(true).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1)))
       .withUpdate(new JsonObject().put("foo", "bar"))
       .returns(new JsonObject().put("field1", "value1"));
 
@@ -34,39 +30,34 @@ public class FindOneAndUpdateWithOptionsTest extends TestBase {
         new JsonObject().put("test", "testFindOneAndUpdateWithOptions"),
         new JsonObject().put("foo", "bar"),
         new FindOptions().setSkip(42),
-        new UpdateOptions().setReturningNewDocument(true))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+        new UpdateOptions().setReturningNewDocument(true).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1)))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndUpdateWithOptionsFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndUpdateWithOptions("findoneandupdatewithoptions",
         new JsonObject().put("test", "testFindOneAndUpdateWithOptionsFile"),
         new JsonObject().put("foo", "bar"),
         new FindOptions().setSkip(42),
-        new UpdateOptions().setMulti(true))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+        new UpdateOptions().setMulti(true)
+      )
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndUpdateWithOptionsFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndUpdateWithOptions("findoneandupdatewithoptions",
         new JsonObject().put("test", "testFindOneAndUpdateWithOptionsError"),
         new JsonObject().put("foo", "bar"),
         new FindOptions().setSkip(42),
         new UpdateOptions().setMulti(true))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
@@ -93,10 +84,10 @@ public class FindOneAndUpdateWithOptionsTest extends TestBase {
       .returns(given);
 
     db.rxFindOneAndUpdateWithOptions("findoneandupdatewithoptions",
-      new JsonObject().put("test", "testFindOneAndUpdateWithOptions"),
-      new JsonObject().put("foo", "bar"),
-      new FindOptions().setSkip(42),
-      new UpdateOptions().setReturningNewDocument(true))
+        new JsonObject().put("test", "testFindOneAndUpdateWithOptions"),
+        new JsonObject().put("foo", "bar"),
+        new FindOptions().setSkip(42),
+        new UpdateOptions().setReturningNewDocument(true))
       .doOnSuccess(actual -> ctx.assertEquals(expected, actual))
       .doOnSuccess(actual -> {
         actual.put("field1", "replace");
@@ -118,10 +109,10 @@ public class FindOneAndUpdateWithOptionsTest extends TestBase {
     final JsonObject expected = new JsonObject().put("field1", "value1");
 
     db.rxFindOneAndUpdateWithOptions("findoneandupdatewithoptions",
-      new JsonObject().put("test", "testFindOneAndUpdateWithOptionsFile"),
-      new JsonObject().put("foo", "bar"),
-      new FindOptions().setSkip(42),
-      new UpdateOptions().setMulti(true))
+        new JsonObject().put("test", "testFindOneAndUpdateWithOptionsFile"),
+        new JsonObject().put("foo", "bar"),
+        new FindOptions().setSkip(42),
+        new UpdateOptions().setMulti(true))
       .doOnSuccess(actual -> ctx.assertEquals(expected, actual))
       .doOnSuccess(actual -> {
         actual.put("field1", "replace");

@@ -3,52 +3,37 @@ package com.noenv.wiremongo.mapping;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 @RunWith(VertxUnitRunner.class)
 public class RunCommandTest extends TestBase {
 
   @Test
   public void testRunCommand(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.runCommand()
       .withCommand("ping", new JsonObject().put("ping", 1))
       .returns(new JsonObject().put("ok", 1));
 
     db.rxRunCommand("ping", new JsonObject().put("ping", 1))
-      .subscribe(r -> {
-        ctx.assertEquals(1, r.getInteger("ok"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> ctx.assertEquals(1, r.getInteger("ok")))));
   }
 
   @Test
   public void testRunCommandFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxRunCommand("ping", new JsonObject().put("pingFile", 1))
-      .subscribe(r -> {
-        ctx.assertEquals(1, r.getInteger("ok"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> ctx.assertEquals(1, r.getInteger("ok")))));
   }
 
   @Test
   public void testRunCommandFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxRunCommand("ping", new JsonObject().put("pingFile", 1).put("fail", true))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test

@@ -3,23 +3,18 @@ package com.noenv.wiremongo.mapping.find;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.MaybeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 @RunWith(VertxUnitRunner.class)
 public class FindOneAndUpdateTest extends TestBase {
 
   @Test
   public void testFindOneAndUpdate(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.findOneAndUpdate()
       .inCollection("findoneandupdate")
       .withQuery(new JsonObject().put("test", "testFindOneAndUpdate"))
@@ -27,30 +22,24 @@ public class FindOneAndUpdateTest extends TestBase {
       .returns(new JsonObject().put("field1", "value1"));
 
     db.rxFindOneAndUpdate("findoneandupdate", new JsonObject().put("test", "testFindOneAndUpdate"), new JsonObject().put("foo", "bar"))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndUpdateFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndUpdate("findoneandupdate", new JsonObject().put("test", "testFindOneAndUpdateFile"), new JsonObject().put("foo", "bar"))
-      .subscribe(r -> {
-        ctx.assertEquals("value1", r.getString("field1"));
-        async.complete();
-      }, ctx::fail);
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
+        ctx.assertEquals("value1", r.getString("field1"))
+      )));
   }
 
   @Test
   public void testFindOneAndUpdateFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxFindOneAndUpdate("findoneandupdate", new JsonObject().put("test", "testFindOneAndUpdateFileError"), new JsonObject().put("foo", "bar"))
-      .subscribe(r -> ctx.fail(), ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test

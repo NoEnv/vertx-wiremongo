@@ -71,7 +71,7 @@ public class DistinctWithQuery extends WithQuery<JsonArray, DistinctWithQueryCom
   }
 
   public DistinctWithQuery withOptions(DistinctOptions options) {
-    return withOptions(JsonMatcher.equalToJson(options.toJson(),DistinctOptions::toJson));
+    return withOptions(JsonMatcher.equalToJson(options.toJson(), DistinctOptions::toJson));
   }
 
   public DistinctWithQuery withOptions(Matcher<DistinctOptions> options) {

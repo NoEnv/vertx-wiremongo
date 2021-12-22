@@ -1,13 +1,11 @@
 package com.noenv.wiremongo.mapping.collection;
 
 import com.noenv.wiremongo.TestBase;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.CollationOptions;
 import io.vertx.ext.mongo.CreateCollectionOptions;
-import io.vertx.ext.mongo.DistinctOptions;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.rxjava3.CompletableHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -16,89 +14,83 @@ public class CreateCollectionTest extends TestBase {
 
   @Test
   public void testCreateCollection(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.createCollection()
       .inCollection("createcollection")
       .returns(null);
 
     db.rxCreateCollection("createcollection")
-      .subscribe(async::complete, ctx::fail);
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
 
   @Test
   public void testCreateCollectionWithOptions(TestContext ctx) {
-    Async async = ctx.async();
-
-    // TODO: remove setAlternate after vertx 4.3.0 release
     mock.createCollectionWithOptions()
       .inCollection("createcollectionwithoptions")
-      .withOptions(new CreateCollectionOptions().setCollation(new CollationOptions().setAlternate(null)))
+      .withOptions(new CreateCollectionOptions().setCollation(new CollationOptions()))
       .returns(null);
 
     db.rxCreateCollectionWithOptions("createcollectionwithoptions",
-      new CreateCollectionOptions().setCollation(new CollationOptions().setAlternate(null))
-    )
-    .subscribe(async::complete, ctx::fail);
+      new CreateCollectionOptions().setCollation(new CollationOptions())
+    ).subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
 
   @Test
   public void testCreateCollectionFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxCreateCollection("createcollectionfile")
-      .subscribe(async::complete, ctx::fail);
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
 
   @Test
   public void testCreateCollectionWithOptionsFile(TestContext ctx) {
-    Async async = ctx.async();
     db.rxCreateCollectionWithOptions("createcollectionwithoptionsfile", new CreateCollectionOptions())
-    .subscribe(async::complete, ctx::fail);
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
 
   @Test
   public void testCreateCollectionFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxCreateCollection("createcollectionfileerror")
-      .subscribe(ctx::fail, ex -> {
-        ctx.assertEquals("intentional", ex.getMessage());
-        async.complete();
-      });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertFailure()));
+  }
+
+  @Test
+  public void testCreateCollectionWithOptionsError(TestContext ctx) {
+    mock.createCollectionWithOptions()
+      .inCollection("createcollectionwithoptionserror")
+      .withOptions(new CreateCollectionOptions().setCollation(new CollationOptions()))
+      .returnsError(new Exception("intentional"));
+    db.rxCreateCollectionWithOptions("createcollectionwithoptionserror", new CreateCollectionOptions().setCollation(new CollationOptions()))
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
   public void testCreateCollectionWithOptionsFileError(TestContext ctx) {
-    Async async = ctx.async();
     db.rxCreateCollectionWithOptions("createcollectionwithoptionsfileerror", new CreateCollectionOptions())
-    .subscribe(ctx::fail, ex -> {
-      ctx.assertEquals("intentional", ex.getMessage());
-      async.complete();
-    });
+      .doOnError(assertIntentionalError(ctx, "intentional"))
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
   public void testCreateCollectionWithOptionsMatch(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.createCollectionWithOptions()
       .inCollection("testCreateCollectionWithOptionsMatch")
       .withOptions(new CreateCollectionOptions().setCollation(new CollationOptions().setLocale("no-way")))
       .returns(null);
 
     db.rxCreateCollectionWithOptions("testCreateCollectionWithOptionsMatch", new CreateCollectionOptions().setCollation(new CollationOptions().setLocale("no-way")))
-      .subscribe(async::complete, ctx::fail);
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
   }
 
   @Test
   public void testCreateCollectionWithOptionsNoMatch(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.createCollectionWithOptions()
       .inCollection("testCreateCollectionWithOptionsNoMatch")
       .withOptions(new CreateCollectionOptions().setCollation(new CollationOptions().setLocale("no-wy")))
       .returns(null);
 
     db.rxCreateCollectionWithOptions("testCreateCollectionWithOptionsNoMatch", new CreateCollectionOptions().setCollation(new CollationOptions().setLocale("no-way")))
-      .subscribe(() -> ctx.fail("should fail"), e -> async.complete());
+      .doOnError(assertNoMappingFoundError(ctx))
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertFailure()));
   }
 }

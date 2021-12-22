@@ -1,0 +1,25 @@
+{
+  "method": "distinctWithQuery",
+  "collection": {
+    "equalTo": "distinctWithQueryWithOptions"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctWithQueryWithOptionsFile"
+  },
+  "resultClassname": {
+    "equalTo": "java.lang.String"
+  },
+  "query": {
+    "equalTo": {
+      "foo": "bar"
+    }
+  },
+  "options": {
+    "equalTo": {
+      "collation": {
+        "locale": "no-way"
+      }
+    }
+  },
+  "response": ["A", "B", "C"]
+}

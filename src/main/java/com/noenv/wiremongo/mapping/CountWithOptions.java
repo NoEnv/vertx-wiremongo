@@ -6,9 +6,6 @@ import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.CountOptions;
-import io.vertx.ext.mongo.CreateCollectionOptions;
-
-import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 public class CountWithOptions extends WithQuery<Long, CountWithOptionsCommand, CountWithOptions> {
 

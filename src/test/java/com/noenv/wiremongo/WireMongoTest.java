@@ -4,9 +4,10 @@ import com.mongodb.MongoSocketOpenException;
 import com.mongodb.MongoTimeoutException;
 import com.mongodb.MongoWriteException;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.rxjava3.MaybeHelper;
+import io.vertx.rxjava3.SingleHelper;
 import io.vertx.rxjava3.core.Vertx;
 import io.vertx.rxjava3.ext.mongo.MongoClient;
 import org.junit.After;
@@ -14,10 +15,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static com.noenv.wiremongo.TestBase.assertMongoException;
+
 @RunWith(VertxUnitRunner.class)
 public class WireMongoTest {
 
-  private JsonObject config = new JsonObject()
+  private final JsonObject config = new JsonObject()
     .put("class", WireMongoClient.class.getName());
   private MongoClient db;
   private com.noenv.rxjava3.wiremongo.WireMongo mock;
@@ -36,62 +39,47 @@ public class WireMongoTest {
 
   @Test
   public void testDuplicate(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.insert()
       .inCollection("foobar")
       .returnsDuplicateKeyError();
 
     db.rxInsert("foobar", new JsonObject())
-      .subscribe(x -> ctx.fail(), ex -> {
-        ctx.assertTrue(ex instanceof MongoWriteException);
-        ctx.assertEquals(11000, ((MongoWriteException)ex).getCode());
-        async.complete();
-      });
+      .doOnError(assertMongoException(ctx, MongoWriteException.class, t -> ctx.assertEquals(11000, t.getCode())))
+      .subscribe(MaybeHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
   public void testConnectionError(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.find()
       .inCollection("foobar")
       .returnsConnectionException();
 
     db.rxFind("foobar", new JsonObject())
-      .subscribe(x -> ctx.fail(), ex -> {
-        ctx.assertTrue(ex instanceof MongoSocketOpenException);
-        async.complete();
-      });
+      .doOnError(assertMongoException(ctx, MongoSocketOpenException.class))
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
   public void testTimeout(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.find()
       .inCollection("foobar")
       .returnsTimeoutException();
 
     db.rxFind("foobar", new JsonObject())
-      .subscribe(x -> ctx.fail(), ex -> {
-        ctx.assertTrue(ex instanceof MongoTimeoutException);
-        async.complete();
-      });
+      .doOnError(assertMongoException(ctx, MongoTimeoutException.class))
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertFailure()));
   }
 
   @Test
   public void testMatchError(TestContext ctx) {
-    Async async = ctx.async();
-
     mock.find()
       .withQuery(j -> {
-        throw new RuntimeException("intentional");
+        throw new RuntimeException("intentional runtime exception");
       })
       .returnsConnectionException();
 
     db.rxFind("foobar", new JsonObject())
-      .doOnError(ex -> ctx.assertTrue(ex.getMessage().startsWith("no mapping found")))
-      .subscribe(x -> ctx.fail(), ex -> async.complete());
+      .doOnError(TestBase.assertNoMappingFoundError(ctx))
+      .subscribe(SingleHelper.toObserver(ctx.asyncAssertFailure()));
   }
 }

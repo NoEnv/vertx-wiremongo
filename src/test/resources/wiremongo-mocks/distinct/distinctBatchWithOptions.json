@@ -1,0 +1,27 @@
+{
+  "method": "distinctBatch",
+  "collection": {
+    "equalTo": "testDistinctBatchWithOptions"
+  },
+  "fieldName": {
+    "equalTo": "testDistinctBatchWithOptionsFile"
+  },
+  "resultClassname": {
+    "equalTo": "io.vertx.core.json.JsonObject"
+  },
+  "options": {
+    "equalTo": {
+      "collation": {
+        "locale": "de_AT"
+      }
+    }
+  },
+  "response": [
+    {
+      "field1": "value1"
+    },
+    {
+      "field2": "value2"
+    }
+  ]
+}

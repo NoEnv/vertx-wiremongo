@@ -6,9 +6,6 @@ import com.noenv.wiremongo.matching.JsonMatcher;
 import com.noenv.wiremongo.matching.Matcher;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.AggregateOptions;
-import io.vertx.ext.mongo.CreateCollectionOptions;
-
-import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class AggregateWithOptions extends AggregateBase<AggregateWithOptionsCommand, AggregateWithOptions> {

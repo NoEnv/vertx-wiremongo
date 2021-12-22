@@ -10,8 +10,7 @@
           "foo": 1
         },
         "options": {
-          "name": "testCreateIndexesFile",
-          "collation": {}
+          "name": "testCreateIndexesFile"
         }
       }
     ]

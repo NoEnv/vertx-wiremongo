@@ -111,6 +111,12 @@ public class JsonMatcher<T> implements Matcher<T> {
 
   @Override
   public boolean matches(T other) {
+    if (value == null && other == null) {
+      return true;
+    }
+    if (value == null || other == null) {
+      return false;
+    }
     return matchInternal(value, toJson.apply(other));
   }
 

@@ -1,5 +1,5 @@
 {
-  "method": "updateCollection",
+  "method": "updateCollectionAggregationPipeline",
   "collection": {
     "equalTo": "updatecollection"
   },

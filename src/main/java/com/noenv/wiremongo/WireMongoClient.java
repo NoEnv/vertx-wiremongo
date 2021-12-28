@@ -13,7 +13,10 @@ import com.noenv.wiremongo.command.collection.CreateCollectionCommand;
 import com.noenv.wiremongo.command.collection.CreateCollectionWithOptionsCommand;
 import com.noenv.wiremongo.command.collection.DropCollectionCommand;
 import com.noenv.wiremongo.command.collection.GetCollectionsCommand;
-import com.noenv.wiremongo.command.distinct.*;
+import com.noenv.wiremongo.command.distinct.DistinctBatchBaseCommand;
+import com.noenv.wiremongo.command.distinct.DistinctBatchWithQueryCommand;
+import com.noenv.wiremongo.command.distinct.DistinctCommand;
+import com.noenv.wiremongo.command.distinct.DistinctWithQueryCommand;
 import com.noenv.wiremongo.command.find.*;
 import com.noenv.wiremongo.command.index.*;
 import com.noenv.wiremongo.command.insert.InsertBaseCommand;
@@ -128,7 +131,7 @@ public class WireMongoClient implements MongoClient {
 
   @Override
   public Future<MongoClientUpdateResult> updateCollection(String collection, JsonObject query, JsonArray update) {
-    return call(new UpdateCollectionBaseCommand<>(collection, query, update));
+    return call(new UpdateCollectionBaseCommand<>("updateCollectionAggregationPipeline", collection, query, update));
   }
 
   @Override
@@ -143,14 +146,14 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
-  public MongoClient updateCollectionWithOptions(String collection, JsonObject query, JsonArray update, UpdateOptions updateOptions, Handler<AsyncResult<MongoClientUpdateResult>> handler) {
-    updateCollectionWithOptions(collection, query, update, updateOptions).onComplete(handler);
+  public MongoClient updateCollectionWithOptions(String collection, JsonObject query, JsonArray update, UpdateOptions options, Handler<AsyncResult<MongoClientUpdateResult>> handler) {
+    updateCollectionWithOptions(collection, query, update, options).onComplete(handler);
     return this;
   }
 
   @Override
-  public Future<MongoClientUpdateResult> updateCollectionWithOptions(String collection, JsonObject query, JsonArray update, UpdateOptions updateOptions) {
-    return call(new UpdateCollectionWithOptionsCommand<>(collection, query, update, updateOptions));
+  public Future<MongoClientUpdateResult> updateCollectionWithOptions(String collection, JsonObject query, JsonArray update, UpdateOptions options) {
+    return call(new UpdateCollectionWithOptionsCommand<>("updateCollectionWithOptionsAggregationPipeline", collection, query, update, options));
   }
 
   @Override

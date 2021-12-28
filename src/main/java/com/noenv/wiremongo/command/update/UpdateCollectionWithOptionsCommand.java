@@ -9,7 +9,11 @@ public class UpdateCollectionWithOptionsCommand<T> extends UpdateCollectionBaseC
   private final UpdateOptions options;
 
   public UpdateCollectionWithOptionsCommand(String collection, JsonObject query, T update, UpdateOptions options) {
-    super("updateCollectionWithOptions", collection, query, update);
+    this("updateCollectionWithOptions", collection, query, update, options);
+  }
+
+  public UpdateCollectionWithOptionsCommand(String method, String collection, JsonObject query, T update, UpdateOptions options) {
+    super(method, collection, query, update);
     this.options = options;
   }
 

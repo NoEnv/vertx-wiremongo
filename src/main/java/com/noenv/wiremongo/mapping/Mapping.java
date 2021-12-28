@@ -106,9 +106,11 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
         case "saveWithOptions":
           return new SaveWithOptions(json);
         case "updateCollection":
-          return new UpdateCollection(json);
+        case "updateCollectionAggregationPipeline":
+          return new UpdateCollection<>(json);
         case "updateCollectionWithOptions":
-          return new UpdateCollectionWithOptions(json);
+        case "updateCollectionWithOptionsAggregationPipeline":
+          return new UpdateCollectionWithOptions<>(json);
         case "find":
           return new Find(json);
         case "findWithOptions":

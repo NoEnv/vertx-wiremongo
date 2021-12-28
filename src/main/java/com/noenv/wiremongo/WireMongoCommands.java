@@ -57,7 +57,7 @@ public interface WireMongoCommands {
   }
 
   default UpdateCollection<JsonArray> updateCollectionAggregationPipeline() {
-    return addMapping(new UpdateCollection<>());
+    return addMapping(new UpdateCollection<>("updateCollectionAggregationPipeline"));
   }
 
   default UpdateCollectionWithOptions<JsonObject> updateCollectionWithOptions() {
@@ -65,7 +65,7 @@ public interface WireMongoCommands {
   }
 
   default UpdateCollectionWithOptions<JsonArray> updateCollectionWithOptionsAggregationPipeline() {
-    return addMapping(new UpdateCollectionWithOptions<>());
+    return addMapping(new UpdateCollectionWithOptions<>("updateCollectionWithOptionsAggregationPipeline"));
   }
 
   default Find find() {

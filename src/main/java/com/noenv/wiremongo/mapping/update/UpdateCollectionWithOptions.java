@@ -8,8 +8,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClientUpdateResult;
 import io.vertx.ext.mongo.UpdateOptions;
 
-import static com.noenv.wiremongo.matching.EqualsMatcher.equalTo;
-
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class UpdateCollectionWithOptions<T> extends UpdateCollectionBase<T, UpdateCollectionWithOptionsCommand<T>, UpdateCollectionWithOptions<T>> {
 
@@ -17,6 +15,10 @@ public class UpdateCollectionWithOptions<T> extends UpdateCollectionBase<T, Upda
 
   public UpdateCollectionWithOptions() {
     super("updateCollectionWithOptions");
+  }
+
+  public UpdateCollectionWithOptions(String method) {
+    super(method);
   }
 
   public UpdateCollectionWithOptions(JsonObject json) {

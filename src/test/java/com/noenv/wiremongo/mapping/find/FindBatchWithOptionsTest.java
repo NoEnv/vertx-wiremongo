@@ -1,5 +1,6 @@
 package com.noenv.wiremongo.mapping.find;
 
+import com.mongodb.client.model.CollationStrength;
 import com.noenv.wiremongo.MemoryStream;
 import com.noenv.wiremongo.TestBase;
 import io.reactivex.rxjava3.core.Flowable;
@@ -24,11 +25,11 @@ public class FindBatchWithOptionsTest extends TestBase {
     mock.findBatchWithOptions()
       .inCollection("findbatchwithoptions")
       .withQuery(new JsonObject().put("test", "testFindBatchWithOptions"))
-      .withOptions(new FindOptions().setLimit(17).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1)))
+      .withOptions(new FindOptions().setLimit(17).setCollation(new CollationOptions().setLocale("de_AT").setStrength(CollationStrength.PRIMARY)))
       .returns(MemoryStream.of(new JsonObject().put("field1", "value1")));
 
     db.findBatchWithOptions("findbatchwithoptions", new JsonObject().put("test", "testFindBatchWithOptions"),
-        new FindOptions().setLimit(17).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1))
+        new FindOptions().setLimit(17).setCollation(new CollationOptions().setLocale("de_AT").setStrength(CollationStrength.PRIMARY))
       )
       .handler(r -> {
         ctx.assertEquals("value1", r.getString("field1"));

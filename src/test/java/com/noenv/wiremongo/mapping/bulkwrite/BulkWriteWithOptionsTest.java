@@ -1,6 +1,7 @@
 package com.noenv.wiremongo.mapping.bulkwrite;
 
 import com.mongodb.MongoBulkWriteException;
+import com.mongodb.client.model.CollationStrength;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -22,7 +23,7 @@ public class BulkWriteWithOptionsTest extends TestBase {
   @Test
   public void testBulkWriteWithOptions(TestContext ctx) {
     BulkOperation operationWithCollation = BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptions"));
-    operationWithCollation.setCollation(new CollationOptions().setLocale("de_AT").setStrength(3));
+    operationWithCollation.setCollation(new CollationOptions().setLocale("de_AT").setStrength(CollationStrength.TERTIARY));
 
     mock.bulkWriteWithOptions()
       .inCollection("bulkwritewithoptions")

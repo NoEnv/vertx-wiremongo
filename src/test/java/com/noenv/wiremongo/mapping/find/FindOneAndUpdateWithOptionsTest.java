@@ -1,5 +1,6 @@
 package com.noenv.wiremongo.mapping.find;
 
+import com.mongodb.client.model.CollationStrength;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -22,7 +23,7 @@ public class FindOneAndUpdateWithOptionsTest extends TestBase {
       .inCollection("findoneandupdatewithoptions")
       .withQuery(new JsonObject().put("test", "testFindOneAndUpdateWithOptions"))
       .withFindOptions(new FindOptions().setSkip(42))
-      .withUpdateOptions(new UpdateOptions().setReturningNewDocument(true).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1)))
+      .withUpdateOptions(new UpdateOptions().setReturningNewDocument(true).setCollation(new CollationOptions().setLocale("de_AT").setStrength(CollationStrength.PRIMARY)))
       .withUpdate(new JsonObject().put("foo", "bar"))
       .returns(new JsonObject().put("field1", "value1"));
 
@@ -30,7 +31,7 @@ public class FindOneAndUpdateWithOptionsTest extends TestBase {
         new JsonObject().put("test", "testFindOneAndUpdateWithOptions"),
         new JsonObject().put("foo", "bar"),
         new FindOptions().setSkip(42),
-        new UpdateOptions().setReturningNewDocument(true).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1)))
+        new UpdateOptions().setReturningNewDocument(true).setCollation(new CollationOptions().setLocale("de_AT").setStrength(CollationStrength.PRIMARY)))
       .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
         ctx.assertEquals("value1", r.getString("field1"))
       )));

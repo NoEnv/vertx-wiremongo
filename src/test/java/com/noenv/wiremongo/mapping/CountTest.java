@@ -1,5 +1,6 @@
 package com.noenv.wiremongo.mapping;
 
+import com.mongodb.client.model.CollationStrength;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.CollationOptions;
@@ -30,13 +31,13 @@ public class CountTest extends TestBase {
   public void testCountWithOptions(TestContext ctx) {
     mock.countWithOptions()
       .inCollection("countwithoptions")
-      .withOptions(new CountOptions().setCollation(new CollationOptions().setLocale("de_AT").setStrength(3)))
+      .withOptions(new CountOptions().setCollation(new CollationOptions().setLocale("de_AT").setStrength(CollationStrength.TERTIARY)))
       .withQuery(new JsonObject().put("test", "testCount"))
       .returns(41L);
 
     db.rxCountWithOptions("countwithoptions",
         new JsonObject().put("test", "testCount"),
-        new CountOptions().setCollation(new CollationOptions().setLocale("de_AT").setStrength(3)))
+        new CountOptions().setCollation(new CollationOptions().setLocale("de_AT").setStrength(CollationStrength.TERTIARY)))
       .subscribe(SingleHelper.toObserver(ctx.asyncAssertSuccess(s ->
         ctx.assertEquals(41L, s)
       )));

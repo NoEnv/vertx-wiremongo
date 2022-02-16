@@ -1,5 +1,6 @@
 package com.noenv.wiremongo.mapping.find;
 
+import com.mongodb.client.model.CollationStrength;
 import com.noenv.wiremongo.TestBase;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -20,12 +21,12 @@ public class FindOneAndDeleteWithOptionsTest extends TestBase {
     mock.findOneAndDeleteWithOptions()
       .inCollection("findOneAndDeleteWithOptions")
       .withQuery(new JsonObject().put("test", "testFindOneAndDeleteWithOptions"))
-      .withOptions(new FindOptions().setSkip(5).setLimit(21).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1)))
+      .withOptions(new FindOptions().setSkip(5).setLimit(21).setCollation(new CollationOptions().setLocale("de_AT").setStrength(CollationStrength.PRIMARY)))
       .returns(new JsonObject().put("field1", "value1"));
 
     db.rxFindOneAndDeleteWithOptions("findOneAndDeleteWithOptions",
         new JsonObject().put("test", "testFindOneAndDeleteWithOptions"),
-        new FindOptions().setSkip(5).setLimit(21).setCollation(new CollationOptions().setLocale("de_AT").setStrength(1))
+        new FindOptions().setSkip(5).setLimit(21).setCollation(new CollationOptions().setLocale("de_AT").setStrength(CollationStrength.PRIMARY))
       )
       .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r ->
         ctx.assertEquals("value1", r.getString("field1"))

@@ -1,4 +1,4 @@
-image:https://circleci.com/gh/NoEnv/vertx-wiremongo.svg?style=svg["Build Status",link="https://circleci.com/gh/NoEnv/vertx-wiremongo"]
+image:https://github.com/NoEnv/vertx-wiremongo/actions/workflows/ci.yml/badge.svg["Build Status",link="https://github.com/NoEnv/vertx-wiremongo/actions/workflows/ci.yml"]
 image:https://codecov.io/gh/NoEnv/vertx-wiremongo/branch/master/graph/badge.svg["Code Coverage",link="https://codecov.io/gh/NoEnv/vertx-wiremongo"]
 image:https://badgen.net/maven/v/maven-central/com.noenv/vertx-wiremongo["Maven Central",link="https://search.maven.org/artifact/com.noenv/vertx-wiremongo"]
 
@@ -18,7 +18,7 @@ To use Vert.x Wiremongo, add the following dependency:
 <dependency>
   <groupId>com.noenv</groupId>
   <artifactId>vertx-wiremongo</artifactId>
-  <version>4.2.7</version>
+  <version>4.3.0</version>
 </dependency>
 ----
 
@@ -26,7 +26,7 @@ To use Vert.x Wiremongo, add the following dependency:
 
 [source,groovy,subs="+attributes"]
 ----
-compile 'com.noenv:vertx-wiremongo:4.2.7'
+compile 'com.noenv:vertx-wiremongo:4.3.0'
 ----
 
 Imagine you have a mongodb to keep track of your fruit. In your application you have a class that uses `io.vertx.ext.mongo.MongoClient` for the database operations:

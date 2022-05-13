@@ -1,5 +1,5 @@
 image:https://github.com/NoEnv/vertx-wiremongo/actions/workflows/ci.yml/badge.svg["Build Status",link="https://github.com/NoEnv/vertx-wiremongo/actions/workflows/ci.yml"]
-image:https://codecov.io/gh/NoEnv/vertx-wiremongo/branch/master/graph/badge.svg["Code Coverage",link="https://codecov.io/gh/NoEnv/vertx-wiremongo"]
+image:https://codecov.io/gh/NoEnv/vertx-wiremongo/branch/main/graph/badge.svg["Code Coverage",link="https://codecov.io/gh/NoEnv/vertx-wiremongo"]
 image:https://badgen.net/maven/v/maven-central/com.noenv/vertx-wiremongo["Maven Central",link="https://search.maven.org/artifact/com.noenv/vertx-wiremongo"]
 
 = Vert.x-Wiremongo

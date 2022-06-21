@@ -28,4 +28,8 @@ public abstract class UpdateCollectionBase<V, U extends UpdateCollectionBaseComm
   protected MongoClientUpdateResult parseResponse(Object jsonValue) {
     return new MongoClientUpdateResult((JsonObject) jsonValue);
   }
+
+  public C returns(long docMatched, JsonObject docUpsertedId, long docModified) {
+    return returns(new MongoClientUpdateResult(docMatched, docUpsertedId, docModified));
+  }
 }

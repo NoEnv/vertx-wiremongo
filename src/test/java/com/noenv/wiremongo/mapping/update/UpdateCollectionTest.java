@@ -21,7 +21,7 @@ public class UpdateCollectionTest extends TestBase {
       .inCollection("updatecollection")
       .withQuery(new JsonObject().put("test", "testUpdateCollection"))
       .withUpdate(new JsonObject().put("foo", "bar"))
-      .returns(new MongoClientUpdateResult(37, null, 21));
+      .returns(37, null, 21);
 
     db.rxUpdateCollection("updatecollection", new JsonObject().put("test", "testUpdateCollection"), new JsonObject().put("foo", "bar"))
       .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> {
@@ -105,7 +105,7 @@ public class UpdateCollectionTest extends TestBase {
       .inCollection("updatecollection")
       .withQuery(new JsonObject().put("test", "testUpdateCollection"))
       .withUpdate(new JsonArray().add(new JsonObject().put("foo", "bar")))
-      .returns(new MongoClientUpdateResult(37, null, 21));
+      .returns(37, null, 21);
 
     db.rxUpdateCollection("updatecollection", new JsonObject().put("test", "testUpdateCollection"), new JsonArray().add(new JsonObject().put("foo", "bar")))
       .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> {

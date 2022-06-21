@@ -25,7 +25,7 @@ public class UpdateCollectionWithOptionsTest extends TestBase {
       .withQuery(new JsonObject().put("test", "testUpdateCollectionWithOptions"))
       .withUpdate(equalToJson(new JsonObject().put("foo", "bar")))
       .withOptions(equalToJson(new JsonObject().put("upsert", true), UpdateOptions::toJson))
-      .returns(new MongoClientUpdateResult(22, null, 24));
+      .returns(22, null, 24);
 
     db.rxUpdateCollectionWithOptions("updatecollectionwithoptions",
         new JsonObject().put("test", "testUpdateCollectionWithOptions"),

@@ -64,18 +64,20 @@ public abstract class BulkWriteBase<U extends BulkWriteBaseCommand, C extends Bu
   @Override
   public C returnsDuplicateKeyError() {
     return returnsError(new MongoBulkWriteException(
-      BulkWriteResult.acknowledged(0, 0, 0, 0, Collections.emptyList()),
+      BulkWriteResult.acknowledged(0, 0, 0, 0, Collections.emptyList(), Collections.emptyList()),
       Collections.singletonList(new BulkWriteError(11000, "error-detail", new BsonDocument(), 0)),
       null,
-      new ServerAddress()));
+      new ServerAddress(),
+      Collections.emptySet()));
   }
 
   public C returnsOtherBulkWriteError() {
     return returnsError(new MongoBulkWriteException(
-      BulkWriteResult.acknowledged(0, 0, 0, 0, Collections.emptyList()),
+      BulkWriteResult.acknowledged(0, 0, 0, 0, Collections.emptyList(), Collections.emptyList()),
       Collections.singletonList(new BulkWriteError(22000, "error-detail", new BsonDocument(), 0)),
       null,
-      new ServerAddress()));
+      new ServerAddress(),
+      Collections.emptySet()));
   }
 
   public C withOperations(List<BulkOperation> operations) {

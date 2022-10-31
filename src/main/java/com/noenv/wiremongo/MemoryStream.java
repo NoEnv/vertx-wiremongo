@@ -76,7 +76,7 @@ public class MemoryStream<T> implements ReadStream<T> {
   @Override
   public ReadStream<T> endHandler(@Nullable Handler<Void> endHandler) {
     this.endHandler = endHandler;
-    if (this.items.isEmpty()) {
+    if (this.items.isEmpty() && endHandler != null) {
       endHandler.handle(null);
     }
     return this;

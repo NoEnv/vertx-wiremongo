@@ -1,10 +1,17 @@
 package com.noenv.wiremongo;
 
+import com.noenv.rxjava3.wiremongo.WireMongoClient;
 import io.vertx.core.Handler;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.streams.ReadStream;
+import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.rxjava3.CompletableHelper;
+import io.vertx.rxjava3.ext.mongo.MongoClient;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +19,25 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(VertxUnitRunner.class)
 public class MemoryStreamTest {
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
+
+  @Test
+  public void testMemoryStream(TestContext ctx) {
+    WireMongo wiremongo = new WireMongo();
+    wiremongo.findBatch()
+      .returns(MemoryStream.of(new JsonObject().put("foo", "bar")));
+
+    MongoClient db = WireMongoClient.newInstance(wiremongo.getClient());
+    db.findBatch("foo", new JsonObject())
+      .toObservable()
+      .doOnNext(j -> ctx.assertEquals("bar", j.getString("foo")))
+      .ignoreElements()
+      .subscribe(CompletableHelper.toObserver(ctx.asyncAssertSuccess()));
+  }
 
   @Test
   public void pausedBeforeHandlerSet() {

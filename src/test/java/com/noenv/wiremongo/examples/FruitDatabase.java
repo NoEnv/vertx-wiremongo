@@ -1,7 +1,6 @@
 package com.noenv.wiremongo.examples;
 
 import io.vertx.core.Future;
-import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.mongo.MongoClientDeleteResult;
@@ -25,18 +24,14 @@ public class FruitDatabase {
   }
 
   private Future<String> insertFruit(String type, int mass, Instant expiration) {
-    Promise<String> p = Promise.promise();
-    mongo.insert("fruits", new JsonObject()
+    return mongo.insert("fruits", new JsonObject()
       .put("type", type)
       .put("mass", mass)
-      .put("expiration", new JsonObject().put("$date", expiration)), p);
-    return p.future();
+      .put("expiration", new JsonObject().put("$date", expiration)));
   }
 
   public Future<Long> countFruitByType(String type) {
-    Promise<Long> p = Promise.promise();
-    mongo.count("fruits", new JsonObject().put("type", type), p);
-    return p.future();
+    return mongo.count("fruits", new JsonObject().put("type", type));
   }
 
   public Future<Long> removeExpiredFruit() {
@@ -44,10 +39,9 @@ public class FruitDatabase {
   }
 
   public Future<Long> removeExpiredFruit(Instant cutoff) {
-    Promise<MongoClientDeleteResult> p = Promise.promise();
-    mongo.removeDocument("fruits", new JsonObject()
+    return mongo.removeDocument("fruits", new JsonObject()
       .put("expiration", new JsonObject()
-        .put("$lt", new JsonObject().put("$date", cutoff))), p);
-    return p.future().map(MongoClientDeleteResult::getRemovedCount);
+        .put("$lt", new JsonObject().put("$date", cutoff))))
+      .map(MongoClientDeleteResult::getRemovedCount);
   }
 }

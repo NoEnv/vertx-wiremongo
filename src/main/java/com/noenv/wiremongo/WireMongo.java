@@ -3,7 +3,6 @@ package com.noenv.wiremongo;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.mapping.Mapping;
 import io.vertx.core.Future;
-import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.impl.logging.Logger;
@@ -11,13 +10,16 @@ import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.streams.ReadStream;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class WireMongo implements WireMongoCommands {
 
   private static final Logger logger = LoggerFactory.getLogger(WireMongo.class);
 
-  private Vertx vertx;
+  private final Vertx vertx;
   private final Map<Mapping<?, ? extends Command, ?>, Integer> mappings = Collections.synchronizedMap(new LinkedHashMap<>());
   private final WireMongoClient client;
   private int priorityCounter = 1;
@@ -40,12 +42,11 @@ public class WireMongo implements WireMongoCommands {
   }
 
   public Future<Void> readFileMappings(String path) {
-    Promise<List<String>> promise = Promise.promise();
     if (vertx == null) {
       return Future.failedFuture("to read file mappings, initialize WireMongo with a vertx instance");
     }
-    vertx.fileSystem().readDir(path, promise);
-    return promise.future()
+    return vertx.fileSystem()
+      .readDir(path)
       .compose(l -> l.stream()
         .map(p -> p.toLowerCase().endsWith(".json") ? readMappingFromFile(p) : readFileMappings(p))
         .reduce(Future.succeededFuture(), (a, b) -> a.compose(x -> b)))
@@ -53,9 +54,8 @@ public class WireMongo implements WireMongoCommands {
   }
 
   private Future<Void> readMappingFromFile(String file) {
-    Promise<Buffer> promise = Promise.promise();
-    vertx.fileSystem().readFile(file, promise);
-    return promise.future()
+    return vertx.fileSystem()
+      .readFile(file)
       .map(Buffer::toJsonObject)
       .map(Mapping::create)
       .map(this::addMapping)

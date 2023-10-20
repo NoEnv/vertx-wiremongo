@@ -259,6 +259,11 @@ public class WireMongoClient implements MongoClient {
   }
 
   @Override
+  public Future<Void> dropIndex(String collection, JsonObject key) {
+    throw new UnsupportedOperationException("not implemented");
+  }
+
+  @Override
   public Future<JsonObject> runCommand(String commandName, JsonObject command) {
     return call(new RunCommandCommand(commandName, command));
   }

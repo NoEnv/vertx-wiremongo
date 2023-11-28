@@ -22,6 +22,7 @@
   },
   "response": {
     "modifiedCount": 71,
-    "upserts": [ { "field1": "value1" } ]
+    "upserts": [ { "field1": "value1" } ],
+    "inserts": [ { "field2": "value2" } ]
   }
 }

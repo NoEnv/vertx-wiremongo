@@ -25,7 +25,7 @@ public class BulkWriteTest extends TestBase {
     mock.bulkWrite()
       .inCollection("bulkwrite")
       .withOperations(Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWrite"))))
-      .returns(new MongoClientBulkWriteResult(1, 0, 0, 0, null));
+      .returns(new MongoClientBulkWriteResult(1, 0, 0, 0, null, null));
 
     db.rxBulkWrite("bulkwrite", Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWrite"))))
       .subscribe(MaybeHelper.toObserver(ctx.asyncAssertSuccess(r -> ctx.assertEquals(1L, r.getInsertedCount()))));
@@ -54,8 +54,8 @@ public class BulkWriteTest extends TestBase {
 
   @Test
   public void testBulkWriteReturnedObjectNotModified(TestContext ctx) {
-    final MongoClientBulkWriteResult given = new MongoClientBulkWriteResult(1, 2, 3, 4, new ArrayList<>(Collections.singletonList(
-      new JsonObject()
+    final MongoClientBulkWriteResult given = new MongoClientBulkWriteResult(1, 2, 3, 4,
+      new ArrayList<>(Collections.singletonList(new JsonObject()
         .put("field1", "value1")
         .put("field2", "value2")
         .put("field3", new JsonObject()
@@ -66,7 +66,17 @@ public class BulkWriteTest extends TestBase {
             .add("value6")
           )
         )
-    )));
+    )),
+      new ArrayList<>(Collections.singletonList(new JsonObject()
+          .put("field7", "value7")
+          .put("field8", new JsonObject()
+            .put("field9", "value9")
+            .put("field10", new JsonArray()
+              .add("value11")
+              .add("value12")
+            )
+          )
+      )));
     final MongoClientBulkWriteResult expected = new MongoClientBulkWriteResult(given.toJson().copy());
 
     mock.bulkWrite()
@@ -85,6 +95,9 @@ public class BulkWriteTest extends TestBase {
         actual.getUpserts().get(0).getJsonObject("field3").put("add", "add");
         actual.getUpserts().get(0).getJsonObject("field3").getJsonArray("field6").remove(0);
         actual.getUpserts().get(0).getJsonObject("field3").getJsonArray("field6").add("add");
+        actual.getInserts().get(0).put("field7", "replace");
+        actual.getInserts().get(0).getJsonObject("field8").put("field9", "replace");
+        actual.getInserts().get(0).getJsonObject("field8").getJsonArray("field10").remove(0);
       })
       .repeat(2)
       .ignoreElements()
@@ -93,13 +106,15 @@ public class BulkWriteTest extends TestBase {
 
   @Test
   public void testBulkWriteFileReturnedObjectNotModified(TestContext ctx) {
-    final MongoClientBulkWriteResult expected = new MongoClientBulkWriteResult(0, 0, 28, 0, new ArrayList<>(Collections.singletonList(new JsonObject().put("field1", "value1"))));
+    final MongoClientBulkWriteResult expected = new MongoClientBulkWriteResult(0, 0, 28, 0, new ArrayList<>(Collections.singletonList(new JsonObject().put("field1", "value1"))), new ArrayList<>(Collections.singletonList(new JsonObject().put("field2", "value2"))));
 
     db.rxBulkWrite("bulkwrite", Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteFile"))))
       .doOnSuccess(actual -> ctx.assertEquals(expected.toJson(), actual.toJson()))
       .doOnSuccess(actual -> {
         actual.getUpserts().get(0).put("field1", "replace");
         actual.getUpserts().get(0).put("add", "add");
+        actual.getInserts().get(0).put("field2", "replace");
+        actual.getInserts().get(0).put("add", "add");
       })
       .repeat(2)
       .ignoreElements()

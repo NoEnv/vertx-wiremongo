@@ -32,7 +32,7 @@ public class BulkWriteWithOptionsTest extends TestBase {
         operationWithCollation
       ))
       .withOptions(new BulkWriteOptions().setOrdered(false))
-      .returns(new MongoClientBulkWriteResult(0, 24, 0, 0, null));
+      .returns(new MongoClientBulkWriteResult(0, 24, 0, 0, null, null));
 
     db.rxBulkWriteWithOptions("bulkwritewithoptions",
         Arrays.asList(
@@ -64,8 +64,8 @@ public class BulkWriteWithOptionsTest extends TestBase {
 
   @Test
   public void testBulkWriteWithOptionsReturnedObjectNotModified(TestContext ctx) {
-    final MongoClientBulkWriteResult given = new MongoClientBulkWriteResult(1, 2, 3, 4, new ArrayList<>(Collections.singletonList(
-      new JsonObject()
+    final MongoClientBulkWriteResult given = new MongoClientBulkWriteResult(1, 2, 3, 4,
+      new ArrayList<>(Collections.singletonList(new JsonObject()
         .put("field1", "value1")
         .put("field2", "value2")
         .put("field3", new JsonObject()
@@ -76,7 +76,17 @@ public class BulkWriteWithOptionsTest extends TestBase {
             .add("value6")
           )
         )
-    )));
+    )),
+      new ArrayList<>(Collections.singletonList(new JsonObject()
+          .put("field7", "value7")
+          .put("field8", new JsonObject()
+            .put("field9", "value9")
+            .put("field10", new JsonArray()
+              .add("value11")
+              .add("value12")
+            )
+          )
+      )));
     final MongoClientBulkWriteResult expected = new MongoClientBulkWriteResult(given.toJson().copy());
 
     mock.bulkWriteWithOptions()
@@ -104,13 +114,15 @@ public class BulkWriteWithOptionsTest extends TestBase {
 
   @Test
   public void testBulkWriteWithOptionsFileReturnedObjectNotModified(TestContext ctx) {
-    final MongoClientBulkWriteResult expected = new MongoClientBulkWriteResult(0, 0, 0, 71, new ArrayList<>(Collections.singletonList(new JsonObject().put("field1", "value1"))));
+    final MongoClientBulkWriteResult expected = new MongoClientBulkWriteResult(0, 0, 0, 71, new ArrayList<>(Collections.singletonList(new JsonObject().put("field1", "value1"))), new ArrayList<>(Collections.singletonList(new JsonObject().put("field2", "value2"))));
 
     db.rxBulkWriteWithOptions("bulkwritewithoptions", Collections.singletonList(BulkOperation.createInsert(new JsonObject().put("test", "testBulkWriteWithOptionsFile"))), new BulkWriteOptions().setWriteOption(WriteOption.ACKNOWLEDGED))
       .doOnSuccess(actual -> ctx.assertEquals(expected.toJson(), actual.toJson()))
       .doOnSuccess(actual -> {
         actual.getUpserts().get(0).put("field1", "replace");
         actual.getUpserts().get(0).put("add", "add");
+        actual.getInserts().get(0).put("field2", "replace");
+        actual.getInserts().get(0).put("add", "add");
       })
       .repeat(2)
       .ignoreElements()

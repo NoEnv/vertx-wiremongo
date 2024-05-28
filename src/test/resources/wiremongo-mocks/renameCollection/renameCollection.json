@@ -1,0 +1,7 @@
+{
+  "method": "renameCollection",
+  "collection": {
+    "equalTo": "testRenameCollection2"
+  },
+  "response": null
+}

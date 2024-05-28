@@ -1,0 +1,11 @@
+{
+  "method": "renameCollectionWithOptions",
+  "collection": {
+    "equalTo": "testRenameCollectionWithOptions2"
+  },
+  "options": {
+    "equalTo": {
+    }
+  },
+  "response": null
+}

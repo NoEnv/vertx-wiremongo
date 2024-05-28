@@ -4,12 +4,9 @@ import com.noenv.wiremongo.TestBase;
 import io.vertx.ext.mongo.CollationOptions;
 import io.vertx.ext.mongo.CreateCollectionOptions;
 import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(VertxUnitRunner.class)
 public class CreateCollectionTest extends TestBase {
 
   @Test

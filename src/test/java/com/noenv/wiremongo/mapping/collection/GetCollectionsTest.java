@@ -3,17 +3,14 @@ package com.noenv.wiremongo.mapping.collection;
 import com.noenv.wiremongo.TestBase;
 import com.noenv.wiremongo.mapping.Mapping;
 import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
 import io.vertx.rxjava3.SingleHelper;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@RunWith(VertxUnitRunner.class)
 public class GetCollectionsTest extends TestBase {
 
   @Test

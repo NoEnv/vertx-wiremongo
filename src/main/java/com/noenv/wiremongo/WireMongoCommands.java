@@ -5,10 +5,7 @@ import com.noenv.wiremongo.mapping.aggregate.Aggregate;
 import com.noenv.wiremongo.mapping.aggregate.AggregateWithOptions;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWrite;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteWithOptions;
-import com.noenv.wiremongo.mapping.collection.CreateCollection;
-import com.noenv.wiremongo.mapping.collection.CreateCollectionWithOptions;
-import com.noenv.wiremongo.mapping.collection.DropCollection;
-import com.noenv.wiremongo.mapping.collection.GetCollections;
+import com.noenv.wiremongo.mapping.collection.*;
 import com.noenv.wiremongo.mapping.distinct.Distinct;
 import com.noenv.wiremongo.mapping.distinct.DistinctBatch;
 import com.noenv.wiremongo.mapping.distinct.DistinctBatchWithQuery;
@@ -122,6 +119,14 @@ public interface WireMongoCommands {
 
   default DropCollection dropCollection() {
     return addMapping(new DropCollection());
+  }
+
+  default RenameCollection renameCollection() {
+    return addMapping(new RenameCollection());
+  }
+
+  default RenameCollectionWithOptions renameCollectionWithOptions() {
+    return addMapping(new RenameCollectionWithOptions());
   }
 
   default CreateIndexes createIndexes() {

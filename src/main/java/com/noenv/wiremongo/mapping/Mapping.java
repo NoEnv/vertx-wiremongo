@@ -8,10 +8,7 @@ import com.noenv.wiremongo.mapping.aggregate.Aggregate;
 import com.noenv.wiremongo.mapping.aggregate.AggregateWithOptions;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWrite;
 import com.noenv.wiremongo.mapping.bulkwrite.BulkWriteWithOptions;
-import com.noenv.wiremongo.mapping.collection.CreateCollection;
-import com.noenv.wiremongo.mapping.collection.CreateCollectionWithOptions;
-import com.noenv.wiremongo.mapping.collection.DropCollection;
-import com.noenv.wiremongo.mapping.collection.GetCollections;
+import com.noenv.wiremongo.mapping.collection.*;
 import com.noenv.wiremongo.mapping.distinct.Distinct;
 import com.noenv.wiremongo.mapping.distinct.DistinctBatch;
 import com.noenv.wiremongo.mapping.distinct.DistinctBatchWithQuery;
@@ -139,6 +136,10 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
           return new CreateCollectionWithOptions(json);
         case "dropCollection":
           return new DropCollection(json);
+        case "renameCollection":
+          return new RenameCollection(json);
+        case "renameCollectionWithOptions":
+          return new RenameCollectionWithOptions(json);
         case "listIndexes":
           return new ListIndexes(json);
         case "createIndex":

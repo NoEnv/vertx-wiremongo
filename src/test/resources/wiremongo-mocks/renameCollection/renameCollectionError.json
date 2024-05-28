@@ -1,0 +1,9 @@
+{
+  "method": "renameCollection",
+  "collection": {
+    "equalTo": "testRenameCollectionError2"
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

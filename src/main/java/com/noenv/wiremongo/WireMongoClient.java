@@ -9,10 +9,7 @@ import com.noenv.wiremongo.command.aggregate.AggregateBaseCommand;
 import com.noenv.wiremongo.command.aggregate.AggregateWithOptionsCommand;
 import com.noenv.wiremongo.command.bulkwrite.BulkWriteBaseCommand;
 import com.noenv.wiremongo.command.bulkwrite.BulkWriteWithOptionsCommand;
-import com.noenv.wiremongo.command.collection.CreateCollectionCommand;
-import com.noenv.wiremongo.command.collection.CreateCollectionWithOptionsCommand;
-import com.noenv.wiremongo.command.collection.DropCollectionCommand;
-import com.noenv.wiremongo.command.collection.GetCollectionsCommand;
+import com.noenv.wiremongo.command.collection.*;
 import com.noenv.wiremongo.command.distinct.DistinctBatchBaseCommand;
 import com.noenv.wiremongo.command.distinct.DistinctBatchWithQueryCommand;
 import com.noenv.wiremongo.command.distinct.DistinctCommand;
@@ -231,6 +228,16 @@ public class WireMongoClient implements MongoClient {
   @Override
   public Future<Void> dropCollection(String collection) {
     return call(new DropCollectionCommand(collection));
+  }
+
+  @Override
+  public Future<Void> renameCollection(String oldCollectionName, String newCollectionName) {
+    return call(new RenameCollectionCommand(oldCollectionName, newCollectionName));
+  }
+
+  @Override
+  public Future<Void> renameCollectionWithOptions(String oldCollectionName, String newCollectionName, RenameCollectionOptions collectionOptions) {
+    return call(new RenameCollectionWithOptionsCommand(oldCollectionName, newCollectionName, collectionOptions));
   }
 
   @Override

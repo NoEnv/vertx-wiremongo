@@ -2,12 +2,9 @@ package com.noenv.wiremongo.mapping.collection;
 
 import com.noenv.wiremongo.TestBase;
 import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava3.CompletableHelper;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(VertxUnitRunner.class)
 public class DropCollectionTest extends TestBase {
 
   @Test

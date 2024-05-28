@@ -1,0 +1,13 @@
+{
+  "method": "renameCollectionWithOptions",
+  "collection": {
+    "equalTo": "testRenameCollectionWithOptionsError2"
+  },
+  "options": {
+    "equalTo": {
+    }
+  },
+  "error": {
+    "message": "intentional"
+  }
+}

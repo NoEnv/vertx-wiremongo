@@ -18,7 +18,7 @@ To use Vert.x Wiremongo, add the following dependency:
 <dependency>
   <groupId>com.noenv</groupId>
   <artifactId>vertx-wiremongo</artifactId>
-  <version>5.0.1</version>
+  <version>5.0.2</version>
 </dependency>
 ----
 

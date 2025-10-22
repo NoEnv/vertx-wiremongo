@@ -5,7 +5,7 @@
 
   <groupId>com.noenv</groupId>
   <artifactId>vertx-wiremongo</artifactId>
-  <version>4.5.22</version>
+  <version>4.5.23-SNAPSHOT</version>
 
   <parent>
     <groupId>io.vertx</groupId>
@@ -18,7 +18,7 @@
   <url>http://github.com/NoEnv/vertx-wiremongo</url>
 
   <properties>
-    <stack.version>4.5.22</stack.version>
+    <stack.version>4.5.23-SNAPSHOT</stack.version>
   </properties>
 
   <dependencyManagement>

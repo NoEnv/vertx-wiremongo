@@ -3,7 +3,7 @@ package com.noenv.wiremongo;
 import com.mongodb.MongoException;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.vertx.core.Handler;
-import io.vertx.core.impl.NoStackTraceThrowable;
+import io.vertx.core.VertxException;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -34,7 +34,7 @@ public abstract class TestBase {
 
   public static Consumer<? super Throwable> assertNoMappingFoundError(TestContext ctx, Async latch) {
     return throwable -> {
-      ctx.assertTrue(throwable instanceof RuntimeException || throwable instanceof NoStackTraceThrowable, "throwable should be instance of RuntimeException or NoStackTraceThrowable");
+      ctx.assertTrue(throwable instanceof RuntimeException || throwable instanceof VertxException, "throwable should be instance of RuntimeException or VertxException");
       ctx.assertTrue(throwable.getMessage() != null && throwable.getMessage().startsWith("no mapping found: "), "throwable message should start with `no mapping found: `");
       System.err.println("Above `no mapping found` error is intentional");
       if (latch != null) {

@@ -150,6 +150,8 @@ public interface Mapping<T, U extends Command, C extends Mapping<T, U, C>> {
           return new CreateIndexWithOptions(json);
         case "runCommand":
           return new RunCommand(json);
+        case "ping":
+          return new Ping(json);
         case "count":
           return new Count(json);
         case "countWithOptions":

@@ -193,6 +193,10 @@ public interface WireMongoCommands {
     return addMapping(new RunCommand());
   }
 
+  default Ping ping() {
+    return addMapping(new Ping());
+  }
+
   default Aggregate aggregate() {
     return addMapping(new Aggregate());
   }

@@ -4,6 +4,7 @@ import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.noenv.wiremongo.command.Command;
 import com.noenv.wiremongo.command.CountCommand;
 import com.noenv.wiremongo.command.CountWithOptionsCommand;
+import com.noenv.wiremongo.command.PingCommand;
 import com.noenv.wiremongo.command.RunCommandCommand;
 import com.noenv.wiremongo.command.aggregate.AggregateBaseCommand;
 import com.noenv.wiremongo.command.aggregate.AggregateWithOptionsCommand;
@@ -273,6 +274,11 @@ public class WireMongoClient implements MongoClient {
   @Override
   public Future<JsonObject> runCommand(String commandName, JsonObject command) {
     return call(new RunCommandCommand(commandName, command));
+  }
+
+  @Override
+  public Future<@Nullable JsonObject> ping() {
+    return call(new PingCommand());
   }
 
   @Override
